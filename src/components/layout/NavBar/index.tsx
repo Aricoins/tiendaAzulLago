@@ -13,7 +13,7 @@ import { addClientSecret, addPaymentIntent, addToCart, addUserID, hideLoading } 
 import { checkUserRole } from "@/app/lib/utils";
 import CartPage from "@/app/cart/page";
 import Purchases from "@/components/purchases/Purchases";
-
+import logo from "../../../../public/img/about.png";
 interface Item {
   cart_item_id: number;
   user_id: string;
@@ -31,7 +31,7 @@ interface CustomPage {
 }
 
 export default function Navbar() {
-    const menu = ["All", "Phones", "Tablets", "Laptops", "Desktops", "Software"]
+    const menu = ["Todos", "Cosmética", "Medicinal", "Aromáticas", "Ofertas", "Socios"]
     const searchParams = useSearchParams()
     const params = searchParams.get('category')
     const id = useUser().user?.id
@@ -137,8 +137,8 @@ export default function Navbar() {
         <div className="w-full flex justify-around">
           <div className="flex ">
             <Link href="/" className="mr-2 flex items-center justify-center">
-            <Image src="\img\codewave-central-high-resolution-logo-transparent.svg" alt="codewave logo" 
-            className="w-52"
+            <Image src={logo} alt="azul lago logo" 
+            className="w-24"
             width={100}
             height={100}
              />
