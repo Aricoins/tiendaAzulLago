@@ -1,9 +1,11 @@
-"use client";
+"use client"
 import React, { useEffect } from 'react';
 
 const PaymentBrick = () => {
   useEffect(() => {
     const initializeMercadoPago = async () => {
+
+      
       const mp = new window.MercadoPago('APP_USR-92fad406-3143-4c51-bd74-dfb2f79bbd4a', {
         locale: 'es'
       });

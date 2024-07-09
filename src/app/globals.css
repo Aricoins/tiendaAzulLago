@@ -4,11 +4,17 @@
 
 :root {
 
-    background: linear-gradient(90deg, rgb(2, 24, 31) 0%, rgb(10, 94, 122) 35%, rgb(2, 24, 31) 100%);
+    background: linear-gradient(90deg, rgb(110, 3, 101) 0%, rgb(1, 1, 10) 35%, rgb(3, 9, 44) 100%);
     
 }
 
-
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: "blue";
+    --background-start-rgb: "violet";
+    --background-end-rgb: "white";
+  }
+}
 
 body {
   color: rgb(var(--foreground-rgb));
