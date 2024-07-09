@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { hideLoading } from "@/redux/slices/cartSlice"
 import { usePathname } from 'next/navigation'
 import { RootState } from "@/redux/store"
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 
@@ -38,7 +39,17 @@ export default function App({children,
         }`}
       >
                 {['/signup', '/signin', '/banned', '/verified'].includes(pathnames) ? null : <Navbar />}
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense fallback={<div
+    style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}
+    >  <ClipLoader
+    color="blue"
+
+    size={150}
+
+
+    aria-label="Loading Spinner"
+    data-testid="loader"
+  /></div>}>
                 <main className="p-4">{children}</main>
                 </Suspense>
             </div>

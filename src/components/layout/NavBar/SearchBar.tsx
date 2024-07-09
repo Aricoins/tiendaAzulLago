@@ -42,7 +42,7 @@ export default function SearchBar (){
             <input
             id='input'
             className={style.input}
-                placeholder="Search for products..."
+                placeholder="Buscar productos..."
                 onChange={(e)=>{
                     handleSearch(e.target.value)
                 }}

@@ -1,22 +1,15 @@
 "use client";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import PaymentForm from "@/components/PaymentForm/PaymentForm";
-// Make sure to call `loadStripe` outside of a component’s render to avoid
-// recreating the `Stripe` object on every render.
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
-);
+
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
+initMercadoPago(process.env.PUBLIC_MP_ID || 'APP_USR-92fad406-3143-4c51-bd74-dfb2f79bbd4a');
+
+console.log('Wallet', Wallet);
 
 export default function Payment() {
-    const options = {
-        // passing the client secret obtained from the server
-        clientSecret: '{{CLIENT_SECRET}}',
-      };
   
     return (  
-    <Elements stripe={stripePromise} options={options}>
-      <PaymentForm />
-    </Elements>
-  );
+<div>
+    <Wallet initialization={{ preferenceId: "APP_USR-92fad406-3143-4c51-bd74-dfb2f79bbd4a" }} />
+      </div>
+      );
 }

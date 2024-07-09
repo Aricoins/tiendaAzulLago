@@ -6,6 +6,7 @@ import ReviewForm from "@/components/RatingReview/ReviewForm";
 import ReviewsList from "@/components/RatingReview/Rating";
 import AverageRatingStars from "@/components/RatingReview/AverageRating";
 import { useEffect, useState } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 
 interface Detail{
   id: string;
@@ -48,7 +49,17 @@ export default function Detail({ params }: { params: { id: string } }) {
   };
 
   if (!productDetail) {
-    return <div>Product not found!</div>;
+    return <div
+    style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}
+    >  <ClipLoader
+    color="blue"
+
+    size={150}
+
+
+    aria-label="Loading Spinner"
+    data-testid="loader"
+  /></div>;
   }
 
   return (

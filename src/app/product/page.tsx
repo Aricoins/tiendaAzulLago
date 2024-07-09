@@ -9,6 +9,7 @@ import FilterbyPriceRange from '@/components/filterPriceRange';
 import { parse } from 'path';
 import AverageRatingStars from '@/components/RatingReview/AverageRating';
 import { Suspense } from 'react';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 
 
@@ -27,31 +28,11 @@ export default async function Product({ searchParams }:
         let data;
         let list = []
         try {
-          let query = 'SELECT * FROM products WHERE disable = false';
-          if(searchParams.model){
-            list.push(searchParams.model)
-            query += ` AND model ILIKE '%' || $${list.length} || '%'`
-          };
-          if(searchParams.category){
+          let query = 'SELECT * FROM products WHERE disable = false;';
+          if(searchParams.category) {
+            query = 'SELECT * FROM products WHERE category = $1 AND disable = false;';
             list.push(searchParams.category)
-            query += ` AND category ILIKE '%' || $${list.length} || '%'`
           }
-
-          if(searchParams.minPrice){
-            list.push(searchParams.minPrice)
-            query += ` AND CAST(Price AS DECIMAL) >= $${list.length}`
-          }  
-
-          if(searchParams.maxPrice){
-            list.push(searchParams.maxPrice)
-            query += ` AND CAST(Price AS DECIMAL) <= $${list.length}`
-          }
-          if(searchParams.ordByPrice){
-            query += ` ORDER BY CAST(Price AS DECIMAL) ${searchParams.ordByPrice === 'max' ? 'DESC' : 'ASC'}`
-          }
-         
-          query = query.replace(/ AND$/, "")
-          query = query.replace(/ WHERE$/, "")
           data = await sql.query(query, list)
             return data.rows
           } catch (error) {
@@ -63,11 +44,22 @@ const data = await fetchData();
 
 
   return (
-    <main className="flex flex-wrap flex-col content-center items-start mx-5">
-      <Suspense fallback={<div>Loading...</div>}>
+    <main className="flex flex-wrap flex-col content-center items-start mx-5 my-[10%]">
+      <Suspense fallback={<div
+    style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}
+    >  <ClipLoader
+    color="blue"
+
+    size={150}
+
+
+    aria-label="Loading Spinner"
+    data-testid="loader"
+  /></div>}>
       <div className='w-full inline-flex justify-between'>
         {searchParams.category ? 
-        <div className='gap-2 flex flex-row h-12 items-center border-gray-400 border bg-transparent rounded-md'><h2 className=' text-gray-400'>Category: {searchParams.category}</h2>
+        <div className='gap-2 flex flex-row h-12 items-center border-gray-400 border bg-transparent rounded-md'>
+          <h2 className=' text-gray-400'>Categoría: {searchParams.category}</h2>
         
         <Link href='/product'>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="red" className="w-5 h-5">
@@ -99,7 +91,7 @@ const data = await fetchData();
                   </div>
                   <div className="flex bg-white text-center justify-center mb-4 border-solid border-2 border-gray rounded-2xl w-11/12 mx-5 my-2 p-2 text-xs font-bold items-center">
                     <p className='text-black'>{product.model}</p>
-                    <p className="bg-blue-600 mx-2 p-1 rounded-2xl text-white">${product.price} USD</p>
+                    <p className="bg-blue-600 mx-2 p-1 rounded-2xl text-white">${product.price} AR$</p>
                   </div> 
                 </Link>               
                 <AddToCart 

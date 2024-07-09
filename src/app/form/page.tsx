@@ -249,13 +249,12 @@ console.log(form.specs)
               onChange={handleChange}
               className='text-3xl text-black w-full border-blue-500'  
             >
-              <option value="All">All</option>
-              <option value="Phones">Phones</option>
-              <option value="Tablets">Tablets</option>
-              <option value="Laptops">Laptops</option>
-              <option value="Desktops">Desktops</option>
-              <option value="Softwares">Softwares</option>
-            </select>
+              <option value="All">Todo</option>
+              <option value="Cosméticas">Cosméticas</option>
+              <option value="Aromáticas">Aromáticas</option>
+              <option value="Medicinales">Medicinales</option>
+              <option value="Ofertas">Ofertas</option>
+              </select>
           </div>
           <div data-aos="flip-right" className='flex flex-col items-center gap-2 w-full'>
             <label htmlFor="price">Price:</label>
