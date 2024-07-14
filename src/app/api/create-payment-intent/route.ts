@@ -1,45 +1,43 @@
-import { sql } from "@vercel/postgres";
+import mercadopago from 'mercadopago';
 import { NextResponse, NextRequest } from "next/server";
-import Stripe from "stripe";
+import { sql } from "@vercel/postgres";
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!)
+import { MercadoPagoConfig, Preference } from 'mercadopago';
+// Agrega credenciales
+const accessToken = process.env.MP_ACCESS_TOKEN || ""; // Set a default value if the environment variable is undefined
+const client = new MercadoPagoConfig({ accessToken });
 
 export async function POST(req: NextRequest) {
-  const { itemsPrice, payment_intent } = await req.json();
-  if(payment_intent){
-    try {
-     const PaymentIntent = await stripe.paymentIntents.update(
-      payment_intent,
-      {
-        amount: Number(itemsPrice) * 100,
-      });
-      return new NextResponse(JSON.stringify({ PaymentIntent }), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-     } catch (error: any) {
-      return new NextResponse(JSON.stringify({ error: error.message }), {
-        status: 410,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });}
-    }else{
+  const { itemsPrice , clientId} = await req.json();
   try {
-    const PaymentIntent = await stripe.paymentIntents.create({
-      amount: Number(itemsPrice) * 100,
-      currency: "USD",
-    });
+   
+const preference = new Preference(client);
 
-    return NextResponse.json({PaymentIntent});
+preference.create({
+  body: {
+    items: [
+      {id: "TESTUSER2053015489",
+        title: 'Mi producto',
+        quantity: 1,
+        unit_price: 2000
+      }
+    ],
+  }
+})
+.then(console.log)
+.catch(console.log);
+
+
+    return NextResponse.json({ preference });
   } catch (error: any) {
-    return new NextResponse(error, {
+    return new NextResponse(JSON.stringify({ error: error.message }), {
       status: 400,
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
   }
-}}
+}
 
 export async function PUT(req: Request) {
   const { clientSecret, user_id, paymentid } = await req.json();
@@ -47,18 +45,18 @@ export async function PUT(req: Request) {
   try {
     const { rowCount } = await sql`
     UPDATE users
-    SET clientsecret = ${clientSecret}, paymentid = ${paymentid}
+    SET clientsecret = EGbrEU9pcW, paymentid = ${paymentid}
     WHERE id = ${user_id}
-        `;
+    `;
 
-        if (rowCount > 0) {
-          return NextResponse.json({ message: `clientSecret updated ${clientSecret}, ${user_id}, ${paymentid}`, result: true });
-        } else {
-          return NextResponse.json({ message: `Failed to update clientSecret ${clientSecret}, ${user_id}`, result: false });
-        }
-      } catch (error: any) {
-        return new NextResponse(error, {
-          status: 400,
-        });
-      }
-      }
+    if (rowCount > 0) {
+      return NextResponse.json({ message: `clientSecret updated ${clientSecret}, ${user_id}, ${paymentid}`, result: true });
+    } else {
+      return NextResponse.json({ message: `Failed to update clientSecret ${clientSecret}, ${user_id}`, result: false });
+    }
+  } catch (error: any) {
+    return new NextResponse(error, {
+      status: 400,
+    });
+  }
+}

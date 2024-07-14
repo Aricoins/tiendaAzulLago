@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { useRouter } from "next/navigation"
 import { addToCart, removeFromCart } from "@/redux/slices/cartSlice"
 import Link from "next/link"
-import Image from "next/image"
+import Image from "next/image";
+import ClipLoader from "react-spinners/ClipLoader";
 
 interface Product {
   cart_item_id: number;
@@ -16,6 +17,7 @@ interface Product {
   qty: number;
     // Add other properties
   }
+  
 
 export default function CartPage(){
     const dispatch = useDispatch()
@@ -59,10 +61,18 @@ export default function CartPage(){
         <div className="flex flex-col flex-wrap content-center">
             <h1 className="mb-4 text-xl">Shopping Cart</h1>
             {loading ? (
-                <div>Loading...</div>
+                <div> <ClipLoader
+                color="blue"
+            
+                size={150}
+            
+            
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              /></div>
                 ) : cartItems.length === 0 ? (
-                    <div>
-                        Cart is Empty. <Link className="underline" href="/">Go Shopping!</Link>
+                    <div className= "text-white">
+                        El carrito esta vacío <Link className="underline" href="/">Volver a la tienda!</Link>
                     </div>
                     ) : (
                     <div className="w-1/2 grid md:grid-cols-4 md:gap-5">
@@ -70,10 +80,10 @@ export default function CartPage(){
             <table className="min-w-full bg-slate-100 rounded-lg">
               <thead className="border-b text-gray-900">
                 <tr>
-                  <th className="p-5 text-left">Product</th>
-                  <th className="p-5 text-right">Quantity</th>
-                  <th className="p-5 text-right">Price</th>
-                  <th className="p-5">Action</th>
+                  <th className="p-5 text-left">Producto</th>
+                  <th className="p-5 text-right">Cantidad</th>
+                  <th className="p-5 text-right">Precio</th>
+                  <th className="p-5">Acción</th>
                 </tr>
               </thead>
               <tbody>
@@ -133,7 +143,7 @@ export default function CartPage(){
                     onClick={() => router.push('/checkout')}
                     className="primary-button w-full bg-blue-500 text-white rounded-lg"
                   >
-                    Proceed to checkout
+                    Pagar
                   </button>
                 </li>
               </ul>

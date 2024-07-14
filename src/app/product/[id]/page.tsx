@@ -97,13 +97,13 @@ export default function Detail({ params }: { params: { id: string } }) {
             </div>
           </div>
         </div>
-        <div className="basis-full lg:basis-2/6">
-          <div className="mb-6 flex flex-col border-b pb-6 border-neutral-700">
+        <div className="basis-full lg:basis-2/6 text-white">
+          <div className="mb-6 flex flex-col border-b pb-6 border-neutral-700 text-white">
             <h1 className="mb-2 text-5xl font-medium">{productDetail.model}</h1>
             <h2>{productDetail.category}</h2>
             <AverageRatingStars productId={productDetail.id} />
             <div className="my-6 mr-auto w-auto rounded-full bg-blue-600 p-2 text-sm text-white">
-              <p>${productDetail.price} USD</p>
+              <p>U$D {productDetail.price}</p>
             </div>
             <div className="flex flex-col justify-center text-xl p-2 rounded-2xl">
               <AddToCart
@@ -123,7 +123,7 @@ export default function Detail({ params }: { params: { id: string } }) {
                 Website: {productDetail.website}
               </a>
             ) : null}
-            <h1 className="text-2xl font-bold">Specs:</h1>
+            <h1 className="text-2xl font-bold">Especificaciones:</h1>
             {productDetail.specs
               ? Object.entries(productDetail.specs).map(([key, value]) => (
                   <div key={key}>
@@ -136,8 +136,8 @@ export default function Detail({ params }: { params: { id: string } }) {
         </div>
       </section>
       <section>
-        <div className="flex flex-col rounded-lg border  p-8 border-neutral-800 bg-black md:p-12  lg:gap-8 ">
-          <p>Product Ratings</p>
+        <div className="flex flex-col rounded-lg border  p-8 border-neutral-800 bg-black md:p-12  text-white lg:gap-8 ">
+          <p> Ratings</p>
           <ReviewsList productId={productDetail.id} />
         </div>
         {/* <div className="flex flex-col rounded-lg border p-8 border-neutral-800 bg-black md:p-12  lg:gap-8 ">
