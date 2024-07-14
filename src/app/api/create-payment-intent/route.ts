@@ -16,7 +16,7 @@ const preference = new Preference(client);
 preference.create({
   body: {
     items: [
-      {id: "TESTUSER2053015489",
+      {id: clientId,
         title: 'Mi producto',
         quantity: 1,
         unit_price: 2000
@@ -45,7 +45,7 @@ export async function PUT(req: Request) {
   try {
     const { rowCount } = await sql`
     UPDATE users
-    SET clientsecret = EGbrEU9pcW, paymentid = ${paymentid}
+    SET clientsecret = ${clientSecret}, paymentid = ${paymentid}
     WHERE id = ${user_id}
     `;
 
