@@ -83,15 +83,31 @@ export default function Detail({ params }: { params: { id: string } }) {
             <div className="flex flex-row m-2 gap-2">
               {productDetail.carrusel
                 ? Object.entries(productDetail.carrusel).map(([key, value]) => (
-                  <div className='z-10'key={key} onClick={() => handleImageChange(String(value))}>
-                      <Image
-                        className={`rounded-md ${value === currentImage ? 'border-2 border-blue-500' : ''}`}
-                        src={String(value)}
-                        width={100}
-                        height={100}
-                        alt={key}
-                      />
-                    </div>
+                 <div className="flex flex-wrap justify-center">
+      {images.map((value, key) => (
+         <div className="flex flex-wrap justify-center">
+      {images.map((value, key) => (
+        <div
+          className="z-10 m-2 cursor-pointer"
+          key={key}
+          onClick={() => handleImageChange(String(value))}
+        >
+          <Image
+            className={`rounded-md ${value === currentImage ? 'border-2 border-blue-500' : ''}`}
+            src={String(value)}
+            width={100}
+            height={100}
+            alt={String(key)}
+            style={{ width: 'auto', height: 'auto' }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+    </div>
+  );
+};
                   ))
                 : null}
             </div>
