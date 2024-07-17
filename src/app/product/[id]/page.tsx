@@ -8,7 +8,7 @@ import AverageRatingStars from "@/components/RatingReview/AverageRating";
 import { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 
-interface Detail{
+interface Detail {
   id: string;
   model: string;
   category: string;
@@ -22,92 +22,84 @@ interface Detail{
 }
 
 export default function Detail({ params }: { params: { id: string } }) {
-  const [productDetail, setProductDetail] = useState<any>() 
+  const [productDetail, setProductDetail] = useState<any>();
   const [currentImage, setCurrentImage] = useState<string>('');
   const [video, setVideo] = useState<boolean>(true);
 
-  const fetchDetail = async () =>{
+  const fetchDetail = async () => {
     try {
       const response = await fetch(`/api/detail?id=${params.id}`);
       if (response.ok) {
         const products = await response.json();
         setProductDetail(products.products[0]);
-    } 
-  } catch (error) {
+      }
+    } catch (error) {
       console.error('Error fetching product details:', error);
     }
   };
-  
-  useEffect(()=>{
-    fetchDetail()
-    
-  }, [])
-  
+
+  useEffect(() => {
+    fetchDetail();
+  }, []);
+
   const handleImageChange = (newImage: string) => {
-    setVideo(false)
+    setVideo(false);
     setCurrentImage(newImage);
   };
 
   if (!productDetail) {
-    return <div
-    style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}
-    >  <ClipLoader
-    color="blue"
-
-    size={150}
-
-
-    aria-label="Loading Spinner"
-    data-testid="loader"
-  /></div>;
+    return (
+      <div
+        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
+      >
+        <ClipLoader
+          color="blue"
+          size={150}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      </div>
+    );
   }
 
   return (
     <main className="mx-auto max-w-screen-2xl px-4">
-      <section className="flex flex-col rounded-lg borderp-8 border-neutral-800 bg-black md:p-12 lg:flex-row lg:gap-8">
+      <section className="flex flex-col rounded-lg border p-8 border-neutral-800 bg-black md:p-12 lg:flex-row lg:gap-8">
         <div className="w-1/2 p-16">
           <div className="h-full w-full basis-full lg:basis-4/6">
-            <div className="h-96 ">
-          {productDetail.video && video ? <video width={600} height={400} autoPlay={true} >
-                <source src={productDetail.video} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video> :
-               <Image
-               src={currentImage ? currentImage : productDetail.image}
-               alt={productDetail.model}
-               width={400}
-               height={400}
-               className="rounded"
-             />}
+            <div className="h-96">
+              {productDetail.video && video ? (
+                <video width={600} height={400} autoPlay={true}>
+                  <source src={productDetail.video} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              ) : (
+                <Image
+                  src={currentImage ? currentImage : productDetail.image}
+                  alt={productDetail.model}
+                  width={400}
+                  height={400}
+                  className="rounded"
+                />
+              )}
             </div>
             <div className="flex flex-row m-2 gap-2">
               {productDetail.carrusel
                 ? Object.entries(productDetail.carrusel).map(([key, value]) => (
-                 <div className="flex flex-wrap justify-center">
-      {images.map((value, key) => (
-         <div className="flex flex-wrap justify-center">
-      {images.map((value, key) => (
-        <div
-          className="z-10 m-2 cursor-pointer"
-          key={key}
-          onClick={() => handleImageChange(String(value))}
-        >
-          <Image
-            className={`rounded-md ${value === currentImage ? 'border-2 border-blue-500' : ''}`}
-            src={String(value)}
-            width={100}
-            height={100}
-            alt={String(key)}
-            style={{ width: 'auto', height: 'auto' }}
-          />
-        </div>
-      ))}
-    </div>
-  );
-};
-    </div>
-  );
-};
+                    <div
+                      className="z-10 m-2 cursor-pointer"
+                      key={key}
+                      onClick={() => handleImageChange(String(value))}
+                    >
+                      <Image
+                        className={`rounded-md ${value === currentImage ? 'border-2 border-blue-500' : ''}`}
+                        src={String(value)}
+                        width={100}
+                        height={100}
+                        alt={String(key)}
+                        style={{ width: 'auto', height: 'auto' }}
+                      />
+                    </div>
                   ))
                 : null}
             </div>
@@ -144,7 +136,7 @@ export default function Detail({ params }: { params: { id: string } }) {
               ? Object.entries(productDetail.specs).map(([key, value]) => (
                   <div key={key}>
                     <h1 className="font-bold">{key}:</h1>
-                    <h1>{String(value)}:</h1>
+                    <h1>{String(value)}</h1>
                   </div>
                 ))
               : null}
@@ -152,11 +144,11 @@ export default function Detail({ params }: { params: { id: string } }) {
         </div>
       </section>
       <section>
-        <div className="flex flex-col rounded-lg border  p-8 border-neutral-800 bg-black md:p-12  text-white lg:gap-8 ">
+        <div className="flex flex-col rounded-lg border p-8 border-neutral-800 bg-black md:p-12 text-white lg:gap-8">
           <p> Ratings</p>
           <ReviewsList productId={productDetail.id} />
         </div>
-        {/* <div className="flex flex-col rounded-lg border p-8 border-neutral-800 bg-black md:p-12  lg:gap-8 ">
+        {/* <div className="flex flex-col rounded-lg border p-8 border-neutral-800 bg-black md:p-12 lg:gap-8">
           <p>Leave a Feedback</p>
           <ReviewForm productId={productDetail.id} />
         </div> */}
