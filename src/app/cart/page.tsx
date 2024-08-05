@@ -9,9 +9,9 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import "dotenv/config"
 // Inicializa MercadoPago con la clave pública
-initMercadoPago(process.env.NEXT_PUBLIC_MERCADO_PAGO_PUBLIC_KEY || 'APP_USR-92fad406-3143-4c51-bd74-dfb2f79bbd4a');
+initMercadoPago(process.env.PUBLIC_KEY || "publickey");
 
 interface Product {
   cart_item_id: number;
