@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client'
-import { useSession } from "@clerk/nextjs";
+import { useSession, useUser } from "@clerk/nextjs";
 import { checkUserRole } from "@/app/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
@@ -29,6 +29,7 @@ export default function admindashboard() {
     const [users, setUsers] = useState([])
     const [status, setStatus] = useState(0);
     const [loading, setLoading] = useState(false);
+const user = useUser()
 
     useEffect(() => {
             const fetchProducts = async () => {
@@ -87,7 +88,7 @@ export default function admindashboard() {
 useEffect(() => {
   Aos.init({ duration: 1000 });
 })
-  
+  console.log(user, "user")
 
   return (
     !loading ? <h1 data-aos="fade-out">Loading...</h1> : 
@@ -110,10 +111,10 @@ useEffect(() => {
             <table className="min-w-full bg-slate-100 bg-opacity-80 rounded-lg">
               <thead className="border-b text-gray-900">
                 <tr>
-                  <th className="p-5 text-left">Product</th>
-                  <th className="p-5 text-left">Category</th>
-                  <th className="p-5 text-right">Price</th>
-                  <th className="p-5">Enable / Disable</th>
+                  <th className="p-5 text-left">Producto</th>
+                  <th className="p-5 text-left">Categgoría</th>
+                  <th className="p-5 text-right">Precio</th>
+                  <th className="p-5">Visible / Oculto</th>
                 </tr>
               </thead>
               <tbody>
@@ -156,9 +157,12 @@ useEffect(() => {
                   <th className="p-1 text-xs text-right">Email</th>
                   <th className="p-1">Enable / Disable</th>
                   <th className="p-1 text-6px text-left">User ID</th>
+                  </tr>
+                  <tbody>
                   
-                </tr>
-              </thead>
+                    <td className="p-5 text-right">{user?.user?.id }</td>
+                  </tbody>
+                  </thead>
               <tbody>
                 {users.map((user: Users) => (
                   <tr key={user.id} className="border-b text-gray-900 text-xs">
