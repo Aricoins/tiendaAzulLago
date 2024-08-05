@@ -6,9 +6,7 @@ const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN!
 
 export async function POST(req: NextRequest) {
   try {
-    const datos = await req.json();
-console.log (req, "req")
-    // Verificar que existan items y que estén en el formato correcto
+    const datos = await req.json();    
     if (!datos.items || !Array.isArray(datos.items) || datos.items.length === 0) {
       return NextResponse.json({ message: 'items needed', error: 'invalid_items', status: 400, cause: null });
     }

@@ -77,12 +77,11 @@ export default function CartPage() {
       const items = cartItems.map(item => ({
         id: item.id,
         title: item.name,
-        currency_id: 'ARS', // Ajusta esto según tu moneda
-        picture_url: item.image,
+        currency_id: 'ARS', 
         description: 'Descripción del Item',
         category_id: 'art',
         quantity: item.qty,
-        unit_price: 22,
+        unit_price: item.price,
       }));
   
       const payer = {
