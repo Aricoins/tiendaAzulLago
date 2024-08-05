@@ -7,7 +7,7 @@ const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN!
 export async function POST(req: NextRequest) {
   try {
     const datos = await req.json();
-
+console.log (req, "req")
     // Verificar que existan items y que estén en el formato correcto
     if (!datos.items || !Array.isArray(datos.items) || datos.items.length === 0) {
       return NextResponse.json({ message: 'items needed', error: 'invalid_items', status: 400, cause: null });
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
     const preference = new Preference(client);
 
     const createdPreference = await preference.create(preferenceData);
+
 
     // Enviar solo el ID de la preferencia
     return NextResponse.json({ preferenceId: createdPreference.id });

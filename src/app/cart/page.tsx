@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 // Inicializa MercadoPago con la clave pública
-initMercadoPago(process.env.NEXT_PUBLIC_MERCADO_PAGO_PUBLIC_KEY || 'YOUR_PUBLIC_KEY_HERE');
+initMercadoPago(process.env.NEXT_PUBLIC_MERCADO_PAGO_PUBLIC_KEY || 'APP_USR-92fad406-3143-4c51-bd74-dfb2f79bbd4a');
 
 interface Product {
   cart_item_id: number;
@@ -30,11 +30,6 @@ export default function CartPage() {
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (cartItems.length > 0) {
-      createPreference();
-    }
-  }, [cartItems]);
 
   const addToCartHandler = (product: Product, cart_item_id: number, qty: number) => {
     const updateQtyDB = async () => {
@@ -54,31 +49,8 @@ export default function CartPage() {
     updateQtyDB();
     dispatch(addToCart({ ...product, qty }));
   };
-
-  const createPreference = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.post('/api/create-preference', {
-      
-          id: "123",
-          title: "aceite",
-          currency_id: 'ARS',
-          category_id: 'art',
-          quantity: 1,
-          unit_price: 1000,
-        });
-
-      const { preferenceId } = response.data;
-      console.log("Response from create-preference:", preferenceId);
-
-      setPreferenceId(preferenceId);
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+ 
+  
   const removeFromCartHandler = (id: string, cart_item_id: number) => {
     const removeFromCartDB = async () => {
       try {
@@ -97,6 +69,82 @@ export default function CartPage() {
     removeFromCartDB();
     dispatch(removeFromCart(id));
   };
+
+
+  const createPreference = async () => {
+    setIsLoading(true);
+    try {
+      const items = cartItems.map(item => ({
+        id: item.id,
+        title: item.name,
+        currency_id: 'ARS', // Ajusta esto según tu moneda
+        picture_url: item.image,
+        description: 'Descripción del Item',
+        category_id: 'art',
+        quantity: item.qty,
+        unit_price: 22,
+      }));
+  
+      const payer = {
+        name: 'Juan',
+        surname: 'Lopez',
+        email: 'user@email.com',
+        phone: {
+          area_code: '11',
+          number: '4444-4444',
+        },
+        identification: {
+          type: 'DNI',
+          number: '12345678',
+        },
+        address: {
+          street_name: 'Street',
+          street_number: 123,
+          zip_code: '5700',
+        },
+      };
+  
+      const response = await fetch('/api/create-preference', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          items,
+          payer,
+          back_urls: {
+            success: `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
+            failure: `${process.env.NEXT_PUBLIC_BASE_URL}/failure`,
+            pending: `${process.env.NEXT_PUBLIC_BASE_URL}/pending`,
+          },
+          auto_return: 'approved',
+          payment_methods: {
+            excluded_payment_methods: [{ id: 'master' }],
+            excluded_payment_types: [{ id: 'ticket' }],
+            installments: 12,
+          },
+          notification_url: 'https://www.your-site.com/ipn',
+          statement_descriptor: 'MINEGOCIO',
+          external_reference: 'Reference_1234',
+          expires: true,
+          expiration_date_from: '2023-08-01T12:00:00.000-04:00',
+          expiration_date_to: '2023-08-31T12:00:00.000-04:00',
+        }),
+      });
+  
+      const data = await response.json();
+      console.log("Response from create-preference:", data);
+  
+      setPreferenceId(data.preferenceId);
+   
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+
 
   return (
     <div className="flex flex-col flex-wrap content-center">
