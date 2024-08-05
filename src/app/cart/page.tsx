@@ -1,17 +1,17 @@
-'use client'
-import { RootState } from "@/redux/store"
-import { useDispatch, useSelector } from "react-redux"
-import { useRouter } from "next/navigation"
-import { addToCart, removeFromCart } from "@/redux/slices/cartSlice"
-import Link from "next/link"
+'use client';
+import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { addToCart, removeFromCart } from "@/redux/slices/cartSlice";
+import Link from "next/link";
 import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
-import { useState } from "react";
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+import { useEffect, useState } from "react";
 import axios from "axios";
-import 'dotenv/config'
 
-initMercadoPago(process.env.PUBLIC_KEY || 'APP_USR-92fad406-3143-4c51-bd74-dfb2f79bbd4a');
+// Inicializa MercadoPago con la clave pública
+initMercadoPago(process.env.NEXT_PUBLIC_MERCADO_PAGO_PUBLIC_KEY || 'YOUR_PUBLIC_KEY_HERE');
 
 interface Product {
   cart_item_id: number;
@@ -24,58 +24,79 @@ interface Product {
 }
 
 export default function CartPage() {
-  const dispatch = useDispatch()
-  const router = useRouter()
-  const { loading, cartItems, itemsPrice } = useSelector((state: RootState) => state.cart)
-  const [preferenceId, setPreferenceId] = useState(null)
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { loading, cartItems, itemsPrice } = useSelector((state: RootState) => state.cart);
+  const [preferenceId, setPreferenceId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      createPreference();
+    }
+  }, [cartItems]);
 
   const addToCartHandler = (product: Product, cart_item_id: number, qty: number) => {
     const updateQtyDB = async () => {
       try {
-        let res = await fetch("/api/cart", {
+        await fetch("/api/cart", {
           method: "PUT",
           body: JSON.stringify({ product, cart_item_id, qty }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
         });
-        return console.log('qty updated to', qty)    
+        console.log('qty updated to', qty);
       } catch (error) {
-        console.log('error', error)
-      }       
-    }
-    updateQtyDB()
-    dispatch(addToCart({ ...product, qty })) 
-  }
+        console.error('error', error);
+      }
+    };
+    updateQtyDB();
+    dispatch(addToCart({ ...product, qty }));
+  };
 
   const createPreference = async () => {
+    setIsLoading(true);
     try {
-      console.log("Cart items to send:", cartItems);
       const response = await axios.post('/api/create-preference', {
-        cartItems,
-      });
-      console.log("Response from create-payment:", response);
+      
+          id: "123",
+          title: "aceite",
+          currency_id: 'ARS',
+          category_id: 'art',
+          quantity: 1,
+          unit_price: 1000,
+        });
 
-      const preferenceId = response.data.preferenceId;
-      setPreferenceId(preferenceId)
-      return preferenceId;
+      const { preferenceId } = response.data;
+      console.log("Response from create-preference:", preferenceId);
+
+      setPreferenceId(preferenceId);
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
   const removeFromCartHandler = (id: string, cart_item_id: number) => {
     const removeFromCartDB = async () => {
       try {
-        let res = await fetch("/api/cart", {
+        await fetch("/api/cart", {
           method: "DELETE",
           body: JSON.stringify({ cart_item_id }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
         });
-        return console.log('deleted', cart_item_id)    
+        console.log('deleted', cart_item_id);
       } catch (error) {
-        console.log('error', error)
+        console.error('error', error);
       }
-    }  
-    removeFromCartDB()
-    dispatch(removeFromCart(id))
-  }
+    };
+    removeFromCartDB();
+    dispatch(removeFromCart(id));
+  };
 
   return (
     <div className="flex flex-col flex-wrap content-center">
@@ -88,10 +109,6 @@ export default function CartPage() {
             aria-label="Loading Spinner"
             data-testid="loader"
           />
-        </div>
-      ) : cartItems.length === 0 ? (
-        <div className="text-white">
-          El carrito está vacío <Link className="underline" href="/">Volver a la tienda!</Link>
         </div>
       ) : (
         <div className="w-full grid md:grid-cols-4 md:gap-5">
@@ -112,7 +129,7 @@ export default function CartPage() {
                       <Link href={`/product/${item.id}`} className="flex items-center">
                         <Image
                           src={item.image}
-                          alt={item.id}
+                          alt={item.name}
                           width={50}
                           height={50}
                           className="p-1"
@@ -151,11 +168,20 @@ export default function CartPage() {
                     Total: ${itemsPrice}
                   </div>
                 </li>
+               
                 <li>
-                <div id="wallet_container">                    
-                  <Wallet initialization={{ preferenceId: preferenceId }} customization={{ texts: { valueProp: 'smart_option' } }} />
-                </div>
-
+                  <button className="w-full bg-blue-500 text-white rounded-lg" onClick={createPreference} disabled={isLoading}>
+                    {isLoading ? 'Creando Preferencia...' : 'Pagar'}
+                  </button>
+                </li>
+                <li>
+                  {preferenceId && (
+                    <div id="wallet_container">                    
+                      <Wallet
+                        initialization={{ preferenceId }}
+                      />
+                    </div>
+                  )}
                 </li>
               </ul>
             </div>
@@ -163,5 +189,5 @@ export default function CartPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

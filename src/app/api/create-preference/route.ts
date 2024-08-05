@@ -1,51 +1,47 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 
-// Configurar MercadoPago
+// Configura MercadoPago
 const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN! });
 
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  qty: number;
-}
+export async function POST(req: NextRequest) {
+  try {
+    const datos = await req.json();
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    try {
-      const { cartItems }: { cartItems: CartItem[] } = req.body;
-      console.log("Received cart items:", cartItems);
-
-      const items = cartItems.map(item => ({
-        id: item.id,
-        title: item.name,
-        quantity: item.qty,
-        unit_price: Number(item.price)
-      }));
-
-      console.log("Preference items to create:", items);
-
-      const preference = new Preference(client);
-      
-      const preferenceResponse = await preference.create({
-        items: items,
-        back_urls: {
-          "success": "http://localhost:3000/feedback",
-          "failure": "http://localhost:3000/feedback",
-          "pending": "http://localhost:3000/feedback"
-        },
-        auto_return: "approved",
-      });
-
-      console.log("Created preference response:", preferenceResponse);
-
-      res.status(200).json({ preferenceId: preferenceResponse.body.id });
-    } catch (error) {
-      console.error('Error creating preference:', error);
-      res.status(500).json({ message: 'Error creating preference' });
+    // Verificar que existan items y que estén en el formato correcto
+    if (!datos.items || !Array.isArray(datos.items) || datos.items.length === 0) {
+      return NextResponse.json({ message: 'items needed', error: 'invalid_items', status: 400, cause: null });
     }
-  } else {
-    res.status(405).json({ message: 'Method Not Allowed' });
+
+    const preferenceData = {
+      body: {
+        items: datos.items,
+        payer: datos.payer,
+        back_urls: {
+          success: `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
+          failure: `${process.env.NEXT_PUBLIC_BASE_URL}/failure`,
+          pending: `${process.env.NEXT_PUBLIC_BASE_URL}/pending`,
+        },
+        auto_return: datos.auto_return || 'approved',
+        payment_methods: datos.payment_methods,
+        notification_url: datos.notification_url,
+        statement_descriptor: datos.statement_descriptor,
+        external_reference: datos.external_reference,
+        expires: datos.expires,
+        expiration_date_from: datos.expiration_date_from,
+        expiration_date_to: datos.expiration_date_to,
+      }
+    };
+
+    // Crear la preferencia de pago
+    const preference = new Preference(client);
+
+    const createdPreference = await preference.create(preferenceData);
+
+    // Enviar solo el ID de la preferencia
+    return NextResponse.json({ preferenceId: createdPreference.id });
+  } catch (error) {
+    console.error('Error al crear la preferencia:', error);
+    return NextResponse.json({ message: 'Error creando la preferencia', error }, { status: 500 });
   }
 }
