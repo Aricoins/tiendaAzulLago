@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "dotenv/config"
 // Inicializa MercadoPago con la clave pública
-initMercadoPago("APP_USR-92fad406-3143-4c51-bd74-dfb2f79bbd4a");
+initMercadoPago(process.env.PUBLIC_KEY || "public.key");
 
 interface Product {
   cart_item_id: number;
@@ -27,7 +27,7 @@ export default function CartPage() {
   const dispatch = useDispatch();
   const router = useRouter();
   const { loading, cartItems, itemsPrice } = useSelector((state: RootState) => state.cart);
-  const [preferenceId, setPreferenceId] = useState('');
+  const [preferenceId, setPreferenceId] = useState<string | null>("");
   const [isLoading, setIsLoading] = useState(false);
 
 
@@ -81,7 +81,7 @@ export default function CartPage() {
         description: 'Descripción del Item',
         category_id: 'art',
         quantity: item.qty,
-        unit_price: item.price,
+        unit_price: 100,
       }));
   
       const payer = {
@@ -132,10 +132,11 @@ export default function CartPage() {
       });
   
       const data = await response.json();
+      const preferencia = data.preferenceId
+      console.log("Respuesta:", preferencia);
   
-      setPreferenceId(data); 
-
-      
+      setPreferenceId(preferencia); 
+      console.log(preferenceId, "id de la preferencia en el estado lolcal")
     } catch (error) {
       console.error('Error:', error);
     } finally {

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
-import "dotenv/config"
 
 // Configura MercadoPago
 const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN! });
@@ -13,22 +12,23 @@ export async function POST(req: NextRequest) {
     }
 
     const preferenceData = {
-      
-        body: {
-          payment_methods: {
-        excluded_payment_methods: [],
-        excluded_payment_types: [],
-        installments: 12
-},
-          items: [
-            {
-              title: datos.name,
-              quantity: 1,
-              unit_price: 2000
-            }
-          ],
-        }
-      
+      body: {
+        items: datos.items,
+        payer: datos.payer,
+        back_urls: {
+          success: `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
+          failure: `${process.env.NEXT_PUBLIC_BASE_URL}/failure`,
+          pending: `${process.env.NEXT_PUBLIC_BASE_URL}/pending`,
+        },
+        auto_return: datos.auto_return || 'approved',
+        payment_methods: datos.payment_methods,
+        notification_url: datos.notification_url,
+        statement_descriptor: datos.statement_descriptor,
+        external_reference: datos.external_reference,
+        expires: datos.expires,
+        expiration_date_from: datos.expiration_date_from,
+        expiration_date_to: datos.expiration_date_to,
+      }
     };
 
     // Crear la preferencia de pago
