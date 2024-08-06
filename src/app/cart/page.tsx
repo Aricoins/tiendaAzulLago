@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "dotenv/config"
 // Inicializa MercadoPago con la clave pública
-initMercadoPago(process.env.PUBLIC_KEY || "publickey");
+initMercadoPago("APP_USR-92fad406-3143-4c51-bd74-dfb2f79bbd4a");
 
 interface Product {
   cart_item_id: number;
@@ -27,7 +27,7 @@ export default function CartPage() {
   const dispatch = useDispatch();
   const router = useRouter();
   const { loading, cartItems, itemsPrice } = useSelector((state: RootState) => state.cart);
-  const [preferenceId, setPreferenceId] = useState<string | null>(null);
+  const [preferenceId, setPreferenceId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
 
@@ -77,7 +77,7 @@ export default function CartPage() {
       const items = cartItems.map(item => ({
         id: item.id,
         title: item.name,
-        currency_id: 'ARS', 
+        currency_id: 'ARS',
         description: 'Descripción del Item',
         category_id: 'art',
         quantity: item.qty,
@@ -122,26 +122,27 @@ export default function CartPage() {
             excluded_payment_types: [{ id: 'ticket' }],
             installments: 12,
           },
-          notification_url: 'https://www.your-site.com/ipn',
+          notification_url: 'https://www.azullago.com/',
           statement_descriptor: 'MINEGOCIO',
           external_reference: 'Reference_1234',
           expires: true,
-          expiration_date_from: '2023-08-01T12:00:00.000-04:00',
-          expiration_date_to: '2023-08-31T12:00:00.000-04:00',
+          expiration_date_from: new Date().toISOString(), 
+                    expiration_date_to: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(),
         }),
       });
   
       const data = await response.json();
-      console.log("Response from create-preference:", data);
   
-      setPreferenceId(data.preferenceId);
-   
+      setPreferenceId(data); 
+
+      
     } catch (error) {
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
     }
   };
+  
   
 
 
