@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     if (!datos.items || !Array.isArray(datos.items) || datos.items.length === 0) {
       return NextResponse.json({ message: 'items needed', error: 'invalid_items', status: 400, cause: null });
     }
-
+console.log(datos, "datos de la request")
     const preferenceData = {
       body: {
         items: datos.items,
