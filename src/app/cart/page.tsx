@@ -8,7 +8,7 @@ import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "axios"
 import dotenv from "dotenv";
 
 dotenv.config();
