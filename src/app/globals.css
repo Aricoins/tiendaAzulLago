@@ -4,7 +4,7 @@
 
 :root {
 
-    background: linear-gradient(90deg, rgb(110, 3, 101) 0%, rgb(1, 1, 10) 35%, rgb(3, 9, 44) 100%);
+    background: linear-gradient(9deg, rgb(0, 41, 106) 0%, rgb(0, 145, 255) 35%, rgb(0, 0, 0) 100%);
     
 }
 
@@ -24,6 +24,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+    height: 100%;
 }
 
 .cart-badge {

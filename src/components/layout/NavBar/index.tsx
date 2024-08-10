@@ -133,10 +133,10 @@ export default function Navbar() {
 
     return (
       <header>
-      <nav className="relative flex items-center justify-between p-4 lg:px-6 text-white">
-        <div className="w-full flex justify-around text-white">
+      <nav className=" items-center justify-between p-4 lg:px-6 text-black bg-white ">
+        <div className="w-full flex justify-around text-black">
           <div className="flex ">
-            <Link href="/" className="mr-2 flex items-center justify-center text-white">
+            <Link href="/" className="mr-2 flex items-center justify-center text-black">
             <Image src={logo} alt="azul lago logo" 
             className="w-24"
             width={100}
@@ -144,13 +144,13 @@ export default function Navbar() {
              />
             </Link>
             {menu.length ? (
-              <ul className="hidden gap-6 text-sm md:flex md:items-center text-white">
+              <ul className="hidden gap-6 text-sm md:flex md:items-center text-black">
                 {menu.map((item) => (
                   <li key={item}
-                  className={params === item ? "text-white underline" : "null"}>
+                  className={params === item ? "text-black underline" : "null"}>
                     <Link
                       href={item === 'Todos' ? `/product` : `/product?category=${item}`}
-                      className="underline-offset-4  hover:underline text-white hover:text-neutral-300"
+                      className="underline-offset-4  hover:underline text-black hover:text-neutral-900"
                     >
                       {item}
                     </Link>

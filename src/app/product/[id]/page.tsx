@@ -65,21 +65,21 @@ export default function Detail({ params }: { params: { id: string } }) {
   return (
     <main className="mx-auto max-w-screen-2xl px-4">
       <section className="flex flex-col rounded-lg border p-8 border-neutral-800 bg-black md:p-12 lg:flex-row lg:gap-8">
-        <div className="w-1/2 p-16">
-          <div className="h-full w-full basis-full lg:basis-4/6">
+        <div className="w-full p-0  mx-0">
+          <div className="h-3/4 w-3/4 basis-full lg:basis-2/4">
             <div className="h-96">
               {productDetail.video && video ? (
                 <video width={600} height={400} autoPlay={true}>
                   <source src={productDetail.video} type="video/mp4" />
-                  Your browser does not support the video tag.
+                  Este navegador no soporta el clip de video.
                 </video>
               ) : (
                 <Image
                   src={currentImage ? currentImage : productDetail.image}
                   alt={productDetail.model}
-                  width={400}
-                  height={400}
-                  className="rounded"
+                  width={200}
+                  height={200}
+                  className="rounded w-full"
                 />
               )}
             </div>
@@ -94,8 +94,8 @@ export default function Detail({ params }: { params: { id: string } }) {
                       <Image
                         className={`rounded-md ${value === currentImage ? 'border-2 border-blue-500' : ''}`}
                         src={String(value)}
-                        width={100}
-                        height={100}
+                        width={200}
+                        height={200}
                         alt={String(key)}
                         style={{ width: 'auto', height: 'auto' }}
                       />
@@ -105,13 +105,13 @@ export default function Detail({ params }: { params: { id: string } }) {
             </div>
           </div>
         </div>
-        <div className="basis-full lg:basis-2/6 text-white">
-          <div className="mb-6 flex flex-col border-b pb-6 border-neutral-700 text-white">
+        <div className="basis-full  lg:basis-2/6 text-white">
+          <div className="mb-6 flex flex-col text-white">
             <h1 className="mb-2 text-5xl font-medium">{productDetail.model}</h1>
             <h2>{productDetail.category}</h2>
             <AverageRatingStars productId={productDetail.id} />
-            <div className="my-6 mr-auto w-auto rounded-full bg-blue-600 p-2 text-sm text-white">
-              <p>U$D {productDetail.price}</p>
+            <div className="my-6 mr-auto w-auto rounded-full bg-blue-600 p-4 text-sm text-white">
+              <p>AR$ {productDetail.price} </p>
             </div>
             <div className="flex flex-col justify-center text-xl p-2 rounded-2xl">
               <AddToCart

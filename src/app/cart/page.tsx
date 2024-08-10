@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -8,13 +8,15 @@ import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { Modal, Form, Input, Button } from "antd";
 import dotenv from "dotenv";
+import { useUser } from "@clerk/clerk-react";
+import { MdOutlineShoppingCart } from "react-icons/md";
+
 
 dotenv.config();
 
-// Inicializa MercadoPago con la clave pública
-initMercadoPago(process.env.NEXT_PUBLIC_MP_KEY || "key");
+initMercadoPago(process.env.NEXT_PUBLIC_MP_KEY || "key",  { locale: 'es-AR' });
 
 interface Product {
   cart_item_id: number;
@@ -34,6 +36,10 @@ export default function CartPage() {
   );
   const [preferenceId, setPreferenceId] = useState<string | null>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form] = Form.useForm();
+
+  const user = useUser();
 
   const addToCartHandler = (
     product: Product,
@@ -49,7 +55,6 @@ export default function CartPage() {
             "Content-Type": "application/json",
           },
         });
-        console.log("qty updated to", qty);
       } catch (error) {
         console.error("error", error);
       }
@@ -68,7 +73,6 @@ export default function CartPage() {
             "Content-Type": "application/json",
           },
         });
-        console.log("deleted", cart_item_id);
       } catch (error) {
         console.error("error", error);
       }
@@ -77,37 +81,51 @@ export default function CartPage() {
     dispatch(removeFromCart(id));
   };
 
-  const createPreference = async () => {
+  const handleOk = () => {
+    form
+      .validateFields()
+      .then((values: number) => {
+        form.resetFields();
+        setIsModalOpen(false);
+        createPreference(values);
+      })
+      .catch((info: string) => {
+        console.log("Validate Failed:", info);
+      });
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+
+
+  const createPreference = async (payerDetails: any) => {
     setIsLoading(true);
     try {
-      console.log(cartItems, "cartitemsantesdemap");
       const items = cartItems.map((item) => ({
         id: item.id,
         title: item.name,
         currency_id: "ARS",
-        description: "Descripción del Item",
-        category_id: "art",
+        description: item.name,
         quantity: item.qty,
         unit_price: Number(item.price),
       }));
-      console.log(items, "antesdemap");
 
       const payer = {
-        name: "Juan",
-        surname: "Lopez",
-        email: "user@email.com",
-        phone: {
-          area_code: "11",
-          number: "4444-4444",
-        },
+        name: user.user?.firstName,
+        surname: user.user?.lastName,
+        email: user.user?.primaryEmailAddress?.emailAddress,
         identification: {
           type: "DNI",
-          number: "12345678",
+          number: payerDetails.identification,
+        },
+        phone: {
+          area_code: payerDetails.phone_area_code,
+          number: payerDetails.phone_number,
         },
         address: {
-          street_name: "Street",
-          street_number: 123,
-          zip_code: "5700",
+          street_name: payerDetails.address,
         },
       };
 
@@ -131,8 +149,8 @@ export default function CartPage() {
             installments: 12,
           },
           notification_url: "https://www.azullago.com/",
-          statement_descriptor: "MINEGOCIO",
-          external_reference: "Reference_1234",
+          statement_descriptor: "Azul Lago Tienda",
+          external_reference: "Pruebas",
           expires: true,
           expiration_date_from: new Date().toISOString(),
           expiration_date_to: new Date(
@@ -142,143 +160,211 @@ export default function CartPage() {
       });
 
       const data = await response.json();
-      console.log(data, "data");
-      const preferencia = data.preferenceId;
-      console.log("Respuesta:", preferencia);
-      console.log(process.env, "procecss")
-
-      setPreferenceId(preferencia);
-      console.log(preferenceId, "id de la preferencia en el estado lolcal");
+      setPreferenceId(data.preferenceId);
     } catch (error) {
       console.error("Error:", error);
     } finally {
       setIsLoading(false);
     }
   };
-  console.log(process.env, "process");
 
-  return (
-    <div className="flex flex-col flex-wrap content-center">
-      <h1 className="mb-4 text-xl text-white">Mi carrito</h1>
-      {loading ? (
-        <div>
+
+    return (
+      <div className="flex flex-col w-full m-20 p-20 justify-center ">
+         <div className="mb-4 flex flex-row gap-4 text-xl text-white">
+         <div>  <MdOutlineShoppingCart className="text-3xl"/> </div> <h3> Mi carrito </h3>
+          </div>
+        {loading ? (
           <ClipLoader
             color="blue"
             size={150}
             aria-label="Loading Spinner"
             data-testid="loader"
           />
-        </div>
-      ) : (
-        <div className="w-full grid md:grid-cols-4 md:gap-5">
-          <div className="overflow-x-auto md:col-span-3">
-            <table className="min-w-full bg-slate-100 rounded-lg">
-              <thead className="border-b text-gray-900">
-                <tr>
-                  <th className="p-5 text-left">Producto</th>
-                  <th className="p-5 text-right">Cantidad</th>
-                  <th className="p-5 text-right">Precio</th>
-                  <th className="p-5">Acción</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cartItems.map((item) => (
-                  <tr key={item.id} className="border-b text-gray-900">
-                    <td>
-                      <Link
-                        href={`/product/${item.id}`}
-                        className="flex items-center"
-                      >
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          width={50}
-                          height={50}
-                          className="p-1"
-                        />
-                        {item.name}
-                      </Link>
-                    </td>
-                    <td className="p-5 text-right">
-                      <div className="flex justify-between items-center">
-                        <button
-                          className="w-1/3 text-xs h-fit shadow-[0_0px_10px_0px_rgba(0,0,0,0.5)] rounded-sm"
-                          onClick={() =>
-                            addToCartHandler(
-                              item,
-                              item.cart_item_id,
-                              item.qty - 1
-                            )
-                          }
-                          disabled={item.qty === 1}
-                        >
-                          -
-                        </button>
-                        <span>{item.qty}</span>
-                        <button
-                          className="w-1/3 text-xs h-fit shadow-[0_0px_10px_0px_rgba(0,0,0,0.5)] rounded-sm"
-                          onClick={() =>
-                            addToCartHandler(
-                              item,
-                              item.cart_item_id,
-                              item.qty + 1
-                            )
-                          }
-                        >
-                          +
-                        </button>
-                      </div>
-                    </td>
-                    <td className="p-5 text-right">${item.price}</td>
-                    <td className="p-5 text-center">
-                      <button
-                        className="w-full bg-red-500 rounded-lg text-white"
-                        onClick={() =>
-                          removeFromCartHandler(item.id, item.cart_item_id)
-                        }
-                      >
-                        Quitar
-                      </button>
-                    </td>
+        ) : (
+          <div className="w-3/3 flex flex-col items-center md:grid md:grid-cols-4 md:gap-5">
+            <div className="overflow-x-auto md:col-span-3">
+              <table className="w-full bg-blue-600 rounded-lg ">
+                <thead className="border-b text-gray-900">
+                  <tr>
+                    <th className="p-5 text-left">Producto</th>
+                    <th className="p-5 text-right">Cantidad</th>
+                    <th className="p-5 text-right">Precio</th>
+                    <th className="p-5">Acción</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="w-full">
-            <div className="card p-2 bg-slate-100 rounded-lg text-gray-900">
-              <ul>
-                <li>
-                  <div className="pb-3 text-xl">
-                    <p>
-                      Cantidad de productos:{" "}
-                      {cartItems.reduce((a, c) => a + c.qty, 0)}
-                    </p>
-                    Total: ${itemsPrice}
-                  </div>
-                </li>
-
-                <li>
-                  <button
-                    className="w-full bg-blue-500 text-white rounded-lg"
-                    onClick={createPreference}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Creando Preferencia..." : "Pagar"}
-                  </button>
-                </li>
-                <li>
-                  {preferenceId && (
-                    <div id="wallet_container">
-                      <Wallet initialization={{ preferenceId }} />
-                    </div>
-                  )}
-                </li>
-              </ul>
+                </thead>
+                <tbody>
+                  {cartItems.map((item) => (
+                    <tr key={item.id} className="border-b text-white">
+                      <td>
+                        <Link
+                          href={`/product/${item.id}`}
+                          className="flex items-center text-white"
+                        >
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            width={50}
+                            height={50}
+                            className="p-1"
+                          />
+                          {item.name}
+                        </Link>
+                      </td>
+                      <td className="p-5 text-right text-white">
+                        <div className="flex justify-between items-center">
+                          <button
+                            className="w-1/3 text-xs h-fit shadow-[0_0px_10px_0px_rgba(0,0,0,0.5)] rounded-sm"
+                            onClick={() =>
+                              addToCartHandler(
+                                item,
+                                item.cart_item_id,
+                                item.qty - 1
+                              )
+                            }
+                            disabled={item.qty === 1}
+                          >
+                            -
+                          </button>
+                          <span>{item.qty}</span>
+                          <button
+                            className="w-1/3 text-xs h-fit shadow-[0_0px_10px_0px_rgba(0,0,0,0.5)] rounded-sm"
+                            onClick={() =>
+                              addToCartHandler(
+                                item,
+                                item.cart_item_id,
+                                item.qty + 1
+                              )
+                            }
+                          >
+                            +
+                          </button>
+                        </div>
+                      </td>
+                      <td className="p-5 text-right">${item.price}</td>
+                      <td className="p-5 text-center">
+                        <button
+                          className="w-full bg-violet-900 rounded-lg text-white"
+                          onClick={() =>
+                            removeFromCartHandler(item.id, item.cart_item_id)
+                          }
+                        >
+                          Quitar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+    
+              <div className="w-full">
+                <div className="card p-2 bg-slate-100 rounded-lg text-gray-900">
+                  <ul>
+                    <li>
+                      <div className="pb-3 text-xl bg-green-500 m-4 text-center text-white p-4">
+                        <p>
+                          Cantidad de productos:{" "}
+                          {cartItems.reduce((a, c) => a + c.qty, 0)}
+                        </p>
+                        Total: ${itemsPrice}
+                      </div>
+                    </li>
+                    <li className="flex justify-center ">
+                      <Button
+                        type="primary"
+                        onClick={() => setIsModalOpen(true)}
+                        disabled={isLoading}
+                        className="bg-blue-500 text-black text-lg text-center"
+                      >
+                        {isLoading ? "Generando pago..." : "Cargar datos de envío"}
+                      </Button>
+                    </li>
+                    <li>
+                      {preferenceId && (
+                        <Wallet
+                          initialization={{ preferenceId }}
+                        
+                        />
+                      )}
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+    
+      <Modal
+        title="Datos de Envío"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="Confirmar"
+        cancelText="Cancelar"
+        okButtonProps={{
+          style: {
+            backgroundColor: "#006eff", // Cambia el color de fondo
+            borderColor: "#000000",      // Cambia el color del borde
+            color: "#000000",               // Cambia el color del texto
+            fontWeight: "bold",          // Hacer el texto más grueso
+          },
+        }}
+        cancelButtonProps={{
+          style: {
+            color: "#000002",            // Cambia el color del texto del botón de cancelar
+          },
+        }}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            name="identification"
+            label="Identificación"
+            rules={[
+              {
+                required: true,
+                message: "Ingresá tu DNI",
+              },
+            ]}
+          >
+            <Input placeholder="DNI" />
+          </Form.Item>
+
+          <Form.Item
+            name="phone_area_code"
+            label="Código de Área"
+            rules={[
+              {
+                required: true,
+                message: "Ingresá el código de área",
+              },
+            ]}
+          >
+            <Input placeholder="Código de Área" />
+          </Form.Item>
+          <Form.Item
+            name="phone_number"
+            label="Número de Teléfono"
+            rules={[
+              {
+                required: true,
+                message: "Ingresá tu número de teléfono",
+              },
+            ]}
+          >
+            <Input placeholder="Número de Teléfono" />
+          </Form.Item>
+
+          <Form.Item
+            name="address"
+            label="Dirección"
+            rules={[
+              { required: true, message: "Ingresá la dirección de envío." },
+            ]}
+          >
+            <Input placeholder="Dirección" />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 }

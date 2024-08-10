@@ -6,7 +6,6 @@ export async function GET(req: NextRequest) {
     const email = searchParams.get('email')
     
     try {
-
       const {rows: users} = await sql`SELECT * FROM users WHERE email = ${email}`
       const user_id = users[0].id
 
@@ -20,7 +19,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: 'Error fetching cart items' }, { status: 500 });
     }}
   
-    export async function POST(req: Request) {
+export async function POST(req: Request) {
       const { productId, model, image, price, qty, email } = await req.json();
       
       try {
@@ -44,8 +43,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-
-    export async function DELETE(req: Request) {
+export async function DELETE(req: Request) {
       const { cart_item_id } = await req.json();
       
       try {  
@@ -61,7 +59,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    export async function PUT(req: Request) {
+export async function PUT(req: Request) {
       const { cart_item_id, qty } = await req.json();
     
       try {

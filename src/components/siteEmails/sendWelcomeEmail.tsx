@@ -5,7 +5,7 @@ export default async function sendEMail(userName: string, email: string) {
   const products = typeof window !== 'undefined' ? `${window.location.origin}/product` : '';
     const emailmessage = compileWelcomeEmail(userName, myaccount, products)
     const emailData = {
-            subject: `Welcome ${userName} to CodeWave Central Shop!`,
+            subject: `Bienvenido ${userName} a Azul Lago Tienda!`,
             emailTo: email,
             message: emailmessage,
           }

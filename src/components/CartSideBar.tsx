@@ -84,19 +84,19 @@ export default function CartSideBar(){
       }
       >
             {loading ? 
-                <div className="py-5 px-2 text-gray-300">Loading...</div> 
+                <div className="py-5 px-2 text-gray-300">Cargando...</div> 
                 : cartItems.length === 0 ?
-                <div className="py-5 px-2 text-gray-300">Cart is Empty</div>
+                <div className="py-5 px-2 text-gray-300">El carrito esta vacío</div>
                 :
                 <>
-                <div className="p-2 flex flex-col items-center border-b border-b-gray-600 text-gray-200">
+                <div className="p-4 bg-black flex flex-col items-center border-b border-b-gray-600 text-gray-200">
                     <div>Subtotal</div>
-                    <div className="font-bold text-white-700">${itemsPrice}</div>
+                    <div className="font-bold p-2 text-white-700">${itemsPrice}</div>
                     <div>
                         <Link
                             href='/cart'
-                            className="w-full text-center p-1 bg-blue-500 text-white rounded-md">
-                        Go to Cart
+                            className="w-full text-center p-2 m-1  bg-blue-500 text-white rounded-md">
+                        Carrito
                         </Link>
                     </div>
                     <div>
