@@ -8,11 +8,7 @@ import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import { useEffect, useState } from "react";
-<<<<<<< HEAD
 import { Modal, Form, Input, Button } from "antd";
-=======
-import axios from "axios"
->>>>>>> 33eade32a5ab78b7af9fa340370ade2c6dad84a7
 import dotenv from "dotenv";
 import { useUser } from "@clerk/clerk-react";
 import { MdOutlineShoppingCart } from "react-icons/md";
