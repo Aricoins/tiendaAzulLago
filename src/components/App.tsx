@@ -52,7 +52,7 @@ export default function App({children}: {children: React.ReactNode}) {
     className="w-full"
     alt="lagoIA"
   />
-  <div  data-aos="zoom-in" className="absolute top-20 left-20 text-white bg-black  zIndex-8 bg-opacity-25 p-8 text-sm lg:text-7xl z-10 text-center">
+  <div  data-aos="zoom-in" className="absolute top-20 left-20 text-white bg-black  zIndex-5 bg-opacity-25 p-8 text-sm lg:text-7xl z-10 text-center">
     Bienvenidos a Tienda Azul Lago  
     <p data-aos="zoom-in" className="text-2xl my-8 text-violet-900">Cosmética, medicinal y aromática natural </p>
   </div>

@@ -79,7 +79,7 @@ export default function CartSideBar(){
         loading
           ? ''
           : cartItems.length > 0 && (pathname === '/' || pathname === '/payment' || pathname === '/shipping' || pathname.indexOf('/product' ) >= 0)
-          ? 'fixed top-32 right-0 w-1/8 zIndex-9000 bg-white h-8/8 shadow-lg text-blue-800 border-l border-l-gray-700 overflow-scroll'
+          ? 'fixed top-32 right-0 w-2/8 zIndex-9000 bg-white h-8/8 shadow-lg text-blue-800 border-l border-l-gray-700 overflow-scroll'
           : 'hidden'
       }
       >
@@ -89,7 +89,7 @@ export default function CartSideBar(){
                 <div className="py-5 mb-20 px-2 text-blue-500">El carrito esta vacío</div>
                 :
                 <>
-                <div className=" zIndex-1000 p-4 mb-10 flex flex-col items-center border-b border-b-gray-600 text-blue-500">
+                <div className=" zIndex-1000 p-4 mb-10 flex flex-col items-center border-b border-b-gray-600 text-blue-500 h-fit">
                     <div>Subtotal</div>
                     <div className="font-bold p-2 text-white-700">${itemsPrice}</div>
                     <div>
@@ -113,13 +113,13 @@ export default function CartSideBar(){
                                     </Link>
                                     <div className="w-full flex items-center justify-evenly">
                                       <button
-                                        className="w-1/5 text-sm h-fit border border-white rounded-md"
+                                        className="w-1/5 text-sm text-blue-500 h-fit border border-white rounded-md"
                                         onClick={() => addToCartHandler(item, item.cart_item_id, item.qty - 1)}
                                         disabled={item.qty === 1}
                                       >
                                         -
                                       </button>
-                                      <span className="text-gray-300">{item.qty}</span>
+                                      <span className="text-blue-500">{item.qty}</span>
                                       <button
                                       className="w-1/5 text-sm h-fit border border-white rounded-md"
                                         onClick={() => addToCartHandler(item, item.cart_item_id, item.qty + 1)}
@@ -130,7 +130,7 @@ export default function CartSideBar(){
                                     </div>
                                     <button className="default-button mt-2 bg-red-500 text-white rounded-md w-full"
                                     onClick={()=> removeFromCartHandler(item.id ,item.cart_item_id)}>
-                                        Delete
+                                        Quitar
                                     </button>
                             </div>
                         ))}
