@@ -132,7 +132,7 @@ export default function Navbar() {
 
 
     return (
-      <header>
+      <header className="fixed top-0 left-0 w-full z-50">
       <nav className=" items-center justify-between p-4 lg:px-6 text-black bg-white ">
         <div className="w-full flex justify-around text-black">
           <div className="flex ">

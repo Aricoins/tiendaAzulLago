@@ -46,6 +46,7 @@ export default function App({children}: {children: React.ReactNode}) {
                         : ''
                 }`}
             >
+
                 {!['/signup', '/signin', '/banned', '/verified'].includes(pathnames) && (
                     <Navbar  />
                 )}
@@ -116,6 +117,51 @@ export default function App({children}: {children: React.ReactNode}) {
                 //     transform: cartItems.length > 0 ? "translateX(0)" : "translateX(100%)",
                 // }}
             />
+
+               {['/signup', '/signin', '/banned', '/verified'].includes(pathnames) ? null : (
+  <Navbar  />
+)}
+              
+<div className="relative w-full mt-32 ">
+  <Image 
+    src={imagen}
+    width={1400}
+    height={1400}
+    className="w-full"
+    alt="lagoIA"
+  />
+  <div  data-aos="zoom-in" className="absolute top-20 left-20 text-white bg-black  zIndex-5 bg-opacity-25 p-8 text-sm lg:text-7xl z-10 text-center">
+    Bienvenidos a Tienda Azul Lago  
+    <p data-aos="zoom-in" className="text-2xl my-8 text-violet-900">Cosmética, medicinal y aromática natural </p>
+  </div>
+</div>
+    
+<Suspense
+  fallback={
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        marginTop: "10%"
+      }}
+    >
+      <ClipLoader
+        color="blue"
+        size={150}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+      />
+    </div>
+  }
+>
+  <main className="p-4 pt-40 mt-20">{children}</main>
+</Suspense>
+
+            </div>
+            <CartSideBar />
+
         </div>
     );
 }
