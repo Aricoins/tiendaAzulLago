@@ -11,7 +11,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import Aos from 'aos';
 import 'aos/dist/aos.css';
 import Image from "next/image";
-import  Foot  from "@/components/Foot";
+import Foot from "@/components/Foot";
 
 export default function App({ children }: { children: React.ReactNode }) {
     const dispatch = useDispatch();
@@ -43,25 +43,36 @@ export default function App({ children }: { children: React.ReactNode }) {
                     <video src='/img/video.mp4' autoPlay loop muted className="absolute inset-0 w-full h-full object-cover" style={{ maskImage: "linear-gradient(to bottom, #d6c2c2 80%, transparent 100%)"}} />
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-0">
                         <h1
-                            className="text-6xl lg:text-9xl text-white font-Inter text-center tracking-wide transition-transform duration-500 transform hover:scale-110 bg-opacity-60 p-2 rounded-md"
+                            className="text-6xl lg:text-9xl text-white font-Inter text-center tracking-wide transition-transform duration-500 ease-in-out transform hover:scale-110 bg-opacity-60 p-2 rounded-md"
+                            style={{ textShadow: '3px 3px 6px rgba(0, 0, 0, 0.9)' }}
                             onMouseEnter={() => handleHover('Azul Lago')}
                             onMouseLeave={handleHoverEnd}
                             data-aos="fade-left"
                         >
-                            {hovered === 'Azul Lago' ? 'Cooperativa' : 'Azul Lago'}
+                            Azul Lago
                         </h1>
                         <p
-                            className="text-xl lg:text-3xl my-4 text-center rounded-3xl shadow-lg p-5 text-blue-500 bg-black bg-opacity-60"
-                            onMouseEnter={() => handleHover('Cooperativa')}
-                            onMouseLeave={handleHoverEnd}
-                            data-aos="fade-in-up"
-                        >
-                            {hovered === 'Cooperativa' ? '¡Bienvenidos a nuestra tienda online!' : 'Cooperativa'}
-                        </p>
-                        <div className="flex flex-row justify-center items-center mt-2 gap-8"
-                             data-aos="fade-up">
-                            Fitomedicina y cosmética natural
-                        </div>
+    className="text-xl lg:text-3xl my-4 text-center rounded-3xl shadow-lg p-5 bg-black bg-opacity-60 transition-all duration-700 ease-out hover:text-yellow-400 cursor-pointer"
+    onMouseEnter={() => handleHover('Cooperativa')}
+    onMouseLeave={handleHoverEnd}
+    data-aos="fade-in-up"
+    onClick={(e) => {
+        e.preventDefault(); 
+        window.location.href = "/"; // Redirigir a la página de inicio
+    }}
+>
+    {hovered === 'Cooperativa' ? '¡Bienvenidos a nuestra tienda online!' : 'Cooperativa'}
+</p>
+
+             
+<div 
+    className="flex flex-row justify-center items-center mt-20 gap-8 text-black transition-transform duration-700 ease-out hover:scale-105"
+    data-aos="fade-up"
+>
+    <p className="hover:text-gray-800 hover:font-bold transition-colors duration-500">
+        Productos de fitomedicina y cosmética natural elaborados en Lago Puelo, Argentina
+    </p>
+</div>
                     </div>
                 </div>
 
