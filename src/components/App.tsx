@@ -44,11 +44,11 @@ export default function App({ children }: { children: React.ReactNode }) {
                         <h1
                             className="text-6xl lg:text-8xl mt-16 text-white font-Inter tracking-wide transition-transform duration-500 transform hover:scale-110 justify-start b 
                             shadow-lg bg-opacity-60 p-2 rounded-md"
-                            onMouseEnter={() => handleHover('Azul Lago')}
+                            onMouseEnter={() => handleHover(' Azul Lago ')}
                             onMouseLeave={handleHoverEnd}
                             data-aos="fade-left"
                         >
-                            {hovered === 'Azul Lago' ? 'Cooperativa' : 'Azul Lago'}
+                            {hovered === ' Azul Lago ' ? 'Cooperativa' : ' Azul Lago '}
                         </h1>
                         <p
                             className="text-xl lg:text-3xl my-4 text-center bg-opacity-40 rounded-3xl shadow-lg p-5 text-blue-500 bg-black bg-opacity-60"
