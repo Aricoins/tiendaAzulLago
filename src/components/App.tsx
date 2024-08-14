@@ -42,31 +42,40 @@ export default function App({ children }: { children: React.ReactNode }) {
                     <video src='/img/video.mp4' autoPlay loop muted className="absolute inset-0 w-full h-full object-cover" />
                     <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-8">
                         <h1
-                            className="text-5xl font-serif tracking-wide transition-transform duration-500 transform hover:scale-110"
+                            className="text-8xl 
+                            mt-16 text-blue-800 font-Inter tracking-wide transition-transform duration-500 transform hover:scale-110 justify-start border-white"
                             onMouseEnter={() => handleHover('Azul Lago')}
                             onMouseLeave={handleHoverEnd}
                             data-aos="zoom-in"
                         >
-                            {hovered === 'Azul Lago' ? 'Bienvenido a' : 'Azul Lago'}
+                            {hovered === 'Azul Lago' ? 'Cooperativa' : 'Azul Lago'}
                         </h1>
                         <p
-                            className="text-3xl my-4 text-violet-200 transition-transform duration-500 transform hover:translate-x-2"
+                            className="text-3xl my-4 
+                            text-center
+                            bg-white  
+                            bg-opacity-40  rounded-3xl
+                            shadow-lg
+                            p-5
+                            text-white
+                         "
                             onMouseEnter={() => handleHover('Cooperativa')}
                             onMouseLeave={handleHoverEnd}
                             data-aos="fade-in-up"
                         >
-                            {hovered === 'Cooperativa' ? 'Bienvenido a la' : 'Cooperativa de productores de Lago Puelo'}
+                            {hovered === 'Productos orgánicos' ? 'Tienda' : 'Productos orgánicos'}
                         </p>
-                        <div className="flex flex-col items-center space-y-4 mt-6">
-                            {['Tienda', 'Aceites esenciales', 'Hidrolatos', 'Fitocosmética'].map((item) => (
+                        <div className="flex flex-col items-center space-y-2 mt-2">
+                            {[ 'Cosmética', 'Medicinal', 'Aromática'].map((item) => (
                                 <p
                                     key={item}
-                                    className="text-2xl text-violet-300 transition-transform duration-500 transform hover:scale-105 hover:text-violet-100"
+                                    className="text-2xl p-2 text-blue-500 bg-white bg-opacity-90 transition-transform duration-500 transform hover:scale-105 hover:text-violet-900 border-blue-800
+                                    rounded-xl"
                                     onMouseEnter={() => handleHover(item)}
                                     onMouseLeave={handleHoverEnd}
                                     data-aos="fade-in-up"
                                 >
-                                    {hovered === item ? `Explora nuestros ${item.toLowerCase()}` : item}
+                                    {hovered === item ? `${item}` : item}
                                 </p>
                             ))}
                         </div>

@@ -31,7 +31,7 @@ interface CustomPage {
 }
 
 export default function Navbar() {
-    const menu = ["Todos", "Cosméticas", "Medicinales", "Aromáticas", "Ofertas"]
+    const menu = ["Todos", "Cosmética", "Medicinal", "Aromática", "Ofertas"]
     const searchParams = useSearchParams()
     const params = searchParams.get('category')
     const id = useUser().user?.id
@@ -133,12 +133,12 @@ export default function Navbar() {
 
     return (
       <header className="fixed top-0 left-0 w-full z-50">
-      <nav className=" items-center justify-between p-4 lg:px-6 text-black bg-white ">
+      <nav className=" items-center justify-between p-0 lg:px-6 text-black bg-white ">
         <div className="w-full flex justify-around text-black">
           <div className="flex ">
             <Link href="/" className="mr-2 flex items-center justify-center text-black">
             <Image src={logo} alt="azul lago logo" 
-            className="w-24"
+            className="w-20 mr-12"
             width={100}
             height={100}
              />
