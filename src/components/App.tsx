@@ -35,42 +35,34 @@ export default function App({ children }: { children: React.ReactNode }) {
 
     return (
         <>
-            <div className={`relative ${loading ? '' : isCartVisiblePath ? 'mr-32' : ''}`}>
+            <div className={`relative ${loading ? '' : isCartVisiblePath ? 'lg:mr-32' : ''}`}>
                 {!isExcludedPath && <Navbar />}
 
-                <div className="relative w-full mt-32 h-screen overflow-hidden">
+                <div className="relative w-full mb-10 mt-20 h-screen overflow-hidden">
                     <video src='/img/video.mp4' autoPlay loop muted className="absolute inset-0 w-full h-full object-cover" />
-                    <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-8">
+                    <div className="absolute flex flex-col justify-right items-rigth text-white p-0">
                         <h1
-                            className="text-8xl 
-                            mt-16 text-blue-800 font-Inter tracking-wide transition-transform duration-500 transform hover:scale-110 justify-start border-white"
+                            className="text-6xl lg:text-8xl mt-16 text-white font-Inter tracking-wide transition-transform duration-500 transform hover:scale-110 justify-start b 
+                            shadow-lg bg-opacity-60 p-2 rounded-md"
                             onMouseEnter={() => handleHover('Azul Lago')}
                             onMouseLeave={handleHoverEnd}
-                            data-aos="zoom-in"
+                            data-aos="fade-left"
                         >
                             {hovered === 'Azul Lago' ? 'Cooperativa' : 'Azul Lago'}
                         </h1>
                         <p
-                            className="text-3xl my-4 
-                            text-center
-                            bg-white  
-                            bg-opacity-40  rounded-3xl
-                            shadow-lg
-                            p-5
-                            text-white
-                         "
-                            onMouseEnter={() => handleHover('Cooperativa')}
+                            className="text-xl lg:text-3xl my-4 text-center bg-opacity-40 rounded-3xl shadow-lg p-5 text-blue-500 bg-black bg-opacity-60"
+                            onMouseEnter={() => handleHover('Productos orgánicos')}
                             onMouseLeave={handleHoverEnd}
                             data-aos="fade-in-up"
                         >
                             {hovered === 'Productos orgánicos' ? 'Tienda' : 'Productos orgánicos'}
                         </p>
                         <div className="flex flex-col items-center space-y-2 mt-2">
-                            {[ 'Cosmética', 'Medicinal', 'Aromática'].map((item) => (
+                            {['Cosmética', 'Medicinal', 'Aromática'].map((item) => (
                                 <p
                                     key={item}
-                                    className="text-2xl p-2 text-blue-500 bg-white bg-opacity-90 transition-transform duration-500 transform hover:scale-105 hover:text-violet-900 border-blue-800
-                                    rounded-xl"
+                                    className="text-lg lg:text-2xl p-2 text-blue-500 bg-white bg-opacity-90 transition-transform duration-500 transform hover:scale-105 hover:text-violet-900 border-blue-800 rounded-xl"
                                     onMouseEnter={() => handleHover(item)}
                                     onMouseLeave={handleHoverEnd}
                                     data-aos="fade-in-up"
@@ -84,12 +76,12 @@ export default function App({ children }: { children: React.ReactNode }) {
 
                 <Suspense
                     fallback={
-                        <div className="flex justify-center items-center h-screen mt-10">
+                        <div className="flex justify-center items-center h-screen mt-0">
                             <ClipLoader color="blue" size={150} aria-label="Loading Spinner" data-testid="loader" />
                         </div>
                     }
                 >
-                    <main className="p-4 pt-40 mt-20 transition-all duration-300">{children}</main>
+                    <main className="p-12 pt-2 mt-20 transition-all duration-300">{children}</main>
                 </Suspense>
             </div>
 
