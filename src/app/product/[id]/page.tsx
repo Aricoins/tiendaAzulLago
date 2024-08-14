@@ -63,8 +63,11 @@ export default function Detail({ params }: { params: { id: string } }) {
   }
 
   return (
-    <main className="mx-auto max-w-screen-2xl px-4">
-      <section className="flex flex-col rounded-lg border p-8 border-neutral-800 bg-black md:p-12 lg:flex-row lg:gap-8">
+    <main className="mx-auto px-4">
+      <section className="flex flex-col 
+      rounded-lg border 
+      p-2
+       border-neutral-800 bg-black md:p-12 lg:flex-row ">
         <div className="w-full p-0  mx-0">
           <div className="h-3/4 w-3/4 basis-full lg:basis-2/4">
             <div className="h-96">
@@ -77,9 +80,9 @@ export default function Detail({ params }: { params: { id: string } }) {
                 <Image
                   src={currentImage ? currentImage : productDetail.image}
                   alt={productDetail.model}
-                  width={200}
-                  height={200}
-                  className="rounded w-full"
+                  width={1600}
+                  height={1600}
+                  className="rounded w-full lg:w-3/4"
                 />
               )}
             </div>
@@ -105,8 +108,8 @@ export default function Detail({ params }: { params: { id: string } }) {
             </div>
           </div>
         </div>
-        <div className="basis-full  lg:basis-2/6 text-white">
-          <div className="mb-6 flex flex-col text-white">
+        <div className="w-4/6  lg:basis-5/6 text-white">
+          <div className="mb-2 flex flex-col text-white">
             <h1 className="mb-2 text-5xl font-medium">{productDetail.model}</h1>
             <h2>{productDetail.category}</h2>
             <AverageRatingStars productId={productDetail.id} />
