@@ -73,20 +73,6 @@ export default function App({ children }: { children: React.ReactNode }) {
                     </div>
                 </div>
 
-                <div className="relative w-full mt-32">
-                    <Image
-                        src='/img/lago.jpg'
-                        width={1400}
-                        height={1400}
-                        className="w-full"
-                        alt="lagoIA"
-                    />
-                    <div data-aos="zoom-in" className="absolute top-20 left-20 text-white bg-black bg-opacity-25 p-8 text-sm lg:text-7xl text-center">
-                        Bienvenidos a Tienda Azul Lago
-                        <p data-aos="zoom-in" className="text-2xl my-8 text-violet-900">Cosmética, medicinal y aromática natural</p>
-                    </div>
-                </div>
-
                 <Suspense
                     fallback={
                         <div className="flex justify-center items-center h-screen mt-10">
