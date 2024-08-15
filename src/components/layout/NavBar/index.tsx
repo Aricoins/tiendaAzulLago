@@ -169,7 +169,7 @@ export default function Navbar() {
               Administrar Tienda
             </Link> </div> </>) : null}
           
-            <div style={{ color: "white", margin: "auto"}}>
+            <div className="text-blue-800 m-auto">
               <SignedOut>
             <SignInButton />
           </SignedOut>
