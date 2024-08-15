@@ -7,7 +7,6 @@ import { ClerkProvider, RedirectToSignIn, SignedOut } from '@clerk/nextjs'
 import { StoreProvider } from '@/redux/storeProvider'
 import CartSideBar from '@/components/CartSideBar'
 import App from '@/components/App'
-import { esES } from "@clerk/localizations";
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -23,13 +22,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider 
-    publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-    afterSignUpUrl='/'
-    localization={esES}
-  
-
-    >
+    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
     <html lang="en">
       <body className={inter.className}>
         <StoreProvider>
