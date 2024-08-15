@@ -162,8 +162,8 @@ const handleAddSpec = () => {
         resetForm();
 
         Swal.fire({
-          title: 'Add New Product',
-          html: `Product successfully created!`,
+          title: 'Agregar Producto',
+          html: `Producto creado!`,
           icon: 'success',
           confirmButtonText: 'Ok',
         }).then((result) => {
@@ -178,7 +178,7 @@ const handleAddSpec = () => {
         console.error(error);
         Swal.fire({
           title: "Error!",
-          text: "Product not added",
+          text: "No se agregó el producto",
           icon: "error",
           confirmButtonText: "OK",
         });
@@ -204,15 +204,17 @@ console.log(form.specs)
     <div className="flex flex-col sm:flex-row justify-center bg-gray-500 w-full mb-32">
       
       <div className="m-6  mx-4 w-auto sm:mx-10 sm:w-2/3 p-4 bg-black rounded-md shadow-md items-center gap-5 mb-50 text-gray-300 ">
-        <h1 data-aos="flip-right" className="text-2xl text-gray-300 p-20 text-center"> Add New Product</h1>
+        <h1 data-aos="flip-right" 
+        className="text-2xl text-gray-300 p-20 text-center"> 
+        Agregar Producto</h1>
         <form onSubmit={handleFormSubmit} className="grid justify-items-center content-evenly gap-y-20">
          <div data-aos="flip-right" className='flex flex-col items-center gap-2 w-full'>
-           <label htmlFor="model">Name model:</label> 
+           <label htmlFor="model">Nombre del producto:</label> 
            <input
               name="model"
               type="text"
               id="model"
-              placeholder='Enter a Name Model...'
+              placeholder='Ej. "Aceite de Rosa Mosqueta...'
               value={form.model}
               onChange={handleChange}
               className='m-1 text-2xl text-black p-2 w-full  border-gray-500 rounded'
@@ -224,7 +226,7 @@ console.log(form.specs)
               uploadPreset="zwtk1tj5"
               onUpload={handleImageUpload}
             >
-              Upload Image
+              Subir imagen de portada
             </CldUploadButton>
           </div>
           {form.image && (
@@ -240,7 +242,7 @@ console.log(form.specs)
             </div>
           )}
           <div data-aos="flip-right" className='flex flex-col items-center w-full'>
-            <label htmlFor="category">Category:</label>
+            <label htmlFor="category">Categoria:</label>
             <select
               name="category"
               id="category"
@@ -257,12 +259,12 @@ console.log(form.specs)
               </select>
           </div>
           <div data-aos="flip-right" className='flex flex-col items-center gap-2 w-full'>
-            <label htmlFor="price">Price:</label>
+            <label htmlFor="price">Precio en AR$:</label>
             <input
               name="price"
               type="text"
               id="price"
-              placeholder='Type a number for the Price...'
+              placeholder='Un valor numérico para el precio...'
               value={form.price}
               onChange={handleChange}
               className='m-1 text-2xl text-black p-2 w-full  border-gray-500 rounded'
@@ -270,28 +272,28 @@ console.log(form.specs)
           </div>
           
  <div data-aos="flip-right" className='flex flex-col items-center gap-2 w-full'>
-  <label htmlFor="key">Spec:</label>
+  <label htmlFor="key">Especificaciones:</label>
   <input
     onChange={handleKeyChange}
     name="key"
     id="key"
-    placeholder='Enter a specificification'
+    placeholder='Ej: "Presentación"'
     value={key}
     className='m-1 text-2xl text-black p-2 w-full border-blue-500 rounded'
   />
 
-  <label htmlFor="value">Desciption:</label>
+  <label htmlFor="value">Detalle</label>
   <input
     onChange={handleValueChange}
     name="value"
     id="value"
-    placeholder='Enter description'
+    placeholder='Ej. "60 ml roll-on etc."'
     value={value}
     className='m-1 text-2xl text-black p-2 w-full border-blue-500 rounded'
   />
 
 <button  type="button" onClick={handleAddSpec} className='m-1 text-2xl text-gray-800 p-2 w-full border-blue-100 bg-blue-300 rounded'>
-    Add Spec
+    Agregar Especificación
   </button>
 </div>
 
@@ -326,7 +328,7 @@ console.log(form.specs)
               disabled={ Object.values(errors).some((error) => error !== '')}
               className='border-gray-500 w-full rounded '
             >
-              {!form.model || Object.values(errors).some((error) => error !== '') ? 'Cannot Submit - Fix Errors' : 'Add New Product'}
+            Crear
             </button>
           </div>
         </form>
