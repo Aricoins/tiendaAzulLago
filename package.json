@@ -10,6 +10,7 @@
     "seed": "node -r dotenv/config ./scripts/seed.js"
   },
   "dependencies": {
+    "@clerk/localizations": "^2.5.8",
     "@clerk/nextjs": "^4.28.1",
     "@material-tailwind/react": "^2.1.8",
     "@mercadopago/sdk-react": "^0.0.19",

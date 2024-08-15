@@ -10,10 +10,10 @@ import { RootState } from "@/redux/store";
 import ClipLoader from "react-spinners/ClipLoader";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import Image from "next/image";
 import Foot from "@/components/Foot";
 import { FaPlaneDeparture } from "react-icons/fa";
 import { PiPlantBold } from "react-icons/pi";
+
 export default function App({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch();
   const pathname = usePathname();
@@ -82,8 +82,8 @@ export default function App({ children }: { children: React.ReactNode }) {
               onClick={(e) => {
                 e.preventDefault();
                 window.scrollTo({
-                  top: 700, // Desplaza 500 píxeles hacia abajo desde la parte superior de la página
-                  behavior: "smooth", // Desplazamiento suave
+                  top: 700,
+                  behavior: "smooth",
                 });
               }}
             >
@@ -92,43 +92,56 @@ export default function App({ children }: { children: React.ReactNode }) {
                 : "Cooperativa"}
             </p>
 
-            <div className="flex flex-row justify-right items-center mt-20 gap-8 w-full text-black  transition-transform duration-700 ease-out">
+            <div className="flex flex-row justify-right items-center mt-20 gap-8 w-full text-black transition-transform duration-700 ease-out">
               <div
-                className=" text-center align-right p-2 bg-white bg-opacity-60 flex  flex-row w-full transition-colors duration-500 hover:text-blue-800"
+                className="text-center align-right p-2 bg-white bg-opacity-60 flex flex-row w-full transition-colors duration-500 hover:text-blue-800"
                 data-aos="fade-right"
               >
-              <PiPlantBold  className="text-2xl text-green-600 mx-2" /> 
-              <p className="ml-52">  Productos elaborados en Lago Puelo, Argentina
-              </p>              </div>
+                <PiPlantBold className="text-2xl text-green-600 mx-2" />
+                <p className="ml-52">
+                  Productos elaborados en Lago Puelo, Argentina
+                </p>
+              </div>
               <br />
 
               <div
-                className=" flex flex-row  text-center align-right p-2 bg-white bg-opacity-60 w-full transition-colors duration-500 "
+                className="flex flex-row text-center align-right p-2 bg-white bg-opacity-60 w-full transition-colors duration-500"
                 data-aos="fade-left"
               >
-               <p className="mr-52"> Envios a todo el Pais  </p>
-                <FaPlaneDeparture className="justify-items-end text-2xl text-blue-400"/>
+                <p className="mr-52"> Envios a todo el País </p>
+                <FaPlaneDeparture className="justify-items-end text-2xl text-blue-400" />
               </div>
             </div>
           </div>
         </div>
 
-        <Suspense
-          fallback={
-            <div className="flex justify-center items-center h-screen mt-0">
-              <ClipLoader
-                color="blue"
-                size={150}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />
-            </div>
-          }
-        >
-          <main className="p-12 pt-2 mt-20 transition-all duration-300">
-            {children}
-          </main>
-        </Suspense>
+        {loading ? (
+          <div className="flex justify-center items-center h-screen mt-0">
+            <ClipLoader
+              color="blue"
+              size={150}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          </div>
+        ) : (
+          <Suspense
+            fallback={
+              <div className="flex justify-center items-center h-screen mt-0">
+                <ClipLoader
+                  color="blue"
+                  size={150}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              </div>
+            }
+          >
+            <main className="p-12 pt-2 mt-20 transition-all duration-300">
+              {children}
+            </main>
+          </Suspense>
+        )}
       </div>
 
       <CartSideBar />
