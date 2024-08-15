@@ -6,7 +6,7 @@ import Link from "next/link";
 import SearchBar from "./SearchBar";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { SignedIn, SignInButton, SignedOut,  UserButton, useSession, useUser } from "@clerk/nextjs";
+import { SignedIn, SignUpButton, SignedOut,  UserButton, useSession, useUser } from "@clerk/nextjs";
 import Cart from "@/components/Cart";
 import { useDispatch } from "react-redux";
 import { addClientSecret, addPaymentIntent, addToCart, addUserID, hideLoading } from "@/redux/slices/cartSlice";
@@ -170,8 +170,8 @@ export default function Navbar() {
             </Link> </div> </>) : null}
           
             <div className="text-blue-800 m-auto">
-              <SignedOut>
-            <SignInButton />
+           <SignedOut>
+            <SignUpButton />
           </SignedOut>
           <SignedIn>
             <UserButton />
