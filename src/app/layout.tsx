@@ -27,18 +27,8 @@ export default function RootLayout({
     publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
     afterSignUpUrl='/'
     localization={esES}
-    appearance={{
-      variables: {
-        fontFamily: "Inter",
-            colorPrimary: "#007DFA",
-      },
-      layout: {
-        termsPageUrl: "/auth/terms",
-        socialButtonsPlacement: "bottom",
-        socialButtonsVariant: "blockButton",
-      },
+  
 
-    }}
     >
     <html lang="en">
       <body className={inter.className}>
