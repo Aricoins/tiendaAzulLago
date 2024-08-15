@@ -3,7 +3,7 @@ import { Input, Button } from "antd";
 
 const Foot = () => {
     return (
-        <footer className="bg-black text-white py-10">
+        <footer className="bg-black text-white p-20">
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
                 <div className="flex flex-col items-center md:items-start">
                     <h4 className=" mb-4 text-sky-500">Dónde estamos</h4>
