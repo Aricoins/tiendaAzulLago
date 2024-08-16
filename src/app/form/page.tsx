@@ -204,7 +204,7 @@ const handleAddSpec = () => {
     AOS.init();
   }, []);
 
-const auth = ""
+const auth = process.env.ADMIN_ID
 
 
 

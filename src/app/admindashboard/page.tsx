@@ -89,7 +89,7 @@ useEffect(() => {
   Aos.init({ duration: 1000 });
 })
   console.log(user, "user")
-const auth = ""
+  const auth = process.env.ADMIN_ID
   return (
 
     !loading ? <h1 data-aos="fade-out">Cargando...</h1> : 
