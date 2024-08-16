@@ -33,6 +33,7 @@ export default function App({ children }: { children: React.ReactNode }) {
 
     const isExcludedPath = ['/signup', '/signin', '/banned', '/verified'].includes(pathname);
     const isCartVisiblePath = cartItems.length > 0 && ['/', '/payment', '/shipping'].includes(pathname) || pathname.includes('/product');
+    const isHomePage = pathname === '/'; // Check if the current page is the home page
 
     return (
         <>
@@ -52,27 +53,26 @@ export default function App({ children }: { children: React.ReactNode }) {
                             Azul Lago
                         </h1>
                         <p
-    className="text-xl lg:text-3xl my-4 text-center rounded-3xl shadow-lg p-5 bg-black bg-opacity-60 transition-all duration-700 ease-out hover:text-yellow-400 cursor-pointer"
-    onMouseEnter={() => handleHover('Cooperativa')}
-    onMouseLeave={handleHoverEnd}
-    data-aos="fade-in-up"
-    onClick={(e) => {
-        e.preventDefault(); 
-        window.location.href = "/"; // Redirigir a la página de inicio
-    }}
->
-    {hovered === 'Tienda' ? '¡Bienvenidos a nuestra tienda online!' : 'Tienda'}
-</p>
+                            className="text-xl lg:text-3xl my-4 text-center rounded-3xl shadow-lg p-5 bg-black bg-opacity-60 transition-all duration-700 ease-out hover:text-yellow-400 cursor-pointer"
+                            onMouseEnter={() => handleHover('Tienda online')}
+                            onMouseLeave={handleHoverEnd}
+                            data-aos="fade-in-up"
+                            onClick={(e) => {
+                                e.preventDefault(); 
+                                window.location.href = "/"; // Redirigir a la página de inicio
+                            }}
+                        >
+                            {hovered === 'Tienda online' ? 'Productos orgánicos' : 'Tienda online'}
+                        </p>
 
-             
-<div 
-    className="flex flex-row justify-center items-center mt-20 gap-8 bg-white bg-opacity-60 w-full text-black transition-transform duration-700 ease-out hover:scale-105"
-    data-aos="fade-up"
->
-    <p className="hover:text-gray-800 hover:font-bold transition-colors duration-500">
-        Productos elaborados en Lago Puelo, Argentina | Envios a todo el Pais.
-    </p>
-</div>
+                        <div 
+                            className="flex flex-row justify-center items-center mt-20 gap-8 bg-white bg-opacity-60 w-full text-black transition-transform duration-700 ease-out hover:scale-105"
+                            data-aos="fade-up"
+                        >
+                            <p className="hover:text-gray-800 hover:font-bold transition-colors duration-500">
+                                Productos elaborados en Lago Puelo, Argentina | Envios a todo el Pais.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -83,11 +83,22 @@ export default function App({ children }: { children: React.ReactNode }) {
                         </div>
                     }
                 >
-                    <main className="p-12 pt-2 mt-20 transition-all duration-300">{children}</main>
+                    <main className="p-12 pt-2 mt-20 transition-all duration-300 bg-black bg-opacity-10">{children}</main>
                 </Suspense>
             </div>
 
             <CartSideBar />
+
+            {isHomePage && (
+                <div className="flex flex-row justify-center">
+                    <iframe 
+                        src="https://docs.google.com/presentation/d/1JEMIzR3Fbo-CXN50EtCD2kw4x5GRZCFfcQpL58HU_8Q/embed?start=true&loop=true&delayms=8000" 
+                        width="960" 
+                        height="569" 
+                    ></iframe>
+                </div>
+            )}
+
             <Foot />
         </>
     );

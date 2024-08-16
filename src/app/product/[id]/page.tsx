@@ -112,7 +112,7 @@ export default function Detail({ params }: { params: { id: string } }) {
           <div className="mb-2 flex flex-col text-white">
             <h1 className="mb-2 text-5xl font-medium">{productDetail.model}</h1>
             <h2>{productDetail.category}</h2>
-            <AverageRatingStars productId={productDetail.id} />
+            {/* <AverageRatingStars productId={productDetail.id} /> */}
             <div className="my-6 mr-auto w-auto rounded-full bg-blue-600 p-4 text-sm text-white">
               <p>AR$ {productDetail.price} </p>
             </div>

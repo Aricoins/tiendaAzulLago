@@ -77,12 +77,12 @@ export default async function Product({ searchParams }: { searchParams: SearchPa
             <div key={product.id} 
               className="flex flex-col h-96 w-72 cursor-pointer items-center border-solid border-x border-y border-gray-300 rounded m-2 hover:border-blue-600 bg-white justify-center">
               <Link href={`/product/${product.id}`}>
-                <div className="flex justify-center mt-2 self-start">
+                {/* <div className="flex justify-center mt-2 self-start">
                   <AverageRatingStars productId={product.id} />
-                </div>
-                <div className="w-52 h-56 flex justify-center items-center">
+                </div> */}
+                <div>
                   <Image 
-                    className="hover:w-52 mt-5"
+                    className="hover:w-52 my-5 mx-auto rounded-lg"
                     src={product.image}
                     width={200}
                     height={200}

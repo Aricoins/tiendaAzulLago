@@ -2,28 +2,24 @@ import Link from 'next/link';
 import { GridTileImage } from './grid/tile';
 import { fetchProduct } from '@/app/lib/data';
 import { shuffleArray } from '@/app/lib/utils';
-import style from '../components/layout/NavBar/navBar.module.css'
 
 export async function Carousel() {
+  const products = await fetchProduct();
 
-    const products = await fetchProduct();
-   
   if (!products?.length) return null;
 
-  // const carouselProducts = [...products, ...products, ...products]
-
-  const shuffleProduct = shuffleArray(products)
+  const shuffleProduct = shuffleArray(products);
   const carouselProducts = [...shuffleProduct];
 
   return (
-      <div className=" w-full overflow-x-auto pb-6 pt-1 items-center">
-        <ul className={style.carousel}>
-          {carouselProducts.map((product, i) => {
+    <div className="w-full overflow-x-auto pb-6 pt-1 flex items-center scroll-smooth snap-x snap-mandatory">
+      <ul className="flex space-x-4">
+        {carouselProducts.map((product, i) => {
           const index = i % carouselProducts.length; // Use modulo to loop back to the beginning
           return (
             <li
               key={`${product.id}${i}`}
-              className="relative aspect-square h-[30vh] max-h-[275px] w-2/3 max-w-[475px] flex-none md:w-1/3"
+              className="relative aspect-square h-[30vh] max-h-[275px] w-2/3 max-w-[475px] flex-none md:w-1/3 snap-start"
             >
               <Link href={`/product/${product.id}`} className="relative h-full w-full">
                 <GridTileImage
@@ -38,8 +34,9 @@ export async function Carousel() {
                 />
               </Link>
             </li>
-          )})}
-        </ul>
-      </div>
+          );
+        })}
+      </ul>
+    </div>
   );
 }

@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation';
 import { ImageConfigContext } from 'next/dist/shared/lib/image-config-context.shared-runtime';
+import { useUser } from '@clerk/nextjs';
 
 
 interface Specs {
@@ -48,6 +49,10 @@ const validation = (form: Form, setErrors: React.Dispatch<React.SetStateAction<E
 const CreateProduct: FC = () => {
 
 const router = useRouter()
+const user= useUser()
+
+const id = user.user?.id
+console.log(id, "userid")
 
 
   const [form, setForm] = useState<Form>({
@@ -198,10 +203,14 @@ const handleAddSpec = () => {
   useEffect(() => {
     AOS.init();
   }, []);
-console.log(form.specs)
+
+const auth = "user_2kkiUMtZWjBP7vGemJMAbn4vtb2"
+
+
+
  return (
-  <>
-    <div className="flex flex-col sm:flex-row justify-center bg-gray-500 w-full mb-32">
+  <> {user.user?.id === auth ? 
+    (<div className="flex flex-col sm:flex-row justify-center bg-gray-500 w-full mb-32">
       
       <div className="m-6  mx-4 w-auto sm:mx-10 sm:w-2/3 p-4 bg-black rounded-md shadow-md items-center gap-5 mb-50 text-gray-300 ">
         <h1 data-aos="flip-right" 
@@ -388,7 +397,7 @@ console.log(form.specs)
       </div>
 
         
-</div>
+</div>) : ( <p className='text-center text-white'> Acceso denegado: debe ser Administrador para poder crear productos </p>)}
 
   </>
 );

@@ -89,11 +89,12 @@ useEffect(() => {
   Aos.init({ duration: 1000 });
 })
   console.log(user, "user")
-const autor = "user_2kfE2AXNYNnmocqzDpFIbegCnRT"
+const auth = "user_2kkiUMtZWjBP7vGemJMAbn4vtb2"
   return (
-    !loading ? <h1 data-aos="fade-out">Loading...</h1> : 
+
+    !loading ? <h1 data-aos="fade-out">Cargando...</h1> : 
   <div>
-        {user?.user?.id === autor ? 
+        {user?.user?.id === auth ? 
          <div className=" md:flex md:flex-row w-full place-content-evenly">
 
         <div data-aos="fade-up"  data-aos-duration="1000" className="rounded-lg h-auto md:h-28 md:mt-64 bg-slate-100 bg-opacity-70 shadow-[0_0px_10px_5px_rgba(100,100,100,.8)] m-1 px-2">
@@ -183,6 +184,7 @@ const autor = "user_2kfE2AXNYNnmocqzDpFIbegCnRT"
         </div> 
         </div> 
          : 
-         <h1>Acceso No Autorizado!</h1>}
+         <p className='text-center text-white'> Acceso denegado: debe ser Administrador para poder administrar los datos y/o crear productos </p>
+}
       </div>);
 }

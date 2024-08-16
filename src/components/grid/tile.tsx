@@ -39,7 +39,7 @@ export function GridTileImage({
       <div className="flex items-center rounded-full border p-1 text-xs font-semibold backdrop-blur-md border-neutral-800 bg-black/70 text-white">
         <h3 className="mr-4 line-clamp-2 flex-grow pl-2 leading-none tracking-tight">{label?.title}</h3>
         <h3
-          className="flex-none rounded-full bg-blue-600 p-2 text-white"
+          className="flex-none rounded-full bg-blue-600 p-2 text-white "
         >${label?.amount} AR$</h3>
       </div>
     </div>

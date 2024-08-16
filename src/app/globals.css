@@ -7,6 +7,23 @@
     background: linear-gradient(9deg, rgb(0, 61, 61) 0%, rgb(0, 99, 138) 35%, rgb(255, 255, 255) 100%);
     
 }
+/* styles/globals.css */
+::-webkit-scrollbar {
+  height: 8px; /* Altura de la barra de desplazamiento */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color del track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* Color del thumb */
+  border-radius: 4px; /* Esquinas redondeadas del thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color del thumb al pasar el cursor */
+}
 
 @media (prefers-color-scheme: dark) {
   :root {

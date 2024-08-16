@@ -31,15 +31,17 @@ const AverageRatingStars: React.FC<ReviewFormProps> = ({ productId }) => {
   }, [productId]);
 
 
+
   return (
-    <div className="rating">
+    <div className="rating" >
     {[...Array(5)].map((_, i) => (
       <input
         key={i}
+  
         type="radio"
         name="rating"
         className={`mask mask-star-2 ${averageRating > i ? "bg-orange-400" : "bg-gray-400"}`}
-        disabled
+
       />
     ))}
   </div>
