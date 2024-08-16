@@ -204,7 +204,7 @@ const handleAddSpec = () => {
     AOS.init();
   }, []);
 
-const auth = "user_2kkiUMtZWjBP7vGemJMAbn4vtb2"
+const auth = ""
 
 
 
