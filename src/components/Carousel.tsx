@@ -16,7 +16,7 @@ export async function Carousel() {
   const carouselProducts = [...shuffleProduct];
 
   return (
-      <div className=" w-full overflow-x-auto pb-6 pt-1">
+      <div className=" w-full overflow-x-auto pb-6 pt-1 items-center">
         <ul className={style.carousel}>
           {carouselProducts.map((product, i) => {
           const index = i % carouselProducts.length; // Use modulo to loop back to the beginning
