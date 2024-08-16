@@ -89,7 +89,7 @@ useEffect(() => {
   Aos.init({ duration: 1000 });
 })
   console.log(user, "user")
-const auth = "user_2kkiUMtZWjBP7vGemJMAbn4vtb2"
+const auth = ""
   return (
 
     !loading ? <h1 data-aos="fade-out">Cargando...</h1> : 
