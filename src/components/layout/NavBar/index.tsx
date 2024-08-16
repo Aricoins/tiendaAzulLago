@@ -31,7 +31,7 @@ interface CustomPage {
 }
 
 export default function Navbar() {
-    const menu = ["Todos", "Cosmética", "Medicinal", "Aromática", "Ofertas"]
+    const menu = ["Todos", "Cosméticas", "Medicinales", "Aromáticas", "Ofertas"]
     const searchParams = useSearchParams()
     const params = searchParams.get('category')
     const id = useUser().user?.id
