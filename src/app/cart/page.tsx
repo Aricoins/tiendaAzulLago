@@ -40,7 +40,8 @@ export default function CartPage() {
   const [form] = Form.useForm();
 
   const user = useUser();
-
+  console.log(user, "user")
+  
   const addToCartHandler = (
     product: Product,
     cart_item_id: number,
@@ -59,6 +60,7 @@ export default function CartPage() {
         console.error("error", error);
       }
     };
+    console.log(user, "user")
     updateQtyDB();
     dispatch(addToCart({ ...product, qty }));
   };
@@ -101,6 +103,7 @@ export default function CartPage() {
 
 
   const createPreference = async (payerDetails: any) => {
+
     setIsLoading(true);
     try {
       const items = cartItems.map((item) => ({
@@ -113,7 +116,7 @@ export default function CartPage() {
       }));
 
       const payer = {
-        name: user.user?.firstName,
+                name: user.user?.firstName,
         surname: user.user?.lastName,
         email: user.user?.primaryEmailAddress?.emailAddress,
         identification: {
@@ -170,9 +173,10 @@ export default function CartPage() {
 
 
     return (
-      <div className="flex flex-col w-full m-20 p-20 justify-center ">
-         <div className="mb-4 flex flex-row gap-4 text-xl text-white">
-         <div>  <MdOutlineShoppingCart className="text-3xl"/> </div> <h3> Mi carrito </h3>
+      <div className="flex flex-col w-full items-center align-center ">
+         <div className="mb-4 flex flex-row text-xl text-white">
+         <div>  <MdOutlineShoppingCart className="text-3xl"/> </div> 
+         <h3> Mi carrito </h3>
           </div>
         {loading ? (
           <ClipLoader
@@ -182,7 +186,7 @@ export default function CartPage() {
             data-testid="loader"
           />
         ) : (
-          <div className="w-3/3 flex flex-col items-center md:grid md:grid-cols-4 md:gap-5">
+          <div className="w-full flex flex-col">
             <div className="overflow-x-auto md:col-span-3">
               <table className="w-full bg-blue-600 rounded-lg ">
                 <thead className="border-b text-gray-900">
