@@ -53,8 +53,8 @@ export default function App({ children }: { children: React.ReactNode }) {
                             Azul Lago
                         </h1>
                         <p
-                            className="text-xl lg:text-3xl my-4 text-center rounded-3xl shadow-lg p-5 bg-black bg-opacity-60 transition-all duration-700 ease-out hover:text-yellow-400 cursor-pointer"
-                            onMouseEnter={() => handleHover('Tienda online')}
+                            className="text-xl lg:text-3xl my-4 text-center rounded-3xl shadow-lg p-5 bg-black bg-opacity-60 transition-all duration-700 ease-out hover:text-green-500 cursor-pointer"
+                            onMouseEnter={() => handleHover('Tienda Online')}
                             onMouseLeave={handleHoverEnd}
                             data-aos="fade-in-up"
                             onClick={(e) => {
@@ -62,7 +62,7 @@ export default function App({ children }: { children: React.ReactNode }) {
                                 window.location.href = "/"; // Redirigir a la página de inicio
                             }}
                         >
-                            {hovered === 'Tienda online' ? 'Productos orgánicos' : 'Tienda online'}
+                            {hovered === 'Tienda Online' ? 'Productos orgánicos de la Patagonia' : 'Tienda Online'}
                         </p>
 
                         <div 

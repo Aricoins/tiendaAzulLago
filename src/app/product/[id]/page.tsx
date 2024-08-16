@@ -80,9 +80,9 @@ export default function Detail({ params }: { params: { id: string } }) {
                 <Image
                   src={currentImage ? currentImage : productDetail.image}
                   alt={productDetail.model}
-                  width={1600}
-                  height={1600}
-                  className="rounded w-full lg:w-3/4"
+                  width={400}
+                  height={400}
+                  className="rounded w-full my-auto"
                 />
               )}
             </div>
