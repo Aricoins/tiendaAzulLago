@@ -170,12 +170,12 @@ export default function Navbar() {
             </Link> </div> </>) : null}
           
             <div style={{ color: "black", margin: "auto"}}>
-              <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </div>
           <div style={{ color: "white", margin: "auto"}}>
           <Cart/>
