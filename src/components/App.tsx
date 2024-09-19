@@ -41,7 +41,7 @@ export default function App({ children }: { children: React.ReactNode }) {
                 {!isExcludedPath && <Navbar />}
 
                 <div className="relative w-full mt-20 h-screen overflow-hidden">
-                    <video src='/video.mp4' autoPlay loop muted className="absolute inset-0 w-full h-full object-cover" style={{ maskImage: "linear-gradient(to bottom, #d6c2c2 80%, transparent 100%)"}} />
+                    <video src='/img/video.mp4' autoPlay loop muted className="absolute inset-0 w-full h-full object-cover" style={{ maskImage: "linear-gradient(to bottom, #d6c2c2 80%, transparent 100%)"}} />
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-0">
                         <h1
                             className="text-6xl lg:text-9xl text-white font-Inter text-center tracking-wide transition-transform duration-500 ease-in-out transform hover:scale-110 bg-opacity-60 p-2 rounded-md"
