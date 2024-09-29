@@ -1,30 +1,28 @@
-'use client'
-import { fetchDetailProduct } from "../../lib/data";
-import Image from "next/image";
-import { AddToCart } from "@/components/AddToCart";
-import ReviewForm from "@/components/RatingReview/ReviewForm";
-import ReviewsList from "@/components/RatingReview/Rating";
-import AverageRatingStars from "@/components/RatingReview/AverageRating";
+'use client';
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
+import { AddToCart } from "@/components/AddToCart";
+import ReviewsList from "@/components/RatingReview/Rating";
 
 interface Detail {
+  [key: string]: unknown;  
   id: string;
   model: string;
   category: string;
   specs: any;
   image: string;
+  video: string;
   colors: string;
   price: string;
   carrusel: any;
-  video: string;
   website: string;
 }
 
 export default function Detail({ params }: { params: { id: string } }) {
-  const [productDetail, setProductDetail] = useState<any>();
+  const [productDetail, setProductDetail] = useState<Detail | null>(null);
   const [currentImage, setCurrentImage] = useState<string>('');
-  const [video, setVideo] = useState<boolean>(true);
+  const [isVideoPlaying, setIsVideoPlaying] = useState<boolean>(true);
 
   const fetchDetail = async () => {
     try {
@@ -43,7 +41,7 @@ export default function Detail({ params }: { params: { id: string } }) {
   }, []);
 
   const handleImageChange = (newImage: string) => {
-    setVideo(false);
+    setIsVideoPlaying(false);
     setCurrentImage(newImage);
   };
 
@@ -64,19 +62,25 @@ export default function Detail({ params }: { params: { id: string } }) {
 
   return (
     <main className="mx-auto px-4">
-      <section className="flex flex-col 
-      rounded-lg border 
-      p-2
-       border-neutral-800 bg-black md:p-12 lg:flex-row ">
-        <div className="w-full p-0  mx-0">
+      <section className="flex flex-col rounded-lg border p-2 border-neutral-800 bg-black md:p-12 lg:flex-row">
+        <div className="w-full p-0 mx-0">
           <div className="h-3/4 w-3/4 basis-full lg:basis-2/4">
             <div className="h-96">
-              {productDetail.video && video ? (
-                <video width={600} height={400} autoPlay={true}>
+              {/* Mostrar video si está disponible y el estado isVideoPlaying es true */}
+              {productDetail.video && isVideoPlaying ? (
+                <video
+                  width={600}
+                  height={400}
+                  controls
+                  autoPlay
+                  loop
+                  preload="metadata"
+                >
                   <source src={productDetail.video} type="video/mp4" />
-                  Este navegador no soporta el clip de video.
+                  Tu navegador no soporta el video.
                 </video>
               ) : (
+                // Mostrar imagen si no se está reproduciendo video
                 <Image
                   src={currentImage ? currentImage : productDetail.image}
                   alt={productDetail.model}
@@ -108,13 +112,12 @@ export default function Detail({ params }: { params: { id: string } }) {
             </div>
           </div>
         </div>
-        <div className="w-4/6  lg:basis-5/6 text-white">
+        <div className="w-4/6 lg:basis-5/6 text-white">
           <div className="mb-2 flex flex-col text-white">
             <h1 className="mb-2 text-5xl font-medium">{productDetail.model}</h1>
             <h2>{productDetail.category}</h2>
-            {/* <AverageRatingStars productId={productDetail.id} /> */}
             <div className="my-6 mr-auto w-auto rounded-full bg-blue-600 p-4 text-sm text-white">
-              <p>AR$ {productDetail.price} </p>
+              <p>AR$ {productDetail.price}</p>
             </div>
             <div className="flex flex-col justify-center text-xl p-2 rounded-2xl">
               <AddToCart
@@ -123,7 +126,7 @@ export default function Detail({ params }: { params: { id: string } }) {
                 productId={productDetail.id}
                 showQty={false}
                 product={productDetail}
-                increasePerClick={true}
+                increasePerClick
                 redirect={false}
               />
             </div>
@@ -148,13 +151,9 @@ export default function Detail({ params }: { params: { id: string } }) {
       </section>
       <section>
         <div className="flex flex-col rounded-lg border p-8 border-neutral-800 bg-black md:p-12 text-white lg:gap-8">
-          <p> Ratings</p>
+          <p>Ratings</p>
           <ReviewsList productId={productDetail.id} />
         </div>
-        {/* <div className="flex flex-col rounded-lg border p-8 border-neutral-800 bg-black md:p-12 lg:gap-8">
-          <p>Leave a Feedback</p>
-          <ReviewForm productId={productDetail.id} />
-        </div> */}
       </section>
     </main>
   );
