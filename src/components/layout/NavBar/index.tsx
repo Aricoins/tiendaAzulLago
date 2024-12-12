@@ -136,7 +136,7 @@ export default function Navbar() {
       <nav className=" items-center justify-between p-0 lg:px-6 text-black bg-white ">
         <div className="w-full flex justify-around text-black">
           <div className="flex ">
-            <Link href="/" className="mr-2 flex items-center justify-center text-black">
+            <Link href="/" className="ml-4 flex items-center justify-center text-black">
             <Image src={logo} alt="azul lago logo" 
             className="w-20 mr-12"
             width={100}

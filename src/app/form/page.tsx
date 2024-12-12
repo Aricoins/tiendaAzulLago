@@ -2,6 +2,7 @@
 'use client'
 import React, { useState, useEffect, FC } from 'react';
 import { CldUploadButton } from 'next-cloudinary';
+import { CldVideoPlayer } from 'next-cloudinary';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Image from 'next/image';
@@ -21,6 +22,7 @@ interface Form {
   model: string;
   category: string;
   image: string;
+  video: string;
   price: string;
   specs: Specs;
   }
@@ -29,6 +31,7 @@ interface Errors {
   model: string;
   category: string;
   image: string;
+  video: string;
   price: string;
   specs: string;
 }
@@ -38,6 +41,7 @@ const validation = (form: Form, setErrors: React.Dispatch<React.SetStateAction<E
   let newErrors: Errors = {
     model: form.model.trim() === '' ? 'Model cannot be empty' : '',
     image: form.image ? '' : "upload an Image",
+    video: form.video ? '' : 'Upload a Video',
     category: form.category ?  '' : 'select a Category',
     price: Number(form.price) > 0 ? '' : 'Price must be a positive number',
     specs: Object.keys(form.specs).length > 0 ? "" :  "Specs must not be empty",
@@ -58,6 +62,7 @@ console.log(id, "userid")
   const [form, setForm] = useState<Form>({
     model: '',
     image: '',
+    video:'',
     category: '',
      price: '',
     specs: {},
@@ -66,6 +71,7 @@ console.log(id, "userid")
   const [errors, setErrors] = useState<Errors>({
     model: '',
     image: '',
+    video: '',
     category: '',
     price: '',
     specs: "",
@@ -136,6 +142,17 @@ const handleAddSpec = () => {
     setFormInteracted(true); 
    }
 
+   const handleVideoUpload = (data: any) => {
+    const { info } = data;
+    setForm((prevForm) => ({
+      ...prevForm,
+      video: info.secure_url,
+    }));
+
+    validation({ ...form, video: info.secure_url }, setErrors);
+    setFormInteracted(true);
+  };
+
 
    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -160,6 +177,7 @@ const handleAddSpec = () => {
           setForm({
             model: '',
             image: "",
+            video: '',
             category: '',
             price: '',
             specs: {specifications: ""},
@@ -250,6 +268,25 @@ const auth = process.env.ADMIN_ID
               />
             </div>
           )}
+   <div className="w-full flex flex-col items-center">
+  <label>Subir Video:</label>
+  <CldUploadButton
+    className="w-full border-blue-500 text-normal rounded border-2 p-8 cursor-pointer transition duration-300 hover:bg-blue-500 hover:text-white hover:border-transparent"
+    uploadPreset="zwtk1tj5"
+    onUpload={handleVideoUpload}
+  >
+    Subir Video del Producto
+  </CldUploadButton>
+  {form.video && (
+    <CldUploadButton
+      className="mt-4 w-full"
+      uploadPreset="zwtk1tj5"
+      onUpload={handleVideoUpload}
+        />
+  )}
+</div>
+
+
           <div data-aos="flip-right" className='flex flex-col items-center w-full'>
             <label htmlFor="category">Categoria:</label>
             <select
@@ -405,3 +442,4 @@ const auth = process.env.ADMIN_ID
 };
 
 export default CreateProduct;
+

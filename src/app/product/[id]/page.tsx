@@ -1,160 +1,123 @@
-'use client'
-import { fetchDetailProduct } from "../../lib/data";
-import Image from "next/image";
-import { AddToCart } from "@/components/AddToCart";
-import ReviewForm from "@/components/RatingReview/ReviewForm";
-import ReviewsList from "@/components/RatingReview/Rating";
-import AverageRatingStars from "@/components/RatingReview/AverageRating";
-import { useEffect, useState } from "react";
-import ClipLoader from "react-spinners/ClipLoader";
+'use client';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import ClipLoader from 'react-spinners/ClipLoader';
+import { AddToCart } from '@/components/AddToCart';
 
-interface Detail {
+export interface Detail {
   id: string;
   model: string;
   category: string;
-  specs: any;
+  specs: Record<string, string>;
   image: string;
-  colors: string;
-  price: string;
-  carrusel: any;
   video: string;
+  price: string;
+  carrusel: Record<string, string>;
   website: string;
+  cartItemId: string;
 }
 
 export default function Detail({ params }: { params: { id: string } }) {
-  const [productDetail, setProductDetail] = useState<any>();
-  const [currentImage, setCurrentImage] = useState<string>('');
-  const [video, setVideo] = useState<boolean>(true);
-
-  const fetchDetail = async () => {
-    try {
-      const response = await fetch(`/api/detail?id=${params.id}`);
-      if (response.ok) {
-        const products = await response.json();
-        setProductDetail(products.products[0]);
-      }
-    } catch (error) {
-      console.error('Error fetching product details:', error);
-    }
-  };
+  const [productDetail, setProductDetail] = useState<Detail | null>(null);
+  const [currentMedia, setCurrentMedia] = useState<string>('');
+  const [isVideo, setIsVideo] = useState<boolean>(false);
 
   useEffect(() => {
-    fetchDetail();
-  }, []);
+    const fetchDetail = async () => {
+      try {
+        const response = await fetch(`/api/detail?id=${params.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          const product = data.products[0];
+          setProductDetail(product);
+          setCurrentMedia(product.video || product.image);
+          setIsVideo(!!product.video);
+        }
+      } catch (error) {
+        console.error('Error fetching product details:', error);
+      }
+    };
 
-  const handleImageChange = (newImage: string) => {
-    setVideo(false);
-    setCurrentImage(newImage);
+    fetchDetail();
+  }, [params.id]);
+
+  const handleMediaChange = (newMedia: string, isVideo: boolean) => {
+    setCurrentMedia(newMedia);
+    setIsVideo(isVideo);
   };
 
   if (!productDetail) {
     return (
-      <div
-        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
-      >
-        <ClipLoader
-          color="blue"
-          size={150}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-        />
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <ClipLoader color="blue" size={150} aria-label="Loading Spinner" data-testid="loader" />
       </div>
     );
   }
 
   return (
     <main className="mx-auto px-4">
-      <section className="flex flex-col 
-      rounded-lg border 
-      p-2
-       border-neutral-800 bg-black md:p-12 lg:flex-row ">
-        <div className="w-full p-0  mx-0">
-          <div className="h-3/4 w-3/4 basis-full lg:basis-2/4">
-            <div className="h-96">
-              {productDetail.video && video ? (
-                <video width={600} height={400} autoPlay={true}>
-                  <source src={productDetail.video} type="video/mp4" />
-                  Este navegador no soporta el clip de video.
-                </video>
-              ) : (
-                <Image
-                  src={currentImage ? currentImage : productDetail.image}
-                  alt={productDetail.model}
-                  width={400}
-                  height={400}
-                  className="rounded w-full my-auto"
-                />
-              )}
-            </div>
-            <div className="flex flex-row m-2 gap-2">
-              {productDetail.carrusel
-                ? Object.entries(productDetail.carrusel).map(([key, value]) => (
-                    <div
-                      className="z-10 m-2 cursor-pointer"
-                      key={key}
-                      onClick={() => handleImageChange(String(value))}
-                    >
-                      <Image
-                        className={`rounded-md ${value === currentImage ? 'border-2 border-blue-500' : ''}`}
-                        src={String(value)}
-                        width={200}
-                        height={200}
-                        alt={String(key)}
-                        style={{ width: 'auto', height: 'auto' }}
-                      />
-                    </div>
-                  ))
-                : null}
-            </div>
+      <section className="flex flex-col rounded-lg border p-2 border-neutral-800 bg-black md:p-12 lg:flex-row">
+        <div className="w-full p-0 mx-0 lg:w-1/2">
+          <div className="h-96">
+            {/* Render Video or Image based on the `isVideo` state */}
+            {isVideo ? (
+              <video width={600} height={600} autoPlay controls className="w-full h-full">
+                <source src={currentMedia} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <Image src={currentMedia} alt={productDetail.model} width={400} height={400} className="rounded w-full h-full object-cover p-10" />
+            )}
+          </div>
+          <div className="flex flex-wrap justify-center m-2 gap-2">
+            {/* Render carousel of images/videos */}
+            {productDetail.carrusel &&
+              Object.entries(productDetail.carrusel).map(([key, value]) => (
+                <div key={key} className="cursor-pointer" onClick={() => handleMediaChange(value, value.includes('.mp4'))}>
+                  {value.includes('.mp4') ? (
+                    <video width={100} height={100} className="rounded border border-gray-600">
+                      <source src={value} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <Image src={value} alt={`Thumbnail ${key}`} width={100} height={100} className="rounded border border-gray-600" />
+                  )}
+                </div>
+              ))}
           </div>
         </div>
-        <div className="w-4/6  lg:basis-5/6 text-white">
-          <div className="mb-2 flex flex-col text-white">
-            <h1 className="mb-2 text-5xl font-medium">{productDetail.model}</h1>
-            <h2>{productDetail.category}</h2>
-            {/* <AverageRatingStars productId={productDetail.id} /> */}
-            <div className="my-6 mr-auto w-auto rounded-full bg-blue-600 p-4 text-sm text-white">
-              <p>AR$ {productDetail.price} </p>
+        <div className="w-full lg:w-1/2 text-white">
+          <div className="mb-2">
+            <h1 className="text-5xl font-medium">{productDetail.model}</h1>
+            <h2 className="text-xl mb-4">{productDetail.category}</h2>
+            <div className="w-auto rounded-full bg-blue-600 p-4 text-lg mb-4 text-center">
+              <p>AR$ {productDetail.price}</p>
             </div>
-            <div className="flex flex-col justify-center text-xl p-2 rounded-2xl">
-              <AddToCart
-                buttonStyle="p-4 text-base"
-                stock={40}
-                productId={productDetail.id}
-                showQty={false}
-                product={productDetail}
-                increasePerClick={true}
-                redirect={false}
-              />
-            </div>
+            <AddToCart
+              buttonStyle="p-4 text-base"
+              stock={40}
+              productId={productDetail.id}
+              showQty={false}
+              product={productDetail}
+              increasePerClick={true}
+              redirect={false}
+            />
           </div>
-          <div>
-            {productDetail.website ? (
-              <a href={productDetail.website}>
-                Website: {productDetail.website}
-              </a>
-            ) : null}
-            <h1 className="text-2xl font-bold">Especificaciones:</h1>
-            {productDetail.specs
-              ? Object.entries(productDetail.specs).map(([key, value]) => (
-                  <div key={key}>
-                    <h1 className="font-bold">{key}:</h1>
-                    <h1>{String(value)}</h1>
-                  </div>
-                ))
-              : null}
+          {productDetail.website && (
+            <a href={productDetail.website} target="_blank" rel="noopener noreferrer" className="underline text-blue-400">
+              Website: {productDetail.website}
+            </a>
+          )}
+          <h1 className="text-2xl font-bold mt-4">Especificaciones:</h1>
+          <div className="mt-2 space-y-2">
+            {productDetail.specs &&
+              Object.entries(productDetail.specs).map(([key, value]) => (
+                <div key={key}>
+                  <h1 className="font-bold">{key}:</h1>
+                  <p>{value}</p>
+                </div>
+              ))}
           </div>
         </div>
-      </section>
-      <section>
-        <div className="flex flex-col rounded-lg border p-8 border-neutral-800 bg-black md:p-12 text-white lg:gap-8">
-          <p> Ratings</p>
-          <ReviewsList productId={productDetail.id} />
-        </div>
-        {/* <div className="flex flex-col rounded-lg border p-8 border-neutral-800 bg-black md:p-12 lg:gap-8">
-          <p>Leave a Feedback</p>
-          <ReviewForm productId={productDetail.id} />
-        </div> */}
       </section>
     </main>
   );

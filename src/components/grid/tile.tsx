@@ -18,6 +18,7 @@ export function GridTileImage({
   
   {
     return(
+        
         <div className={`group flex h-full w-full items-center justify-center overflow-hidden rounded-lg border hover:border-blue-600 bg-black ${
             label ? 'relative' : ''
           } ${
@@ -25,7 +26,7 @@ export function GridTileImage({
           }`}>
              {props.src ? (
         // eslint-disable-next-line jsx-a11y/alt-text -- `alt` is inherited from `props`, which is being enforced with TypeScript
-        <Image
+          <Image
         className={`relative h-full w-full object-contain ${
             isInteractive ? 'transition duration-300 ease-in-out group-hover:scale-105' : ''
           }`}
@@ -35,7 +36,7 @@ export function GridTileImage({
 
       <div
       className={`self-end left-0 flex w-full px-4 pb-4`}
-      >
+      > 
       <div className="flex items-center rounded-full border p-1 text-xs font-semibold backdrop-blur-md border-neutral-800 bg-black/70 text-white">
         <h3 className="mr-4 line-clamp-2 flex-grow pl-2 leading-none tracking-tight">{label?.title}</h3>
         <h3
@@ -43,6 +44,6 @@ export function GridTileImage({
         >${label?.amount} AR$</h3>
       </div>
     </div>
-        </div>
+     </div>
 );
 }

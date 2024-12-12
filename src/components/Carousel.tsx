@@ -34,6 +34,7 @@ export async function Carousel() {
                 />
               </Link>
             </li>
+            
           );
         })}
       </ul>

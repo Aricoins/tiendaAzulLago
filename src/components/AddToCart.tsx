@@ -11,7 +11,7 @@ import { addToCart, removeFromCart } from "@/redux/slices/cartSlice";
 interface AddToCartProps {
   stock: number;
   productId: string;
-  product: Record<string, unknown>; // Assuming product is an object
+  product: Record<string, unknown>; 
   showQty?: boolean;
   redirect?: boolean;
   increasePerClick?: boolean;
