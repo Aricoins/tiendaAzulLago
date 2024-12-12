@@ -79,17 +79,17 @@ export default function CartSideBar(){
         loading
           ? ''
           : cartItems.length > 0 && (pathname === '/' || pathname === '/payment' || pathname === '/shipping' || pathname.indexOf('/product' ) >= 0)
-          ? 'fixed top-32 right-0 w-2/8 zIndex-9000 bg-white h-8/8 shadow-lg text-blue-800 border-l border-l-gray-700 overflow-scroll'
+          ? 'fixed top-20 right-0 w-3/8 zIndex-9000 bg-white h-8/8 shadow-lg text-blue-800 border-4 border-l-gray-400 overflow-y-scroll'
           : 'hidden'
       }
       >
             {loading ? 
                 <div className="py-5 px-2 text-blue-500">Cargando...</div> 
                 : cartItems.length === 0 ?
-                <div className="py-5 mb-20 px-2 text-blue-500">El carrito esta vacío</div>
+                <div className="py-5 m-auto px-2 text-blue-500">El carrito esta vacío</div>
                 :
                 <>
-                <div className=" zIndex-1000 p-4 mb-10 flex flex-col items-center border-b border-b-gray-600 text-blue-500 h-fit">
+                <div className=" zIndex-1000 flex flex-col items-center text-black m-2 p-4 h-auto">
                     <div>Subtotal</div>
                     <div className="font-bold p-2 text-white-700">${itemsPrice}</div>
                     <div>

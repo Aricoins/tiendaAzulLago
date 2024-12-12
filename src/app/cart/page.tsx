@@ -270,7 +270,7 @@ export default function CartPage() {
                           Cantidad de productos:{" "}
                           {cartItems.reduce((a, c) => a + c.qty, 0)}
                         </p>
-                        Total: ${itemsPrice}
+                        Total: AR$ {itemsPrice}
                       </div>
                     </li>
                     <li className="flex justify-center ">
@@ -317,9 +317,11 @@ export default function CartPage() {
           style: {
             color: "#000002",            // Cambia el color del texto del botón de cancelar
           },
+         
         }}
       >
-        <Form form={form} layout="vertical">
+        
+        <Form form={form} layout="vertical"  className='text-center'>
           <Form.Item
             name="identification"
             label="Identificación"
@@ -367,6 +369,7 @@ export default function CartPage() {
           >
             <Input placeholder="Dirección" />
           </Form.Item>
+          Envios a Todo el País en 24hs
         </Form>
       </Modal>
     </div>

@@ -1,29 +1,26 @@
-'use client';
+'use client'
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
 import { AddToCart } from "@/components/AddToCart";
-import ReviewsList from "@/components/RatingReview/Rating";
 
 interface Detail {
-  [key: string]: unknown;  
   id: string;
   model: string;
   category: string;
-  specs: Record<string, string>;
+  specs: Record<string, any>;
   image: string;
-  video: string;
   colors: string;
   price: string;
-  carrusel: any;
+  carrusel: Record<string, string>;
+  video: string;
   website: string;
-  cartItemId: string;
 }
 
 export default function Detail({ params }: { params: { id: string } }) {
   const [productDetail, setProductDetail] = useState<Detail | null>(null);
-  const [currentMedia, setCurrentMedia] = useState<string>('');
-  const [isVideo, setIsVideo] = useState<boolean>(false);
+  const [currentImage, setCurrentImage] = useState<string>("");
+  const [video, setVideo] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchDetail = async () => {
@@ -31,94 +28,117 @@ export default function Detail({ params }: { params: { id: string } }) {
         const response = await fetch(`/api/detail?id=${params.id}`);
         if (response.ok) {
           const data = await response.json();
-          const product = data.products[0];
-          setProductDetail(product);
-          setCurrentMedia(product.video || product.image);
-          setIsVideo(!!product.video);
+          setProductDetail(data.products[0]);
         }
       } catch (error) {
-        console.error('Error fetching product details:', error);
+        console.error("Error fetching product details:", error);
       }
     };
-
     fetchDetail();
   }, [params.id]);
 
-  const handleMediaChange = (newMedia: string, isVideo: boolean) => {
-    setCurrentMedia(newMedia);
-    setIsVideo(isVideo);
+  const handleImageChange = (newImage: string) => {
+    setVideo(false);
+    setCurrentImage(newImage);
   };
 
   if (!productDetail) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <ClipLoader color="blue" size={150} aria-label="Loading Spinner" data-testid="loader" />
+      <div className="flex h-screen items-center justify-center">
+        <ClipLoader color="blue" size={150} aria-label="Loading Spinner" />
       </div>
     );
   }
 
   return (
-    <main className="mx-auto px-4">
-      <section className="flex flex-col rounded-lg border p-2 border-neutral-800 bg-black md:p-12 lg:flex-row">
-        <div className="w-full p-0 mx-0 lg:w-1/2">
-          <div className="h-96">
-            {/* Render Video or Image based on the `isVideo` state */}
-            {isVideo ? (
-              <video width={600} height={600} autoPlay controls className="w-full h-full">
-                <source src={currentMedia} type="video/mp4" />
+    <main className="container mx-auto p-4">
+      <section className="flex flex-col gap-6 rounded-lg border border-gray-800 bg-gray-900 p-6 md:flex-row">
+        {/* Image and Video Section */}
+        <div className="flex flex-col items-center md:w-1/2">
+          <div className="h-[24rem] w-full">
+            {productDetail.video && video ? (
+              <video
+                className="h-full w-full rounded-md object-cover"
+                controls
+                autoPlay
+              >
+                <source src={productDetail.video} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             ) : (
-              <Image src={currentMedia} alt={productDetail.model} width={400} height={400} className="rounded w-full h-full object-cover p-10" />
+              <Image
+                src={currentImage || productDetail.image}
+                alt={productDetail.model}
+                width={600}
+                height={400}
+                className="h-full w-full rounded-md object-cover"
+              />
             )}
           </div>
-          <div className="flex flex-wrap justify-center m-2 gap-2">
-            {/* Render carousel of images/videos */}
+
+          {/* Image Carousel */}
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
             {productDetail.carrusel &&
               Object.entries(productDetail.carrusel).map(([key, value]) => (
-                <div key={key} className="cursor-pointer" onClick={() => handleMediaChange(value as string, (value as string).includes('.mp4'))}>
-                  {(value as string).includes('.mp4') ? (
-                    <video width={100} height={100} className="rounded border border-gray-600">
-                      <source src={value as string} type="video/mp4" />
-                    </video>
-                  ) : (
-                    <Image src={value as string} alt={`Thumbnail ${key}`} width={100} height={100} className="rounded border border-gray-600" />
-                  )}
-                </div>
+                <button
+                  key={key}
+                  className={`rounded-md p-1 border ${
+                    value === currentImage ? "border-blue-500" : "border-transparent"
+                  }`}
+                  onClick={() => handleImageChange(value)}
+                >
+                  <Image
+                    src={value}
+                    alt={key}
+                    width={60}
+                    height={60}
+                    className="h-16 w-16 rounded-md object-cover"
+                  />
+                </button>
               ))}
           </div>
         </div>
-        <div className="w-full lg:w-1/2 text-white">
-          <div className="mb-2">
-            <h1 className="text-5xl font-medium">{productDetail.model}</h1>
-            <h2 className="text-xl mb-4">{productDetail.category}</h2>
-            <div className="w-auto rounded-full bg-blue-600 p-4 text-lg mb-4 text-center">
-              <p>AR$ {productDetail.price}</p>
-            </div>
-            <AddToCart
-              buttonStyle="p-4 text-base"
-              stock={40}
-              productId={productDetail.id}
-              showQty={false}
-              product={productDetail}
-              increasePerClick={true}
-              redirect={false}
-            />
+
+        {/* Product Details Section */}
+        <div className="flex flex-col gap-4 text-white md:w-1/2">
+          <h1 className="text-3xl font-bold md:text-4xl">{productDetail.model}</h1>
+          <h2 className="text-lg font-medium text-gray-400">{productDetail.category}</h2>
+
+          <div className="rounded-lg bg-blue-600 px-4 py-2 text-xl font-semibold text-center">
+            AR$ {productDetail.price}
           </div>
+
+          <AddToCart
+            buttonStyle="px-6 py-2 mt-4 text-base"
+            stock={40}
+            productId={productDetail.id}
+            showQty={false}
+            product={productDetail}
+            increasePerClick={true}
+            redirect={false}
+          />
+
           {productDetail.website && (
-            <a href={productDetail.website} target="_blank" rel="noopener noreferrer" className="underline text-blue-400">
-              Website: {productDetail.website}
+            <a
+              href={productDetail.website}
+              className="mt-4 text-blue-400 hover:underline"
+            >
+              Visit Website
             </a>
           )}
-          <h1 className="text-2xl font-bold mt-4">Especificaciones:</h1>
-          <div className="mt-2 space-y-2">
-            {productDetail.specs &&
-              Object.entries(productDetail.specs).map(([key, value]) => (
-                <div key={key}>
-                  <h1 className="font-bold">{key}:</h1>
-                  <p>{value}</p>
-                </div>
-              ))}
+
+          {/* Specifications */}
+          <div>
+            <h3 className="mt-6 text-2xl font-bold">Características:</h3>
+            <ul className="mt-2 space-y-2">
+              {productDetail.specs &&
+                Object.entries(productDetail.specs).map(([key, value]) => (
+                  <li key={key} className="flex gap-2">
+                    <span className="font-semibold text-gray-300">{key}:</span>
+                    <span>{String(value)}</span>
+                  </li>
+                ))}
+            </ul>
           </div>
         </div>
       </section>
