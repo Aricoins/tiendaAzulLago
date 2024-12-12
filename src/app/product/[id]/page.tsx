@@ -15,6 +15,7 @@ interface Detail {
   carrusel: Record<string, string>;
   video: string;
   website: string;
+  product: Record<string, unknown>;
 }
 
 export default function Detail({ params }: { params: { id: string } }) {
@@ -113,7 +114,7 @@ export default function Detail({ params }: { params: { id: string } }) {
             stock={40}
             productId={productDetail.id}
             showQty={false}
-            product={productDetail}
+            product= {productDetail.product}
             increasePerClick={true}
             redirect={false}
           />
