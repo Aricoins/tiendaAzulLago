@@ -1,18 +1,21 @@
 'use client';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import ClipLoader from 'react-spinners/ClipLoader';
-import { AddToCart } from '@/components/AddToCart';
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import ClipLoader from "react-spinners/ClipLoader";
+import { AddToCart } from "@/components/AddToCart";
+import ReviewsList from "@/components/RatingReview/Rating";
 
-export interface Detail {
+interface Detail {
+  [key: string]: unknown;  
   id: string;
   model: string;
   category: string;
   specs: Record<string, string>;
   image: string;
   video: string;
+  colors: string;
   price: string;
-  carrusel: Record<string, string>;
+  carrusel: any;
   website: string;
   cartItemId: string;
 }
@@ -73,13 +76,13 @@ export default function Detail({ params }: { params: { id: string } }) {
             {/* Render carousel of images/videos */}
             {productDetail.carrusel &&
               Object.entries(productDetail.carrusel).map(([key, value]) => (
-                <div key={key} className="cursor-pointer" onClick={() => handleMediaChange(value, value.includes('.mp4'))}>
-                  {value.includes('.mp4') ? (
+                <div key={key} className="cursor-pointer" onClick={() => handleMediaChange(value as string, (value as string).includes('.mp4'))}>
+                  {(value as string).includes('.mp4') ? (
                     <video width={100} height={100} className="rounded border border-gray-600">
-                      <source src={value} type="video/mp4" />
+                      <source src={value as string} type="video/mp4" />
                     </video>
                   ) : (
-                    <Image src={value} alt={`Thumbnail ${key}`} width={100} height={100} className="rounded border border-gray-600" />
+                    <Image src={value as string} alt={`Thumbnail ${key}`} width={100} height={100} className="rounded border border-gray-600" />
                   )}
                 </div>
               ))}
