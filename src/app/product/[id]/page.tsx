@@ -130,7 +130,7 @@ export default function Detail({ params }: { params: { id: string } }) {
             AR$ {productDetail.price}
           </div>
 <AddToCart
-  buttonStyle="px-6 py-2 mt-4 text-base"
+  buttonStyle="px-6 py-2 mt-4 text-base border border-white rounded-full"
   stock={40}
   productId={productDetail.id}
   showQty={false}
@@ -164,7 +164,20 @@ export default function Detail({ params }: { params: { id: string } }) {
     ))}
 </ul>
 
-
+<AddToCart
+  buttonStyle="px-6 py-2 mt-4 text-base border border-white rounded-full"
+  stock={40}
+  productId={productDetail.id}
+  showQty={false}
+  product={{
+    cart_item_id: 0,
+    model: productDetail.model,
+    price: parseFloat(productDetail.price),
+    image: productDetail.image,
+  }}
+  increasePerClick={true}
+  redirect={false}
+/>
 
 
           </div>

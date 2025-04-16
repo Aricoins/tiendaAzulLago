@@ -93,7 +93,7 @@ export const AddToCart: React.FC<AddToCartProps> = ({
           className={`relative flex w-full items-center justify-center rounded-full bg-blue-600  tracking-wide text-white ${buttonStyle}`}
           onClick={addToCartHandler}
         >
-          {/* <div className="absolute left-0 ml-3 mr-3">
+        <div className="absolute left-0 ml-3 mr-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -109,7 +109,7 @@ export const AddToCart: React.FC<AddToCartProps> = ({
                 d="M12 4.5v15m7.5-7.5h-15"
               ></path>
             </svg>
-          </div> */}
+          </div>
           Agregar al carrito
         </button>
       </div>
