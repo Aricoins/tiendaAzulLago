@@ -68,8 +68,8 @@ export default function App({ children }: { children: React.ReactNode }) {
                             className="flex flex-row justify-center items-center mt-20 gap-8 bg-white bg-opacity-60 w-full text-black transition-transform duration-700 ease-out hover:scale-105"
                             data-aos="fade-up"
                         >
-                            <p className="hover:text-gray-800 hover:font-bold transition-colors duration-500">
-                                Productos elaborados en Lago Puelo, Argentina | Envios a todo el Pais.
+                            <p className="hover:text-gray-800 hover:font-bold transition-colors duration-500 text-md ">
+                                Productos elaborados en Lago Puelo, Argentina | Envios a todo el Pais 🚛 ✈️
                             </p>
                         </div>
                     </div>

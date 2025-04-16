@@ -29,7 +29,16 @@ export default function Detail({ params }: { params: { id: string } }) {
   const [productDetail, setProductDetail] = useState<Detail | null>(null);
   const [currentImage, setCurrentImage] = useState<string>("");
   const [video, setVideo] = useState<boolean>(true);
-
+  function capitalize(word: string) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }
+  function formatKey(key: string) {
+    return key
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+  
   useEffect(() => {
     const fetchDetail = async () => {
       try {
@@ -83,7 +92,7 @@ export default function Detail({ params }: { params: { id: string } }) {
 
   return (
     <main className="container mx-auto p-4">
-      <section className="flex flex-col gap-6 rounded-lg border border-gray-800 bg-gray-900 p-6 md:flex-row">
+      <section className="flex flex-col gap-2 rounded-lg border border-white border-4 bg-gray-rgb(144,144, 144) p-6 md:flex-row">
         {/* Image and Video Section */}
         <div className="flex flex-col items-center md:w-1/2">
         <MediaGallery media={media} />
@@ -115,7 +124,7 @@ export default function Detail({ params }: { params: { id: string } }) {
         {/* Product Details Section */}
         <div className="flex flex-col gap-4 text-white md:w-1/2">
           <h1 className="text-3xl font-bold md:text-4xl">{productDetail.model}</h1>
-          <h2 className="text-lg font-medium text-gray-400">{productDetail.category}</h2>
+          <h2 className="text-lg font-medium ">{productDetail.category}</h2>
 
           <div className="rounded-lg bg-blue-600 px-4 py-2 text-xl font-semibold text-center">
             AR$ {productDetail.price}
@@ -140,15 +149,24 @@ export default function Detail({ params }: { params: { id: string } }) {
           {/* Specifications */}
           <div>
             <h3 className="mt-6 text-2xl font-bold">Características:</h3>
-            <ul className="mt-2 space-y-2">
-              {productDetail.specs &&
-                Object.entries(productDetail.specs).map(([key, value]) => (
-                  <li key={key} className="flex gap-2">
-                    <span className="font-semibold text-gray-300">{key}:</span>
-                    <span>{String(value)}</span>
-                  </li>
-                ))}
-            </ul>
+            <ul className="mt-2 space-y-2 break-words">
+  {productDetail.specs &&
+    Object.entries(productDetail.specs).map(([key, value]) => (
+      <li
+        key={key}
+        className="flex flex-col md:flex-row md:items-start md:gap-2"
+      >
+        <span className="font-bold  bg-blue-600 text-gray-100">{formatKey(key)}:</span>
+        <span className="md:whitespace-normal break-words">
+          {String(value).toLowerCase()}
+        </span>
+      </li>
+    ))}
+</ul>
+
+
+
+
           </div>
         </div>
       </section>

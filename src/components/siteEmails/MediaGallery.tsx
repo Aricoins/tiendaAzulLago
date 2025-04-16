@@ -36,7 +36,7 @@ export default function MediaGallery({ media }: MediaGalleryProps) {
   };
 
   return (
-    <div className="w-[100%]">
+    <div className="w-[90%]">
       {/* Carrusel principal */}
       <Swiper
         modules={[Navigation, Thumbs, Pagination]}
