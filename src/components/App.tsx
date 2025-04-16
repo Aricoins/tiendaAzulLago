@@ -39,8 +39,7 @@ export default function App({ children }: { children: React.ReactNode }) {
         <>
             <div className={`relative ${loading ? '' : isCartVisiblePath ? 'lg:mx-0' : ''}`}>
                 {!isExcludedPath && <Navbar />}
-
-                <div className="relative w-full mt-20 h-screen overflow-hidden">
+                <div className="relative w-full mt-2 h-screen overflow-hidden">
                     <video src='/img/video.mp4' autoPlay loop muted className="absolute inset-0 w-full h-full object-cover" style={{ maskImage: "linear-gradient(to bottom, #d6c2c2 80%, transparent 100%)"}} />
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-0">
                         <h1
@@ -88,16 +87,6 @@ export default function App({ children }: { children: React.ReactNode }) {
             </div>
 
             <CartSideBar />
-
-            {isHomePage && (
-                <div className="flex flex-row justify-center">
-                    <iframe 
-                        src="https://docs.google.com/presentation/d/1JEMIzR3Fbo-CXN50EtCD2kw4x5GRZCFfcQpL58HU_8Q/embed?start=true&loop=true&delayms=8000" 
-                        width="960" 
-                        height="569" 
-                    ></iframe>
-                </div>
-            )}
 
             <Foot />
         </>

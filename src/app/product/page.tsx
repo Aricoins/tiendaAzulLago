@@ -70,7 +70,7 @@ export default async function Product({ searchParams }: { searchParams: SearchPa
             </div>
           }
           <FilterbyPriceRange />
-          <OrderButtons />
+          <OrderButtons />z
         </div>
 
         {/* Productos */}
@@ -86,7 +86,8 @@ export default async function Product({ searchParams }: { searchParams: SearchPa
                         src={product.video}
                         width={200}
                         height={200}
-                        controls
+                        autoPlay
+                        loop
                         className="rounded-lg my-5 mx-auto hover:shadow-xl"
                       />
                     ) : (

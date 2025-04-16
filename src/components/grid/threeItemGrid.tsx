@@ -4,34 +4,61 @@ import Link from "next/link";
 import { Products } from "@/app/lib/definitions";
 
 function ThreeItemGridItem({
-    item,
-    size,
-    priority
-  }: {
-    item: Products;
-    size: 'full' | 'half';
-    priority?: boolean;
-  }) {
-    return (
-        <div className={size === 'full' ? 'md:col-span-4 md:row-span-2' : 'md:col-span-2 md:row-span-1'}>
-                <Link className="relative block aspect-square h-full w-full" href={`/product/${item.id}`}>
-                <GridTileImage
-                src={item.image}
-                fill
-                sizes={
-                    size === 'full' ? '(min-width: 900px) 66vw, 100vw' : '(min-width: 900px) 33vw, 100vw'}
-                priority={priority}
-                alt={item.model}
-                label={{
-                    position: size === 'full' ? 'center' : 'bottom',
-                    title: item.model as string,
-                    amount: item.price.toString()
-                  }}
-                />
-                </Link>
+  item,
+  size,
+  priority
+}: {
+  item: Products;
+  size: 'full' | 'half';
+  priority?: boolean;
+}) {
+  return (
+    <div className={size === 'full' ? 'md:col-span-4 md:row-span-2' : 'md:col-span-2 md:row-span-1'}>
+      <Link
+        className="relative block aspect-square h-full w-full group overflow-hidden"
+        href={`/product/${item.id}`}
+      >
+        {item.video ? (
+          <video
+            className="h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+          >
+            <source src={item.video} type="video/mp4" />
+          </video>
+        ) : (
+          <GridTileImage
+            src={item.image}
+            fill
+            className="object-cover"
+            sizes={
+              size === 'full'
+                ? '(min-width: 900px) 66vw, 100vw'
+                : '(min-width: 900px) 33vw, 100vw'
+            }
+            priority={priority}
+            alt={item.model}
+          />
+        )}
+
+        <div
+          className={`
+            absolute inset-x-0 bottom-0 bg-black/60 p-2
+            text-white transition-opacity duration-300 group-hover:opacity-90
+            ${size === 'full' ? 'md:text-center' : ''}
+          `}
+        >
+          <h3 className="text-lg font-medium">{item.model}</h3>
+          <p className="text-sm">${item.price}</p>
         </div>
-    )
+      </Link>
+    </div>
+  )
 }
+
+// Resto del código se mantiene igual...
 
 function shuffleArray(array: any) {
   const newArray = [...array];
