@@ -47,4 +47,18 @@ body {
 .cart-badge {
   @apply absolute ml-4 mt-2 text-center w-5 h-auto bg-red-500 text-white text-xs font-semibold rounded-full px-1 py-0.5;
 }
+.swiper-button-prev,
+.swiper-button-next {
+  color: #3b82f6 !important; /* Color azillo */
+  padding: 0 20px;
+}
+
+.swiper-pagination-bullet-active {
+  background: #3b82f6 !important;
+}
+
+.thumbs-swiper .swiper-slide-thumb-active > div {
+  border-color: #3b82f6 !important;
+  opacity: 1 !important;
+}
 

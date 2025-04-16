@@ -1,0 +1,73 @@
+[
+  {
+    "id": 21,
+    "model": "Óleo 7",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1734016225/i8n5b9n7gu314ygzfs31.jpg",
+    "category": "Medicinales",
+    "price": "29000",
+    "specs": {
+      "beneficios": "Óleo 7 es una poderosa mezcla de aceites esenciales naturales diseñada para aliviar síntomas gripales y respiratorios. Su combinación única de abeto, eucalipto y menta ayuda a despejar las vías respiratorias, mientras que el romero, el orégano y el laurel proporcionan un efecto antiinflamatorio y calmante. Además, la lavanda aporta una sensación de bienestar y relajación, ideal para enfrentar los días más difíciles. Llevá con vos este práctico roll-on y experimentá alivio y frescura en cualquier momento.",
+      "ingredientes": "Aceites esenciales de Lavanda, Eucalipto, Abeto, Romero, Menta, Orégano y Laurel",
+      "presentacion": "Roll-on 10ml"
+    },
+    "video": "https://res.cloudinary.com/dx0htqhaq/video/upload/v1734016848/ogkdwxma14goa0sdcdwb.mp4"
+  },
+  {
+    "id": 22,
+    "model": "Aceite Thieves",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1744826931/Render_Mockup_1920_1920_2025-04-17_2_wwe6xn.jpg",
+    "category": "Medicinales",
+    "price": "4900",
+    "specs": {
+      "beneficios": "Inspirado en una antigua leyenda europea, el Aceite Thieves combina el poder del laurel, eucalipto y romero para brindar protección natural. Su uso tradicional está asociado al refuerzo del sistema inmune, la limpieza energética y el alivio de síntomas respiratorios. El laurel aporta propiedades antimicrobianas, el eucalipto es descongestionante y el romero estimula la circulación y el bienestar general.",
+      "ingredientes": "Aceites esenciales de Laurel, Eucalipto y Romero",
+      "presentacion": "Frasco de 10 ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, especialmente en cuello, pecho o planta de los pies. También puede usarse en difusor o para limpieza ambiental."
+    },
+    "video": "https://res.cloudinary.com/dx0htqhaq/video/upload/v1744827213/quuzjbuqocpipsfnjut2.mov"
+  },
+  {
+    "id": 1,
+    "model": "Aceite de Eucalipto",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1719080173/ozjzv4gk8x2j5b6f7c9d.png",
+    "category": "Medicinales",
+    "price": "4900",
+    "specs": {
+      "beneficios": "El aceite de eucalipto es conocido por sus propiedades descongestionantes y antisépticas. Ideal para aliviar síntomas de resfriados y problemas respiratorios, su aroma fresco y mentolado ayuda a despejar las vías respiratorias. También es útil para calmar dolores musculares y articulares, proporcionando una sensación de frescura y alivio.",
+      "ingredientes": "Aceite esencial de Eucalipto (Eucalyptus globulus)",
+      "presentacion": "Frasco de 10 ml"
+    },
+    "video": ""
+  },
+  {
+    "id": 11,
+    "model": "Purificador de Ambientes",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1719080173/t2eqo3nq4puvrkbputih.png",
+    "category": "Aromáticas",
+    "price": "18000",
+    "specs": {
+      "beneficios": "El Purificador de Ambientes es una mezcla poderosa de óleos esenciales y hidrolatos naturales, diseñada para limpiar, desodorizar y revitalizar cualquier espacio. Con aromas frescos de vegetales y hierbas, este purificador no solo elimina malos olores, sino que también proporciona un ambiente fresco y equilibrado. Perfecto para usar en cualquier habitación, deja un aroma suave y refrescante que mejora tu bienestar y el de quienes te rodean.",
+      "ingredientes": "Hidrolatos de eucalipto, romero, lavanda y óleos esenciales",
+      "presentacion": "250ml"
+    },
+    "video": ""
+  },
+ 
+  {
+    "id": 15,
+    "model": "BioCoop",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1723823661/udx8aymhkp1hiq8llwtw.jpg",
+    "category": "Medicinales",
+    "price": "4900",
+    "specs": {
+      "descripcion": "El BioCoop es un repelente y fungicida no tóxico, ecológico y biodegradable, elaborado en nuestra cooperativa con base de aceite de Neem, un aceite vegetal altamente medicinal. Este producto se destaca por su potente acción insecticida y fungicida, siendo adecuado para uso en plantas, humanos y animales.",
+      "beneficios": "Para Plantas: Actúa como pesticida ecológico controlando diversos insectos que pueden convertirse en plagas. Además, potencia el brillo de tus plantas y refuerza su sistema inmunológico. Para Humanos: Usado tópicamente, es eficaz para afecciones de la piel como inflamaciones, psoriasis, hongos y piojos. Para Animales: Previene y controla pulgas, sarna y hongos. Su origen orgánico lo hace seguro y no agresivo para las mascotas.",
+      "ingredientes": "Aceite de Neem (Azadirachta indica)",
+      "presentacion": "Frasco de 60 ml",
+      "modo_uso": "Para Plantas: Diluir 20 ml por litro de agua para prevención. Para atacar plagas, diluir 40 ml por litro de agua. Para Humanos: Aplicar directamente sobre las áreas afectadas de la piel. Para Animales: Aplicar diluido en el agua del baño o directamente sobre la piel de los animales, evitando el contacto con los ojos y mucosas.",
+      "precauciones": "Mantener fuera del alcance de los niños. Evitar el contacto con los ojos. Solo para uso externo. En caso de irritación en la piel, suspender el uso y consultar a un médico.",
+      "conservacion": "Almacenar en un lugar fresco y seco, alejado de la luz solar directa."
+    },
+    "video": ""
+  }
+]

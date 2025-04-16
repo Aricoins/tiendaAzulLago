@@ -1,8 +1,15 @@
 'use client'
 import { useEffect, useState } from "react";
+
+interface MediaItem {
+  type: 'image' | 'video';
+  url: string;
+  thumbnail?: string;
+}
 import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
 import { AddToCart } from "@/components/AddToCart";
+import MediaGallery from "@/components/siteEmails/MediaGallery";
 
 interface Detail {
   id: string;
@@ -50,32 +57,37 @@ export default function Detail({ params }: { params: { id: string } }) {
       </div>
     );
   }
+  const media: MediaItem[] = [];
+
+  if (productDetail.video) {
+    media.push({
+      type: 'video',
+      url: productDetail.video,
+      thumbnail: productDetail.image, // Usar la imagen principal como miniatura para el video
+    });
+  }
+  
+  media.push({
+    type: 'image',
+    url: productDetail.image,
+  });
+  
+  if (productDetail.carrusel) {
+    Object.values(productDetail.carrusel).forEach((url) => {
+      media.push({
+        type: 'image',
+        url: typeof url === 'string' ? url : String(url),
+      });
+    });
+  }
 
   return (
     <main className="container mx-auto p-4">
       <section className="flex flex-col gap-6 rounded-lg border border-gray-800 bg-gray-900 p-6 md:flex-row">
         {/* Image and Video Section */}
         <div className="flex flex-col items-center md:w-1/2">
-          <div className="h-[24rem] w-full">
-            {productDetail.video && video ? (
-              <video
-                className="h-full w-full rounded-md object-cover"
-                controls
-                autoPlay
-              >
-                <source src={productDetail.video} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            ) : (
-              <Image
-                src={currentImage || productDetail.image}
-                alt={productDetail.model}
-                width={600}
-                height={400}
-                className="h-full w-full rounded-md object-cover"
-              />
-            )}
-          </div>
+        <MediaGallery media={media} />
+
 
           {/* Image Carousel */}
           <div className="mt-4 flex flex-wrap justify-center gap-2">
@@ -93,7 +105,7 @@ export default function Detail({ params }: { params: { id: string } }) {
                     alt={key}
                     width={60}
                     height={60}
-                    className="h-16 w-16 rounded-md object-cover"
+                    className=" m-10 h-16 w-16 rounded-md object-cover"
                   />
                 </button>
               ))}
@@ -118,15 +130,7 @@ export default function Detail({ params }: { params: { id: string } }) {
             increasePerClick={true}
             redirect={false}
           />
-
-          {productDetail.website && (
-            <a
-              href={productDetail.website}
-              className="mt-4 text-blue-400 hover:underline"
-            >
-              Visit Website
-            </a>
-          )}
+            
 
           {/* Specifications */}
           <div>

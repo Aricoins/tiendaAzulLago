@@ -292,7 +292,6 @@ const auth = process.env.ADMIN_ID
             <select
               name="category"
               id="category"
-              placeholder='Select a Category'
               value={form.category}
               onChange={handleChange}
               className='text-3xl text-black w-full border-blue-500'  

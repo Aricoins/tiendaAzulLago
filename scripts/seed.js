@@ -1,19 +1,27 @@
 const { db } = require('@vercel/postgres');
-const appledb = require('../src/app/lib/appledb.json');
+const products = require('../src/app/lib/products.json');
 
+// Helper para generar URLs de video en formato Cloudinary
+const generateVideoUrl = (productName) => {
+  const baseUrl = 'https://res.cloudinary.com/dx0htqhaq/video/upload/';
+  const videoCodes = [
+    'v1744809596/z2mgalnbx492rkfs8iip', // Desinfectante
+    'v1727569967/feattplfoqbo8j79xh1z', // Óleo 7
+    'v1728318027/eqfvgtab8gqn5ziybgbn', // Limpiador
+    'v1728319579/ftfv8lp6gwl0143iwl9q'  // Limpiador alternativo
+  ];
+  const randomCode = videoCodes[Math.floor(Math.random() * videoCodes.length)];
+  return `${baseUrl}${randomCode}.mp4`;
+};
 
 async function clearProductsTable() {
-    try {
-      await db.query('TRUNCATE TABLE products');
-      
-      
-      console.log('Products table cleared successfully!');
-    } catch (error) {
-      console.error('Error clearing products table:', error);
-    }
+  try {
+    await db.query('TRUNCATE TABLE products RESTART IDENTITY CASCADE');
+    console.log('Products table cleared successfully!');
+  } catch (error) {
+    console.error('Error clearing products table:', error);
   }
-
-
+}
 
 async function seedProducts(client) {
   try {
@@ -21,59 +29,47 @@ async function seedProducts(client) {
     
     const createTable = await client.sql`
       CREATE TABLE IF NOT EXISTS products (
+        id SERIAL PRIMARY KEY,
         model VARCHAR(255) NOT NULL,
         category VARCHAR(255) NOT NULL,
-        specs JSONB,
+        specs JSONB NOT NULL,
         image VARCHAR(255) NOT NULL,
-        colors TEXT[],
-        price FLOAT NOT NULL,
-        carrusel JSONB,
+        price DECIMAL NOT NULL,
         video VARCHAR(255),
-        website VARCHAR(255)
+        disable BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
     `;
 
-    const createUsersTable = await client.sql`
-      CREATE TABLE IF NOT EXISTS users (
-        id VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        clientsecret VARCHAR(255),
-        paymentid VARCHAR(255)
-      );`;
-
-    const createCartItemTable = await client.sql`
-      CREATE TABLE IF NOT EXISTS cart_items (
-        cart_item_id INT NOT NULL,
-        product_id VARCHAR(255) NOT NULL,
-        user_id VARCHAR(255) NOT NULL,
-        name VARCHAR(255) NOT NULL,
-        image VARCHAR(255) NOT NULL,
-        price INT NOT NULL,
-        qty INT NOT NULL
-      );`;
-
     console.log(`Created "products" table`);
 
-   await clearProductsTable()
+    await clearProductsTable();
 
-    // Insert data into the table
+    // Insertar productos
     const insertedProducts = await Promise.all(
-      appledb.map(async (product) => {
+      products.map(async (product) => {
         return client.sql`
-        INSERT INTO products (model, category, specs, image, colors, price, carrusel, video, website)
-        VALUES (${product.model}, ${product.category}, ${product.specs}, ${product.img_url}, ${product.colors}, ${product.price}, ${product.img_carrusel}, ${product.video}, ${product.website})
-        ON CONFLICT (id) DO NOTHING;
-      `;
+          INSERT INTO products (model, category, specs, image, price, video, disable)
+          VALUES (
+            ${product.model},
+            ${product.category},
+            ${product.specs},
+            ${product.image},
+            ${parseFloat(product.price)},
+            ${product.video || generateVideoUrl(product.model)},
+            ${product.disable || false}
+          );
+        `;
       }),
     );
 
     console.log(`Seeded ${insertedProducts.length} products`);
+    console.log('Products:', insertedProducts);
 
     return {
       createTable,
-      products: insertedProducts,
-      createUsersTable,
-      createCartItemTable,
+      products: insertedProducts
     };
   } catch (error) {
     console.error('Error seeding products:', error);
