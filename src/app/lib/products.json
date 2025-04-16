@@ -15,7 +15,7 @@
   {
     "id": 22,
     "model": "Aceite Thieves",
-    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1744826931/Render_Mockup_1920_1920_2025-04-17_2_wwe6xn.jpg",
+    "image": ["https://res.cloudinary.com/dx0htqhaq/image/upload/v1744826931/Render_Mockup_1920_1920_2025-04-17_2_wwe6xn.jpg","https://res.cloudinary.com/dx0htqhaq/image/upload/v1744827027/video.mp4_be99ag.png"],
     "category": "Medicinales",
     "price": "4900",
     "specs": {
