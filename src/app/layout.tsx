@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     default: 'Azul Lago - Tienda Oficial',
   },
   description: 'Descubre nuestra colección exclusiva de productos. Envíos rápidos y garantía de calidad.',
-  keywords: ['patagonia', 'organico', 'aceites esenciales', 'hidrolatos'],
+  keywords: ['patagonia', 'organico', 'aceites esenciales', 'hidrolatos', 'lago', 'azul'],
   openGraph: {
     type: 'website',
     locale: 'es_ES',

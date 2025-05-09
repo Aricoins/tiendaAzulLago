@@ -164,6 +164,34 @@ export default function CartPage() {
 
       const data = await response.json();
       setPreferenceId(data.preferenceId);
+      await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          preference_id: data.preferenceId,
+          payer: {
+            email: user.user?.primaryEmailAddress?.emailAddress,
+            name: user.user?.firstName,
+            surname: user.user?.lastName,
+            dni: payerDetails.identification,
+            phone: `${payerDetails.phone_area_code}${payerDetails.phone_number}`,
+            address: payerDetails.address,
+          },
+          total_amount: itemsPrice,
+          items: cartItems.map((item) => ({
+            product_id: item.id,
+            title: item.name,
+            quantity: item.qty,
+            unit_price: item.price,
+          })),
+        }),
+      });
+      
+
+
+
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -278,7 +306,7 @@ export default function CartPage() {
                         type="primary"
                         onClick={() => setIsModalOpen(true)}
                         disabled={isLoading}
-                        className="bg-blue-500 text-black text-lg text-center"
+                        className="bg-blue-500 text-black text-lg text-center text-white hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg px-4 py-2"
                       >
                         {isLoading ? "Generando pago..." : "Cargar datos de envío"}
                       </Button>

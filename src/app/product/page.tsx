@@ -8,7 +8,6 @@ import FilterbyPriceRange from '@/components/filterPriceRange';
 import AverageRatingStars from '@/components/RatingReview/AverageRating';
 import { Suspense } from 'react';
 import ClipLoader from 'react-spinners/ClipLoader';
-
 export const fetchCache = 'force-no-store';
 
 interface SearchParams {
