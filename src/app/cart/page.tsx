@@ -83,17 +83,22 @@ export default function CartPage() {
     dispatch(removeFromCart(id));
   };
 
+  useEffect(() => {
+    return () => {
+      setPreferenceId(null); // Limpia al desmontar el componente
+    };
+  }, []);
+  
+
   const handleOk = () => {
-    form
-      .validateFields()
-      .then((values: number) => {
+    form.validateFields()
+      .then((values) => {
+        setPreferenceId(null); // Resetear antes de nueva creación
         form.resetFields();
         setIsModalOpen(false);
         createPreference(values);
       })
-      .catch((info: string) => {
-        console.log("Validate Failed:", info);
-      });
+      .catch(console.error);
   };
 
   const handleCancel = () => {
@@ -312,12 +317,12 @@ export default function CartPage() {
                       </Button>
                     </li>
                     <li>
-                      {preferenceId && (
-                        <Wallet
-                          initialization={{ preferenceId }}
-                        
-                        />
-                      )}
+                    {preferenceId && (
+  <Wallet
+    key={preferenceId} // Forzar recreación del componente
+    initialization={{ preferenceId }}
+  />
+)}
                     </li>
                   </ul>
                 </div>
@@ -397,7 +402,7 @@ export default function CartPage() {
           >
             <Input placeholder="Dirección" />
           </Form.Item>
-          Envios a Todo el País en 24hs
+          Envios a Todo el País
         </Form>
       </Modal>
     </div>
