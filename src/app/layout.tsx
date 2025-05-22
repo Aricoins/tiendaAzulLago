@@ -7,7 +7,7 @@ import { ClerkProvider, RedirectToSignIn, SignedOut } from "@clerk/nextjs";
 import { StoreProvider } from "@/redux/storeProvider";
 import CartSideBar from "@/components/CartSideBar";
 import App from "@/components/App";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,12 +17,12 @@ export const metadata: Metadata = {
     template: '%s | Azul Lago',
     default: 'Azul Lago - Tienda Oficial',
   },
-  description: 'Descubre nuestra colección exclusiva de productos. Envíos rápidos y garantía de calidad.',
-  keywords: ['patagonia', 'organico', 'aceites esenciales', 'hidrolatos', 'lago', 'azul'],
+  description: 'Descubí nuestra colección exclusiva de productos. Envíos rápidos y garantía de calidad.',
+  keywords: ['patagonia', 'orgánico', 'aceites esenciales', 'hidrolatos', 'lago', 'azul'],
   openGraph: {
     type: 'website',
     locale: 'es_ES',
-    url: 'https://www.azullago.com',
+    url: 'https://www.tienda.azullago.com',
     siteName: 'Azul Lago',
     images: [
       {
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
       },
     ],
   },
-  metadataBase: new URL('https://www.azullago.com'),
+  metadataBase: new URL('https://www.tienda.azullago.com'),
 };
 
 export default function RootLayout({
