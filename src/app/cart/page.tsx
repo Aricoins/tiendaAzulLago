@@ -318,7 +318,7 @@ export default function CartPage() {
                     <li>
                     {preferenceId && (
   <Wallet
-    key={preferenceId} // Forzar recreación del componente
+   // key={preferenceId} // Forzar recreación del componente
     initialization={{ preferenceId }}
   />
 )}
