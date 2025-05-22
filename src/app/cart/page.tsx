@@ -93,7 +93,6 @@ export default function CartPage() {
   const handleOk = () => {
     form.validateFields()
       .then((values) => {
-        setPreferenceId(null); // Resetear antes de nueva creación
         form.resetFields();
         setIsModalOpen(false);
         createPreference(values);
@@ -313,7 +312,7 @@ export default function CartPage() {
                         disabled={isLoading}
                         className="bg-blue-500 text-black text-lg text-center text-white hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg px-4 py-2"
                       >
-                        {isLoading ? "Generando pago..." : "Cargar datos de envío"}
+                        {isLoading ? "Generando pago..." : "A dónde lo enviamos?"}
                       </Button>
                     </li>
                     <li>
