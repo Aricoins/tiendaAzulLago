@@ -8,6 +8,7 @@ import { StoreProvider } from "@/redux/storeProvider";
 import CartSideBar from "@/components/CartSideBar";
 import App from "@/components/App";
 import { Analytics } from "@vercel/analytics/next";
+import Script from 'next/script';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -42,7 +43,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es"> {/* Cambiado a español */}
+    <html lang="es">
+      <head>
+        {/* Google Analytics */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', { page_path: window.location.pathname });`}
+        </Script>
+      </head>
       <body className={inter.className}>
         <ClerkProvider>
           <StoreProvider>
