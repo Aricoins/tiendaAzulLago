@@ -1,16 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Cookies from 'js-cookie';
-
-interface CartItem {
-    
-    cart_item_id: number;
-    userid: string;
-    id: string;
-    name: string;
-    image: string;
-    price: number;
-    qty: number;
-}
+import { CartItem } from "@/app/lib/definitions";
 
 interface CartState {
     loading: boolean;
@@ -20,28 +9,39 @@ interface CartState {
     shippingPrice: string;
     taxPrice: string;
     totalPrice: string;
-    payment_id: string;
-    payment_intent: string;
+    preference_id: string; // MercadoPago preference ID
     showSideBar: boolean;
     shippingAddress: object;
 }
 
-const storedCart = null
+const getStoredCart = () => {
+    if (typeof window !== 'undefined') {
+        try {
+            const stored = localStorage.getItem('cart');
+            return stored ? JSON.parse(stored) : null;
+        } catch (error) {
+            console.error('Error parsing stored cart:', error);
+            return null;
+        }
+    }
+    return null;
+};
+
+const storedCart = getStoredCart();
 
 const initialState: CartState = storedCart
-    ? {...JSON.parse(storedCart), 
-    loading: true,
-    showSidebar: false }
+    ? {...storedCart, 
+    loading: false,
+    showSideBar: false }
     : {
-    loading: true,
+    loading: false,
     cartItems: [],
     user_id: '',
     itemsPrice: '0.00',
     shippingPrice: '0.00',
     taxPrice: '0.00',
     totalPrice: '0.00',
-    payment_id: '',
-    payment_intent:'',
+    preference_id: '',
     shippingAddress: {},
 };
 
@@ -49,35 +49,47 @@ const addDecimals = (num: number): string => {
     return (Math.round(num * 100) / 100).toFixed(2);
 };
 
+const saveToLocalStorage = (state: CartState) => {
+    if (typeof window !== 'undefined') {
+        try {
+            localStorage.setItem('cart', JSON.stringify(state));
+        } catch (error) {
+            console.error('Error saving cart to localStorage:', error);
+        }
+    }
+};
+
 export const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
-        addPaymentIntent: (state, action: PayloadAction<string>)=>{
-            state.payment_intent = action.payload
-        },
-        addClientSecret: (state, action: PayloadAction<string>)=>{
-            state.payment_id = action.payload;
+        addPreferenceId: (state, action: PayloadAction<string>)=>{
+            state.preference_id = action.payload
         },
         addUserID: (state, action: PayloadAction<string>)=>{
             state.user_id = action.payload
-        }
-        ,
+        },
         saveShippingAddress: (state, action: PayloadAction<object>)=>{
             state.shippingAddress = action.payload
         },
         hideLoading: (state) => {
             state.loading = false;
         },
-        savePaymentId: (state, action: PayloadAction<string>)=>{
-            state.payment_id = action.payload
+        clearCart: (state) => {
+            state.cartItems = [];
+            state.itemsPrice = '0.00';
+            state.shippingPrice = '0.00';
+            state.taxPrice = '0.00';
+            state.totalPrice = '0.00';
+            state.preference_id = '';
+            saveToLocalStorage(state);
         },
         addToCart: (state, action: PayloadAction<CartItem>) => {
             const item = action.payload;
-            const existItem = state.cartItems.find((x) => x.id === item.id);
+            const existItem = state.cartItems.find((x) => x.product_id === item.product_id);
             if (existItem) {
                 state.cartItems = state.cartItems.map((x) =>
-                    x.id === existItem.id ? item : x
+                    x.product_id === existItem.product_id ? item : x
                 );
             } else {
                 state.cartItems = [...state.cartItems, item];
@@ -94,10 +106,10 @@ export const cartSlice = createSlice({
                 Number(state.shippingPrice) +
                 Number(state.taxPrice)
             ).toString();
-            // Cookies.set('cart', JSON.stringify(state));
+            saveToLocalStorage(state);
         },
         removeFromCart: (state, action: PayloadAction<string>) => {
-            state.cartItems = state.cartItems.filter((x) => x.id !== action.payload);
+            state.cartItems = state.cartItems.filter((x) => x.product_id !== action.payload);
             state.itemsPrice = addDecimals(
                 state.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
             );
@@ -110,12 +122,12 @@ export const cartSlice = createSlice({
                 Number(state.shippingPrice) +
                 Number(state.taxPrice)
             ).toString();
-            // Cookies.set('cart', JSON.stringify(state));
+            saveToLocalStorage(state);
         },
         
     },
 });
 
-export const { addToCart, removeFromCart, saveShippingAddress, hideLoading, savePaymentId, addUserID, addClientSecret, addPaymentIntent } = cartSlice.actions;
+export const { addToCart, removeFromCart, saveShippingAddress, hideLoading, addUserID, addPreferenceId, clearCart } = cartSlice.actions;
 
 export const cartReducer = cartSlice.reducer;

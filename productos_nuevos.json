@@ -1,0 +1,534 @@
+[
+  {
+    "id": 23,
+    "model": "Hidrolato de Hamamelis",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000000/hidrolato-hamamelis.jpg",
+    "category": "Hidrolatos",
+    "price": "8500",
+    "specs": {
+      "beneficios": "El hidrolato de hamamelis es reconocido por sus propiedades astringentes y antiinflamatorias. Ideal para pieles grasas, mixtas y con tendencia acneica, ayuda a cerrar poros, controlar el exceso de grasa y calmar irritaciones. También es excelente para el cuidado de pieles sensibles y como tónico facial refrescante.",
+      "ingredientes": "Hidrolato puro de Hamamelis (Hamamelis virginiana)",
+      "presentacion": "Frasco de 250ml",
+      "modo_uso": "Aplicar con algodón sobre rostro limpio como tónico, o pulverizar directamente sobre la piel. Puede usarse mañana y noche."
+    },
+    "video": ""
+  },
+  {
+    "id": 24,
+    "model": "Hidrolato de Manzanilla",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000001/hidrolato-manzanilla.jpg",
+    "category": "Hidrolatos",
+    "price": "8500",
+    "specs": {
+      "beneficios": "El hidrolato de manzanilla es conocido por sus propiedades calmantes y suavizantes. Perfecto para pieles sensibles, irritadas o con rojeces, proporciona alivio inmediato y ayuda a restaurar el equilibrio natural de la piel. También es ideal para el cuidado de pieles delicadas y como demaquillante suave.",
+      "ingredientes": "Hidrolato puro de Manzanilla (Matricaria chamomilla)",
+      "presentacion": "Frasco de 250ml",
+      "modo_uso": "Aplicar con algodón sobre rostro limpio, o pulverizar directamente sobre la piel. Ideal para usar después del sol o en pieles irritadas."
+    },
+    "video": ""
+  },
+  {
+    "id": 25,
+    "model": "Hidrolato de Caléndula",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000002/hidrolato-calendula.jpg",
+    "category": "Hidrolatos",
+    "price": "8500",
+    "specs": {
+      "beneficios": "El hidrolato de caléndula es valorado por sus propiedades cicatrizantes y regeneradoras. Ideal para pieles dañadas, con heridas menores, irritaciones o eczemas, ayuda a acelerar el proceso de curación y regeneración celular. También es excelente para el cuidado de pieles maduras y como calmante post-afeitado.",
+      "ingredientes": "Hidrolato puro de Caléndula (Calendula officinalis)",
+      "presentacion": "Frasco de 250ml",
+      "modo_uso": "Aplicar con algodón sobre la zona afectada, o pulverizar directamente sobre la piel. Usar 2-3 veces al día para mejores resultados."
+    },
+    "video": ""
+  },
+  {
+    "id": 26,
+    "model": "Hidrolato de Rosas",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000003/hidrolato-rosas.jpg",
+    "category": "Hidrolatos",
+    "price": "9500",
+    "specs": {
+      "beneficios": "El hidrolato de rosas es apreciado por sus propiedades hidratantes y rejuvenecedoras. Ideal para todo tipo de pieles, especialmente pieles maduras y secas, ayuda a mantener la hidratación natural, mejora la elasticidad y proporciona un aroma delicado y relajante. También es excelente como tónico facial de lujo.",
+      "ingredientes": "Hidrolato puro de Rosa (Rosa damascena)",
+      "presentacion": "Frasco de 250ml",
+      "modo_uso": "Aplicar con algodón sobre rostro limpio como tónico, o pulverizar directamente sobre la piel. Puede usarse como bruma facial durante el día."
+    },
+    "video": ""
+  },
+  {
+    "id": 27,
+    "model": "Hidrolato de Lavanda",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000004/hidrolato-lavanda.jpg",
+    "category": "Hidrolatos",
+    "price": "8500",
+    "specs": {
+      "beneficios": "El hidrolato de lavanda es reconocido por sus propiedades calmantes y equilibrantes. Ideal para pieles sensibles, irritadas o con tendencia a la rosácea, ayuda a reducir el estrés de la piel y proporciona una sensación de calma y bienestar. También es excelente para uso nocturno y como relajante natural.",
+      "ingredientes": "Hidrolato puro de Lavanda (Lavandula angustifolia)",
+      "presentacion": "Frasco de 250ml",
+      "modo_uso": "Aplicar con algodón sobre rostro limpio, o pulverizar directamente sobre la piel. Ideal para usar antes de dormir por sus propiedades relajantes."
+    },
+    "video": ""
+  },
+  {
+    "id": 28,
+    "model": "Hidrolato de Romero",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000005/hidrolato-romero.jpg",
+    "category": "Hidrolatos",
+    "price": "8500",
+    "specs": {
+      "beneficios": "El hidrolato de romero es apreciado por sus propiedades estimulantes y purificantes. Ideal para pieles grasas, con tendencia acneica y cuero cabelludo graso, ayuda a estimular la circulación, controlar la grasa excesiva y fortalecer el cabello. También es excelente como tónico energizante matutino.",
+      "ingredientes": "Hidrolato puro de Romero (Rosmarinus officinalis)",
+      "presentacion": "Frasco de 250ml",
+      "modo_uso": "Aplicar con algodón sobre rostro limpio, o pulverizar directamente sobre la piel y cuero cabelludo. Ideal para uso matutino por sus propiedades estimulantes."
+    },
+    "video": ""
+  },
+  {
+    "id": 29,
+    "model": "Aceite de Romero",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000006/aceite-romero.jpg",
+    "category": "Medicinales",
+    "price": "4900",
+    "specs": {
+      "beneficios": "El aceite de romero es conocido por sus propiedades estimulantes y fortalecedoras. Ideal para mejorar la circulación sanguínea, fortalecer el cabello y cuero cabelludo, y aliviar dolores musculares y articulares. También es excelente para mejorar la concentración y memoria, y como estimulante natural.",
+      "ingredientes": "Aceite esencial de Romero (Rosmarinus officinalis)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, cuero cabelludo o músculos. También puede usarse en difusor para aromaterapia."
+    },
+    "video": ""
+  },
+  {
+    "id": 30,
+    "model": "Aceite de Lavanda",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000007/aceite-lavanda.jpg",
+    "category": "Medicinales",
+    "price": "4900",
+    "specs": {
+      "beneficios": "El aceite de lavanda es valorado por sus propiedades calmantes y relajantes. Ideal para reducir el estrés, promover el sueño reparador, calmar irritaciones de la piel y aliviar dolores de cabeza. También es excelente para el cuidado de pieles sensibles y como relajante natural.",
+      "ingredientes": "Aceite esencial de Lavanda (Lavandula angustifolia)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o unas gotas en la almohada para favorecer el sueño. También puede usarse en difusor."
+    },
+    "video": ""
+  },
+  {
+    "id": 31,
+    "model": "Aceite de Menta",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000008/aceite-menta.jpg",
+    "category": "Medicinales",
+    "price": "4900",
+    "specs": {
+      "beneficios": "El aceite de menta es reconocido por sus propiedades refrescantes y descongestionantes. Ideal para aliviar dolores de cabeza, náuseas, problemas digestivos y congestión nasal. También es excelente para refrescar el aliento, calmar dolores musculares y proporcionar una sensación de frescura inmediata.",
+      "ingredientes": "Aceite esencial de Menta (Mentha piperita)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o inhalar directamente para aliviar congestión. También puede usarse en difusor."
+    },
+    "video": ""
+  },
+  {
+    "id": 32,
+    "model": "Aceite de Limón",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000009/aceite-limon.jpg",
+    "category": "Medicinales",
+    "price": "4900",
+    "specs": {
+      "beneficios": "El aceite de limón es apreciado por sus propiedades purificantes y energizantes. Ideal para limpiar y desinfectar superficies, mejorar el estado de ánimo, estimular la concentración y fortalecer el sistema inmunológico. También es excelente para el cuidado de pieles grasas y como desodorante natural.",
+      "ingredientes": "Aceite esencial de Limón (Citrus limon)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede añadirse a productos de limpieza caseros."
+    },
+    "video": ""
+  },
+  {
+    "id": 33,
+    "model": "Aceite de Naranja",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000010/aceite-naranja.jpg",
+    "category": "Medicinales",
+    "price": "4900",
+    "specs": {
+      "beneficios": "El aceite de naranja es conocido por sus propiedades alegres y estimulantes. Ideal para mejorar el estado de ánimo, reducir la ansiedad, estimular la digestión y crear un ambiente cálido y acogedor. También es excelente para el cuidado de pieles opacas y como aromatizante natural.",
+      "ingredientes": "Aceite esencial de Naranja (Citrus sinensis)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor para crear un ambiente alegre. También puede añadirse a productos de cuidado personal."
+    },
+    "video": ""
+  },
+  {
+    "id": 34,
+    "model": "Aceite de Árbol de Té",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000011/aceite-arbol-te.jpg",
+    "category": "Medicinales",
+    "price": "5900",
+    "specs": {
+      "beneficios": "El aceite de árbol de té es valorado por sus propiedades antimicrobianas y antisépticas. Ideal para el tratamiento de acné, hongos, infecciones cutáneas menores y caspa. También es excelente para purificar el aire, limpiar superficies y como desinfectante natural.",
+      "ingredientes": "Aceite esencial de Árbol de Té (Melaleuca alternifolia)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel afectada, o usar puro en pequeñas cantidades sobre granitos. También puede usarse en difusor."
+    },
+    "video": ""
+  },
+  {
+    "id": 35,
+    "model": "Aceite de Geranio",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000012/aceite-geranio.jpg",
+    "category": "Medicinales",
+    "price": "6900",
+    "specs": {
+      "beneficios": "El aceite de geranio es apreciado por sus propiedades equilibrantes y regeneradoras. Ideal para regular la producción de grasa en la piel, mejorar la elasticidad cutánea, equilibrar las hormonas y crear un ambiente floral y relajante. También es excelente para el cuidado de pieles maduras y mixtas.",
+      "ingredientes": "Aceite esencial de Geranio (Pelargonium graveolens)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede añadirse a productos de cuidado facial caseros."
+    },
+    "video": ""
+  },
+  {
+    "id": 36,
+    "model": "Aceite de Clavo",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000013/aceite-clavo.jpg",
+    "category": "Medicinales",
+    "price": "4900",
+    "specs": {
+      "beneficios": "El aceite de clavo es reconocido por sus propiedades analgésicas y antimicrobianas. Ideal para aliviar dolor de muelas, infecciones bucales, dolores musculares y articulares. También es excelente como repelente de insectos y para crear un ambiente cálido y especiado.",
+      "ingredientes": "Aceite esencial de Clavo (Syzygium aromaticum)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar una gota directamente sobre la muela afectada. También puede usarse en difusor en pequeñas cantidades."
+    },
+    "video": ""
+  },
+  {
+    "id": 37,
+    "model": "Aceite de Canela",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000014/aceite-canela.jpg",
+    "category": "Medicinales",
+    "price": "5900",
+    "specs": {
+      "beneficios": "El aceite de canela es conocido por sus propiedades estimulantes y antimicrobianas. Ideal para estimular la circulación, mejorar la digestión, combatir infecciones y crear un ambiente cálido y acogedor. También es excelente para fortalecer el sistema inmunológico y como afrodisíaco natural.",
+      "ingredientes": "Aceite esencial de Canela (Cinnamomum verum)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar muy diluido en aceite portador sobre la piel, o usar en difusor en pequeñas cantidades. Precaución: puede causar irritación si se usa concentrado."
+    },
+    "video": ""
+  },
+  {
+    "id": 38,
+    "model": "Aceite de Citronela",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000015/aceite-citronela.jpg",
+    "category": "Medicinales",
+    "price": "4900",
+    "specs": {
+      "beneficios": "El aceite de citronela es valorado por sus propiedades repelentes y purificantes. Ideal para repeler mosquitos y otros insectos, purificar el aire, aliviar dolores de cabeza y crear un ambiente fresco y limpio. También es excelente para uso en exteriores y como desodorante natural.",
+      "ingredientes": "Aceite esencial de Citronela (Cymbopogon nardus)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel como repelente, o usar en difusor. También puede añadirse a velas o productos de limpieza."
+    },
+    "video": ""
+  },
+  {
+    "id": 39,
+    "model": "Aceite de Jengibre",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000016/aceite-jengibre.jpg",
+    "category": "Medicinales",
+    "price": "5900",
+    "specs": {
+      "beneficios": "El aceite de jengibre es apreciado por sus propiedades estimulantes y digestivas. Ideal para aliviar náuseas, mejorar la digestión, estimular la circulación y aliviar dolores musculares y articulares. También es excelente para combatir la fatiga y como afrodisíaco natural.",
+      "ingredientes": "Aceite esencial de Jengibre (Zingiber officinale)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o inhalar directamente para aliviar náuseas. También puede usarse en difusor."
+    },
+    "video": ""
+  },
+  {
+    "id": 40,
+    "model": "Aceite de Bergamota",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000017/aceite-bergamota.jpg",
+    "category": "Medicinales",
+    "price": "6900",
+    "specs": {
+      "beneficios": "El aceite de bergamota es conocido por sus propiedades equilibrantes y elevadoras del ánimo. Ideal para reducir el estrés, la ansiedad y la depresión, mejorar la confianza en uno mismo y crear un ambiente elegante y sofisticado. También es excelente para el cuidado de pieles grasas y mixtas.",
+      "ingredientes": "Aceite esencial de Bergamota (Citrus bergamia)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. Precaución: puede causar fotosensibilidad, evitar exposición al sol tras aplicación."
+    },
+    "video": ""
+  },
+  {
+    "id": 41,
+    "model": "Aceite de Ylang Ylang",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000018/aceite-ylang-ylang.jpg",
+    "category": "Medicinales",
+    "price": "7900",
+    "specs": {
+      "beneficios": "El aceite de ylang ylang es valorado por sus propiedades relajantes y afrodisíacas. Ideal para reducir el estrés, equilibrar las emociones, mejorar la libido y crear un ambiente romántico y exótico. También es excelente para el cuidado del cabello y como perfume natural.",
+      "ingredientes": "Aceite esencial de Ylang Ylang (Cananga odorata)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede añadirse a productos de cuidado capilar."
+    },
+    "video": ""
+  },
+  {
+    "id": 42,
+    "model": "Aceite de Sándalo",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000019/aceite-sandalo.jpg",
+    "category": "Medicinales",
+    "price": "12900",
+    "specs": {
+      "beneficios": "El aceite de sándalo es apreciado por sus propiedades meditativas y relajantes. Ideal para la meditación, reducir la ansiedad, mejorar la concentración y crear un ambiente sereno y espiritual. También es excelente para el cuidado de pieles maduras y como perfume natural de lujo.",
+      "ingredientes": "Aceite esencial de Sándalo (Santalum album)",
+      "presentacion": "Frasco de 5ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor durante la meditación. También puede aplicarse en puntos de pulso como perfume."
+    },
+    "video": ""
+  },
+  {
+    "id": 43,
+    "model": "Aceite de Patchouli",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000020/aceite-patchouli.jpg",
+    "category": "Medicinales",
+    "price": "6900",
+    "specs": {
+      "beneficios": "El aceite de patchouli es conocido por sus propiedades equilibrantes y terrosas. Ideal para equilibrar las emociones, mejorar la concentración, crear un ambiente místico y exótico, y como repelente natural de insectos. También es excelente para el cuidado de pieles grasas y mixtas.",
+      "ingredientes": "Aceite esencial de Patchouli (Pogostemon cablin)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede añadirse a productos de cuidado personal caseros."
+    },
+    "video": ""
+  },
+  {
+    "id": 44,
+    "model": "Aceite de Cedro",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000021/aceite-cedro.jpg",
+    "category": "Medicinales",
+    "price": "5900",
+    "specs": {
+      "beneficios": "El aceite de cedro es valorado por sus propiedades calmantes y purificantes. Ideal para reducir el estrés, mejorar la calidad del sueño, fortalecer el cabello y cuero cabelludo, y crear un ambiente sereno y masculino. También es excelente como repelente natural de insectos.",
+      "ingredientes": "Aceite esencial de Cedro (Cedrus atlantica)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel o cuero cabelludo, o usar en difusor. También puede añadirse a productos de cuidado capilar."
+    },
+    "video": ""
+  },
+  {
+    "id": 45,
+    "model": "Aceite de Petitgrain",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000022/aceite-petitgrain.jpg",
+    "category": "Medicinales",
+    "price": "6900",
+    "specs": {
+      "beneficios": "El aceite de petitgrain es apreciado por sus propiedades equilibrantes y refrescantes. Ideal para reducir el estrés, mejorar la calidad del sueño, equilibrar las emociones y crear un ambiente fresco y cítrico. También es excelente para el cuidado de pieles grasas y como desodorante natural.",
+      "ingredientes": "Aceite esencial de Petitgrain (Citrus aurantium)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede añadirse a productos de cuidado personal."
+    },
+    "video": ""
+  },
+  {
+    "id": 46,
+    "model": "Aceite de Palmarosa",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000023/aceite-palmarosa.jpg",
+    "category": "Medicinales",
+    "price": "6900",
+    "specs": {
+      "beneficios": "El aceite de palmarosa es conocido por sus propiedades hidratantes y regeneradoras. Ideal para el cuidado de pieles secas y maduras, mejorar la elasticidad cutánea, equilibrar las emociones y crear un ambiente floral y relajante. También es excelente como perfume natural.",
+      "ingredientes": "Aceite esencial de Palmarosa (Cymbopogon martinii)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede añadirse a productos de cuidado facial caseros."
+    },
+    "video": ""
+  },
+  {
+    "id": 47,
+    "model": "Aceite de Incienso",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000024/aceite-incienso.jpg",
+    "category": "Medicinales",
+    "price": "14900",
+    "specs": {
+      "beneficios": "El aceite de incienso es valorado por sus propiedades meditativas y regeneradoras. Ideal para la meditación, reducir la ansiedad, mejorar la concentración, el cuidado de pieles maduras y crear un ambiente sagrado y espiritual. También es excelente para cicatrizar heridas y como anti-edad natural.",
+      "ingredientes": "Aceite esencial de Incienso (Boswellia carterii)",
+      "presentacion": "Frasco de 5ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor durante la meditación. También puede aplicarse en puntos de pulso."
+    },
+    "video": ""
+  },
+  {
+    "id": 48,
+    "model": "Aceite de Mirra",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000025/aceite-mirra.jpg",
+    "category": "Medicinales",
+    "price": "12900",
+    "specs": {
+      "beneficios": "El aceite de mirra es apreciado por sus propiedades cicatrizantes y purificantes. Ideal para la meditación, cicatrizar heridas, el cuidado de pieles maduras y dañadas, fortalecer el sistema inmunológico y crear un ambiente místico y espiritual. También es excelente para el cuidado bucal.",
+      "ingredientes": "Aceite esencial de Mirra (Commiphora myrrha)",
+      "presentacion": "Frasco de 5ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede añadirse a productos de cuidado bucal caseros."
+    },
+    "video": ""
+  },
+  {
+    "id": 49,
+    "model": "Aceite de Vetiver",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000026/aceite-vetiver.jpg",
+    "category": "Medicinales",
+    "price": "8900",
+    "specs": {
+      "beneficios": "El aceite de vetiver es conocido por sus propiedades calmantes y centradoras. Ideal para reducir el estrés, mejorar la calidad del sueño, equilibrar las emociones y crear un ambiente terroso y relajante. También es excelente para la meditación y como perfume natural masculino.",
+      "ingredientes": "Aceite esencial de Vetiver (Vetiveria zizanioides)",
+      "presentacion": "Frasco de 5ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede aplicarse en puntos de pulso como perfume."
+    },
+    "video": ""
+  },
+  {
+    "id": 50,
+    "model": "Aceite de Tomillo",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000027/aceite-tomillo.jpg",
+    "category": "Medicinales",
+    "price": "5900",
+    "specs": {
+      "beneficios": "El aceite de tomillo es valorado por sus propiedades antimicrobianas y expectorantes. Ideal para combatir infecciones respiratorias, fortalecer el sistema inmunológico, aliviar la tos y crear un ambiente purificado y herbáceo. También es excelente para el cuidado de pieles con acné.",
+      "ingredientes": "Aceite esencial de Tomillo (Thymus vulgaris)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede añadirse a vaporizaciones para problemas respiratorios."
+    },
+    "video": ""
+  },
+  {
+    "id": 51,
+    "model": "Aceite de Orégano",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000028/aceite-oregano.jpg",
+    "category": "Medicinales",
+    "price": "5900",
+    "specs": {
+      "beneficios": "El aceite de orégano es apreciado por sus propiedades antimicrobianas y antiinflamatorias. Ideal para combatir infecciones, fortalecer el sistema inmunológico, aliviar problemas digestivos y crear un ambiente herbáceo y purificado. También es excelente para el cuidado de pieles con problemas.",
+      "ingredientes": "Aceite esencial de Orégano (Origanum vulgare)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar muy diluido en aceite portador sobre la piel, o usar en difusor en pequeñas cantidades. Precaución: puede causar irritación si se usa concentrado."
+    },
+    "video": ""
+  },
+  {
+    "id": 52,
+    "model": "Aceite de Albahaca",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000029/aceite-albahaca.jpg",
+    "category": "Medicinales",
+    "price": "5900",
+    "specs": {
+      "beneficios": "El aceite de albahaca es conocido por sus propiedades estimulantes y clarificadoras. Ideal para mejorar la concentración, aliviar dolores de cabeza, estimular la mente y crear un ambiente fresco y herbáceo. También es excelente para el cuidado de pieles grasas y como repelente de insectos.",
+      "ingredientes": "Aceite esencial de Albahaca (Ocimum basilicum)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede inhalarse directamente para mejorar la concentración."
+    },
+    "video": ""
+  },
+  {
+    "id": 53,
+    "model": "Aceite de Salvia",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000030/aceite-salvia.jpg",
+    "category": "Medicinales",
+    "price": "6900",
+    "specs": {
+      "beneficios": "El aceite de salvia es valorado por sus propiedades equilibrantes y purificantes. Ideal para equilibrar las hormonas, mejorar la memoria, purificar el ambiente y crear un ambiente herbáceo y medicinal. También es excelente para el cuidado de pieles grasas y como antiséptico natural.",
+      "ingredientes": "Aceite esencial de Salvia (Salvia officinalis)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. Precaución: evitar durante el embarazo y la lactancia."
+    },
+    "video": ""
+  },
+  {
+    "id": 54,
+    "model": "Aceite de Ciprés",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000031/aceite-cipres.jpg",
+    "category": "Medicinales",
+    "price": "6900",
+    "specs": {
+      "beneficios": "El aceite de ciprés es apreciado por sus propiedades astringentes y circulatorias. Ideal para mejorar la circulación, tratar varices, aliviar problemas respiratorios y crear un ambiente fresco y balsámico. También es excelente para el cuidado de pieles grasas y como desodorante natural.",
+      "ingredientes": "Aceite esencial de Ciprés (Cupressus sempervirens)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede añadirse a productos de cuidado para piernas cansadas."
+    },
+    "video": ""
+  },
+  {
+    "id": 55,
+    "model": "Aceite de Enebro",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000032/aceite-enebro.jpg",
+    "category": "Medicinales",
+    "price": "6900",
+    "specs": {
+      "beneficios": "El aceite de enebro es conocido por sus propiedades purificantes y diuréticas. Ideal para purificar el ambiente, mejorar la concentración, aliviar retención de líquidos y crear un ambiente fresco y balsámico. También es excelente para el cuidado de pieles grasas y como desintoxicante natural.",
+      "ingredientes": "Aceite esencial de Enebro (Juniperus communis)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede añadirse a productos de cuidado corporal desintoxicantes."
+    },
+    "video": ""
+  },
+  {
+    "id": 56,
+    "model": "Aceite de Hinojo",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000033/aceite-hinojo.jpg",
+    "category": "Medicinales",
+    "price": "5900",
+    "specs": {
+      "beneficios": "El aceite de hinojo es valorado por sus propiedades digestivas y equilibrantes. Ideal para mejorar la digestión, aliviar cólicos, equilibrar las hormonas y crear un ambiente anisado y reconfortante. También es excelente para el cuidado de pieles maduras y como tónico facial.",
+      "ingredientes": "Aceite esencial de Hinojo (Foeniculum vulgare)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede inhalarse para aliviar problemas digestivos."
+    },
+    "video": ""
+  },
+  {
+    "id": 57,
+    "model": "Aceite de Anís",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000034/aceite-anis.jpg",
+    "category": "Medicinales",
+    "price": "5900",
+    "specs": {
+      "beneficios": "El aceite de anís es apreciado por sus propiedades digestivas y calmantes. Ideal para mejorar la digestión, aliviar cólicos, calmar el sistema nervioso y crear un ambiente dulce y reconfortante. También es excelente para el cuidado respiratorio y como expectorante natural.",
+      "ingredientes": "Aceite esencial de Anís (Pimpinella anisum)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede añadirse a vaporizaciones para problemas respiratorios."
+    },
+    "video": ""
+  },
+  {
+    "id": 58,
+    "model": "Aceite de Cardamomo",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000035/aceite-cardamomo.jpg",
+    "category": "Medicinales",
+    "price": "8900",
+    "specs": {
+      "beneficios": "El aceite de cardamomo es conocido por sus propiedades digestivas y afrodisíacas. Ideal para mejorar la digestión, estimular la mente, crear un ambiente exótico y especiado, y como afrodisíaco natural. También es excelente para refrescar el aliento y como perfume natural.",
+      "ingredientes": "Aceite esencial de Cardamomo (Elettaria cardamomum)",
+      "presentacion": "Frasco de 5ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor. También puede añadirse a productos de cuidado bucal caseros."
+    },
+    "video": ""
+  },
+  {
+    "id": 59,
+    "model": "Aceite de Pimienta Negra",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000036/aceite-pimienta-negra.jpg",
+    "category": "Medicinales",
+    "price": "7900",
+    "specs": {
+      "beneficios": "El aceite de pimienta negra es valorado por sus propiedades estimulantes y circulatorias. Ideal para estimular la circulación, aliviar dolores musculares, mejorar la digestión y crear un ambiente especiado y energizante. También es excelente para combatir la fatiga y como afrodisíaco natural.",
+      "ingredientes": "Aceite esencial de Pimienta Negra (Piper nigrum)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor en pequeñas cantidades. También puede añadirse a productos de masaje."
+    },
+    "video": ""
+  },
+  {
+    "id": 60,
+    "model": "Aceite de Nuez Moscada",
+    "image": "https://res.cloudinary.com/dx0htqhaq/image/upload/v1700000037/aceite-nuez-moscada.jpg",
+    "category": "Medicinales",
+    "price": "7900",
+    "specs": {
+      "beneficios": "El aceite de nuez moscada es apreciado por sus propiedades estimulantes y afrodisíacas. Ideal para estimular la mente, mejorar la concentración, aliviar dolores musculares y crear un ambiente cálido y especiado. También es excelente para combatir la fatiga mental y como afrodisíaco natural.",
+      "ingredientes": "Aceite esencial de Nuez Moscada (Myristica fragrans)",
+      "presentacion": "Frasco de 10ml",
+      "modo_uso": "Aplicar diluido en aceite portador sobre la piel, o usar en difusor en pequeñas cantidades. Precaución: puede causar irritación si se usa concentrado."
+    },
+    "video": ""
+  }
+]

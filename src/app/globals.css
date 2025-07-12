@@ -45,7 +45,7 @@ body {
 }
 
 .cart-badge {
-  @apply absolute ml-4 mt-2 text-center w-5 h-auto bg-red-500 text-white text-xs font-semibold rounded-full px-1 py-0.5;
+  @apply absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center;
 }
 .swiper-button-prev,
 .swiper-button-next {
@@ -60,5 +60,28 @@ body {
 .thumbs-swiper .swiper-slide-thumb-active > div {
   border-color: #3b82f6 !important;
   opacity: 1 !important;
+}
+
+/* MercadoPago Wallet customization */
+.mercadopago-wallet {
+  @apply w-full max-w-md mx-auto;
+}
+
+.mercadopago-wallet .mp-wallet-container {
+  @apply rounded-lg shadow-lg;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  @apply animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500;
+}
+
+/* Prevent double-click on payment buttons */
+.payment-button {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.payment-button:disabled {
+  @apply opacity-50 cursor-not-allowed;
 }
 

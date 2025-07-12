@@ -2,11 +2,12 @@
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { addToCart, removeFromCart } from "@/redux/slices/cartSlice";
+import { addToCart, removeFromCart, addPreferenceId } from "@/redux/slices/cartSlice";
 import Link from "next/link";
 import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
-import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
+import { initMercadoPago } from "@mercadopago/sdk-react";
+import MercadoPagoWallet from "@/components/MercadoPagoWallet";
 import { useEffect, useState } from "react";
 import { Modal, Form, Input, Button } from "antd";
 import dotenv from "dotenv";
@@ -20,8 +21,8 @@ initMercadoPago(process.env.NEXT_PUBLIC_MP_KEY || "key",  { locale: 'es-AR' });
 
 interface Product {
   cart_item_id: number;
-  userid: string;
-  id: string;
+  user_id: string;
+  product_id: string;
   name: string;
   image: string;
   price: number;
@@ -31,16 +32,14 @@ interface Product {
 export default function CartPage() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { loading, cartItems, itemsPrice } = useSelector(
+  const { loading, cartItems, itemsPrice, preference_id } = useSelector(
     (state: RootState) => state.cart
   );
-  const [preferenceId, setPreferenceId] = useState<string | null>("");
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
 
   const user = useUser();
-  console.log(user, "user")
   
   const addToCartHandler = (
     product: Product,
@@ -83,11 +82,12 @@ export default function CartPage() {
     dispatch(removeFromCart(id));
   };
 
+  // Limpiar preference_id cuando se desmonte el componente
   useEffect(() => {
     return () => {
-      setPreferenceId(null); // Limpia al desmontar el componente
+      dispatch(addPreferenceId(''));
     };
-  }, []);
+  }, [dispatch]);
   
 
   const handleOk = () => {
@@ -107,11 +107,13 @@ export default function CartPage() {
 
 
   const createPreference = async (payerDetails: any) => {
-
+    // Evitar crear múltiples preferencias
+    if (isLoading || preference_id) return;
+    
     setIsLoading(true);
     try {
       const items = cartItems.map((item) => ({
-        id: item.id,
+        id: item.product_id,
         title: item.name,
         currency_id: "ARS",
         description: item.name,
@@ -120,7 +122,7 @@ export default function CartPage() {
       }));
 
       const payer = {
-                name: user.user?.firstName,
+        name: user.user?.firstName,
         surname: user.user?.lastName,
         email: user.user?.primaryEmailAddress?.emailAddress,
         identification: {
@@ -167,37 +169,40 @@ export default function CartPage() {
       });
 
       const data = await response.json();
-      setPreferenceId(data.preferenceId);
-      await fetch("/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          preference_id: data.preferenceId,
-          payer: {
-            email: user.user?.primaryEmailAddress?.emailAddress,
-            name: user.user?.firstName,
-            surname: user.user?.lastName,
-            dni: payerDetails.identification,
-            phone: `${payerDetails.phone_area_code}${payerDetails.phone_number}`,
-            address: payerDetails.address,
-          },
-          total_amount: itemsPrice,
-          items: cartItems.map((item) => ({
-            product_id: item.id,
-            title: item.name,
-            quantity: item.qty,
-            unit_price: item.price,
-          })),
-        }),
-      });
       
-
-
+      if (data.preferenceId) {
+        // Guardar preference_id en Redux
+        dispatch(addPreferenceId(data.preferenceId));
+        
+        // Crear orden en base de datos
+        await fetch("/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            preference_id: data.preferenceId,
+            payer: {
+              email: user.user?.primaryEmailAddress?.emailAddress,
+              name: user.user?.firstName,
+              surname: user.user?.lastName,
+              dni: payerDetails.identification,
+              phone: `${payerDetails.phone_area_code}${payerDetails.phone_number}`,
+              address: payerDetails.address,
+            },
+            total_amount: itemsPrice,
+            items: cartItems.map((item) => ({
+              product_id: item.product_id,
+              title: item.name,
+              quantity: item.qty,
+              unit_price: item.price,
+            })),
+          }),
+        });
+      }
 
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error creating preference:", error);
     } finally {
       setIsLoading(false);
     }
@@ -234,7 +239,7 @@ export default function CartPage() {
                     <tr key={item.id} className="border-b text-white">
                       <td>
                         <Link
-                          href={`/product/${item.id}`}
+                          href={`/product/${item.product_id}`}
                           className="flex items-center text-white"
                         >
                           <Image
@@ -282,7 +287,7 @@ export default function CartPage() {
                         <button
                           className="w-full bg-violet-900 rounded-lg text-white"
                           onClick={() =>
-                            removeFromCartHandler(item.id, item.cart_item_id)
+                            removeFromCartHandler(item.product_id, item.cart_item_id)
                           }
                         >
                           Quitar
@@ -316,12 +321,15 @@ export default function CartPage() {
                       </Button>
                     </li>
                     <li>
-                    {preferenceId && (
-  <Wallet
-   // key={preferenceId} // Forzar recreación del componente
-    initialization={{ preferenceId }}
-  />
-)}
+                      {preference_id && (
+                        <div className="mt-4">
+                          <MercadoPagoWallet
+                            preferenceId={preference_id}
+                            onReady={() => console.log('Wallet ready')}
+                            onError={(error) => console.error('Wallet error:', error)}
+                          />
+                        </div>
+                      )}
                     </li>
                   </ul>
                 </div>

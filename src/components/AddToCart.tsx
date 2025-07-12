@@ -37,7 +37,7 @@ export const AddToCart: React.FC<AddToCartProps> = ({
     const addToCartHandler = () => {
       let newQty = qty;
       if (increasePerClick) {
-        const existItem = cartItems.find((x: any) => x.id === productId);
+        const existItem = cartItems.find((x: any) => x.product_id === productId);
         if (existItem) {
           if (existItem.qty + 1 <= (stock1)) {
             newQty = existItem.qty + qty;
@@ -59,8 +59,8 @@ export const AddToCart: React.FC<AddToCartProps> = ({
       dispatch(
         addToCart({
           cart_item_id: product.cart_item_id as number,
-          userid: product.user_id as string,
-          id: productId, 
+          user_id: product.user_id as string,
+          product_id: productId, 
           name: product.model as string,
           image: product.image as string,
           price: product.price as number,
