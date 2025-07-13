@@ -2,9 +2,8 @@
 import { useSession, useUser } from "@clerk/nextjs";
 import { checkUserRole, isUserAdmin, getUserInfo } from "@/app/lib/utils";
 import Link from "next/link";
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import ClerkErrorBoundary from "@/components/ClerkErrorBoundary";
 import { 
     Package, 
     Users, 
@@ -61,22 +60,22 @@ const useToast = () => {
         message: string;
     }>>([]);
 
-    const removeToast = useCallback((id: string) => {
-        setToasts(prev => prev.filter(toast => toast.id !== id));
-    }, []);
-
-    const addToast = useCallback((type: 'success' | 'error' | 'warning', message: string) => {
+    const addToast = (type: 'success' | 'error' | 'warning', message: string) => {
         const id = Date.now().toString();
         setToasts(prev => [...prev, { id, type, message }]);
         setTimeout(() => removeToast(id), 5000);
-    }, [removeToast]);
+    };
+
+    const removeToast = (id: string) => {
+        setToasts(prev => prev.filter(toast => toast.id !== id));
+    };
 
     return { toasts, addToast, removeToast };
 };
 
-function AdminDashboardContent() {
+export default function AdminDashboard() {
     const { session } = useSession();
-    const { user, isLoaded } = useUser();
+    const { user } = useUser();
     const { toasts, addToast, removeToast } = useToast();
     
     // Estados principales
@@ -86,7 +85,6 @@ function AdminDashboardContent() {
     const [error, setError] = useState<string>('');
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [debugInfo, setDebugInfo] = useState<any>(null);
-    const [clerkError, setClerkError] = useState<string>('');
     
     // Estados de filtros y búsqueda
     const [searchTerm, setSearchTerm] = useState('');
@@ -102,56 +100,27 @@ function AdminDashboardContent() {
     
     // Estados de UI
     const [activeTab, setActiveTab] = useState<'products' | 'users' | 'stats' | 'debug'>('products');
-    
-    // Ref para evitar múltiples llamadas
-    const hasFetchedData = useRef(false);
 
     // Verificar si el usuario es administrador usando la nueva función
-    const isAdmin = useMemo(() => {
-        try {
-            return isUserAdmin(session, user);
-        } catch (error) {
-            console.error('Error checking admin status:', error);
-            setClerkError('Error de autenticación. Intenta recargar la página.');
-            return false;
-        }
-    }, [session, user]); // Necesitamos los objetos completos para isUserAdmin
-
+    const isAdmin = isUserAdmin(session, user);
+    
     // Obtener información de debug
     useEffect(() => {
-        try {
-            if (user || session) {
-                const info = getUserInfo(session, user);
-                setDebugInfo(info);
-                console.log('🔍 User Info Debug:', info);
-            }
-        } catch (error) {
-            console.error('Error getting user info:', error);
-            setDebugInfo({ error: 'Error al obtener información del usuario' });
+        if (user || session) {
+            const info = getUserInfo(session, user);
+            setDebugInfo(info);
+            console.log('🔍 User Info Debug:', info);
         }
     }, [session, user]);
 
     useEffect(() => {
         console.log('🔍 Dashboard useEffect triggered');
         console.log('🔍 isAdmin:', isAdmin);
-        console.log('🔍 isLoaded:', isLoaded);
-        
-        // Esperar a que Clerk cargue completamente
-        if (!isLoaded) {
-            console.log('⏳ Waiting for Clerk to load...');
-            return;
-        }
+        console.log('🔍 user:', user);
+        console.log('🔍 session:', session);
         
         if (!isAdmin) {
             console.log('❌ User is not admin, skipping data fetch');
-            setLoading(false);
-            hasFetchedData.current = false; // Reset para permitir nueva carga si cambia el estado
-            return;
-        }
-
-        // Evitar múltiples llamadas si ya se cargaron los datos y no hay refresh
-        if (hasFetchedData.current && refreshTrigger === 0) {
-            console.log('⏭️ Data already fetched, skipping');
             return;
         }
 
@@ -170,7 +139,7 @@ function AdminDashboardContent() {
 
             setStats({
                 totalProducts: products.length,
-                totalUsers: 0, // Hardcoded por ahora
+                totalUsers: users.length,
                 activeProducts: activeProducts.length,
                 totalRevenue,
                 categoryStats
@@ -198,8 +167,16 @@ function AdminDashboardContent() {
                 // Calcular estadísticas solo con productos
                 calculateStats(productsData.products || []);
                 
-                // Marcar que los datos ya fueron cargados
-                hasFetchedData.current = true;
+                // Cargar usuarios solo si es necesario (comentado por ahora)
+                // try {
+                //     const usersResponse = await fetch('/api/admin/users');
+                //     if (usersResponse.ok) {
+                //         const usersData = await usersResponse.json();
+                //         setUsers(usersData.users || []);
+                //     }
+                // } catch (userError) {
+                //     console.warn('Users endpoint not available:', userError);
+                // }
                 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -211,8 +188,7 @@ function AdminDashboardContent() {
         };
 
         fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isAdmin, refreshTrigger, isLoaded]);
+    }, [isAdmin, refreshTrigger, addToast]);
 
     const toggleProductStatus = async (id: string, currentStatus: boolean) => {
         try {
@@ -225,7 +201,6 @@ function AdminDashboardContent() {
             if (!response.ok) throw new Error('Failed to update product');
             
             addToast('success', `Producto ${!currentStatus ? 'ocultado' : 'activado'} correctamente`);
-            hasFetchedData.current = false; // Reset para permitir nueva carga
             setRefreshTrigger(prev => prev + 1);
         } catch (error) {
             console.error('Error updating product:', error);
@@ -263,61 +238,6 @@ function AdminDashboardContent() {
 
     // Obtener categorías únicas
     const categories = [...new Set(productList.map(p => p.category))];
-
-    // Mostrar error de Clerk si existe
-    if (clerkError) {
-        return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8">
-                    <div className="text-center mb-6">
-                        <AlertCircle className="mx-auto h-12 w-12 text-red-500 mb-4" />
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Error de Autenticación</h2>
-                        <p className="text-gray-600 mb-6">
-                            {clerkError}
-                        </p>
-                    </div>
-                    
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                        <h4 className="text-sm font-medium text-yellow-800 mb-2">💡 Posibles soluciones:</h4>
-                        <ul className="text-xs text-yellow-700 space-y-1">
-                            <li>• Verifica tu conexión a internet</li>
-                            <li>• Recarga la página</li>
-                            <li>• Verifica que las variables de entorno de Clerk estén configuradas</li>
-                            <li>• Si el problema persiste, contacta al administrador</li>
-                        </ul>
-                    </div>
-                    
-                    <div className="flex space-x-3 justify-center">
-                        <button
-                            onClick={() => window.location.reload()}
-                            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                        >
-                            <RefreshCw className="h-4 w-4 mr-2" />
-                            Recargar
-                        </button>
-                        <Link 
-                            href="/" 
-                            className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
-                        >
-                            Volver al inicio
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    // Mostrar loader mientras Clerk carga
-    if (!isLoaded) {
-        return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Cargando autenticación...</p>
-                </div>
-            </div>
-        );
-    }
 
     if (!isAdmin) {
         return (
@@ -839,13 +759,5 @@ function AdminDashboardContent() {
                 </div>
             </div>
         </div>
-    );
-}
-
-export default function AdminDashboard() {
-    return (
-        <ClerkErrorBoundary>
-            <AdminDashboardContent />
-        </ClerkErrorBoundary>
     );
 }

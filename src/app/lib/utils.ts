@@ -43,47 +43,71 @@ export const shuffleArray = <T>(array: T[]): T[] => {
 
   // Función específica para verificar si un usuario es administrador
   export function isUserAdmin(session: any, user: any) {
-    if (!session && !user) {
+    try {
+      // En desarrollo, permitir acceso si está configurado
+      if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_BYPASS_AUTH === 'true') {
+        console.log('🔓 Bypass auth enabled in development');
+        return true;
+      }
+
+      if (!session && !user) {
+        return false;
+      }
+
+      // Método 1: Verificar por rol usando checkUserRole
+      const userRole = checkUserRole(session);
+      if (userRole === 'admin' || userRole === 'administrator') {
+        return true;
+      }
+
+      // Método 2: Verificar por publicMetadata en el objeto user
+      if (user?.publicMetadata?.role === 'admin' || user?.publicMetadata?.role === 'administrator') {
+        return true;
+      }
+
+      // Método 3: Verificar por email en la lista de administradores
+      const userEmail = user?.primaryEmailAddress?.emailAddress || 
+                       user?.emailAddresses?.[0]?.emailAddress ||
+                       session?.user?.emailAddresses?.[0]?.emailAddress;
+      
+      if (userEmail && ADMIN_EMAILS.includes(userEmail.toLowerCase())) {
+        return true;
+      }
+
+      // Método 4: Verificar por ID específico (como fallback temporal)
+      const userId = user?.id || session?.user?.id;
+      if (userId && process.env.NEXT_PUBLIC_ADMIN_USER_ID && userId === process.env.NEXT_PUBLIC_ADMIN_USER_ID) {
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error('Error in isUserAdmin:', error);
       return false;
     }
-
-    // Método 1: Verificar por rol usando checkUserRole
-    const userRole = checkUserRole(session);
-    if (userRole === 'admin' || userRole === 'administrator') {
-      return true;
-    }
-
-    // Método 2: Verificar por publicMetadata en el objeto user
-    if (user?.publicMetadata?.role === 'admin' || user?.publicMetadata?.role === 'administrator') {
-      return true;
-    }
-
-    // Método 3: Verificar por email en la lista de administradores
-    const userEmail = user?.primaryEmailAddress?.emailAddress || 
-                     user?.emailAddresses?.[0]?.emailAddress ||
-                     session?.user?.emailAddresses?.[0]?.emailAddress;
-    
-    if (userEmail && ADMIN_EMAILS.includes(userEmail.toLowerCase())) {
-      return true;
-    }
-
-    // Método 4: Verificar por ID específico (como fallback temporal)
-    const userId = user?.id || session?.user?.id;
-    if (userId && process.env.NEXT_PUBLIC_ADMIN_USER_ID && userId === process.env.NEXT_PUBLIC_ADMIN_USER_ID) {
-      return true;
-    }
-
-    return false;
   }
 
   // Función para obtener información detallada del usuario para debugging
   export function getUserInfo(session: any, user: any) {
-    return {
-      userId: user?.id || session?.user?.id,
-      email: user?.primaryEmailAddress?.emailAddress || user?.emailAddresses?.[0]?.emailAddress,
-      role: checkUserRole(session),
-      publicMetadata: user?.publicMetadata,
-      organizationMemberships: session?.user?.organizationMemberships,
-      isAdmin: isUserAdmin(session, user)
-    };
+    try {
+      return {
+        userId: user?.id || session?.user?.id,
+        email: user?.primaryEmailAddress?.emailAddress || user?.emailAddresses?.[0]?.emailAddress,
+        role: checkUserRole(session),
+        publicMetadata: user?.publicMetadata,
+        organizationMemberships: session?.user?.organizationMemberships,
+        isAdmin: isUserAdmin(session, user)
+      };
+    } catch (error) {
+      console.error('Error in getUserInfo:', error);
+      return {
+        userId: null,
+        email: null,
+        role: null,
+        publicMetadata: null,
+        organizationMemberships: null,
+        isAdmin: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
   }
