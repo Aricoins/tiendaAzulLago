@@ -275,12 +275,17 @@ export async function GET(request: Request) {
     console.error('Error fetching analytics:', error);
     
     // En caso de error, devolver datos simulados
+    // Reparse the URL to get period in catch block
+    const { searchParams } = new URL(request.url);
+    const periodFallback = searchParams.get('period') || '7';
+    const daysBackFallback = parseInt(periodFallback);
+    
     return NextResponse.json({
-      analytics: getMockAnalytics(parseInt(period) || 7),
+      analytics: getMockAnalytics(daysBackFallback),
       lastUpdated: new Date().toISOString(),
       source: 'mock',
       error: 'Error al obtener análisis reales',
-      period: parseInt(period) || 7
+      period: daysBackFallback
     });
   }
 }
