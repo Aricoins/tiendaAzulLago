@@ -61,7 +61,7 @@ export default function App({ children }: { children: React.ReactNode }) {
                                 </svg>
                             </div>
                             <p className="logo-coop-text" data-aos="fade-right">
-                                COOP
+                                COOP   
                             </p>
                         </div>
                         <p

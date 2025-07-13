@@ -8,16 +8,20 @@ import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
 import { initMercadoPago } from "@mercadopago/sdk-react";
 import MercadoPagoWallet from "@/components/MercadoPagoWallet";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Modal, Form, Input, Button } from "antd";
 import dotenv from "dotenv";
 import { useUser } from "@clerk/clerk-react";
 import { MdOutlineShoppingCart } from "react-icons/md";
 
-
 dotenv.config();
 
-initMercadoPago(process.env.NEXT_PUBLIC_MP_KEY || "key",  { locale: 'es-AR' });
+// Inicializar MercadoPago solo una vez, fuera del componente
+let mercadoPagoInitialized = false;
+if (!mercadoPagoInitialized && typeof window !== 'undefined') {
+  initMercadoPago(process.env.NEXT_PUBLIC_MP_KEY || "key", { locale: 'es-AR' });
+  mercadoPagoInitialized = true;
+}
 
 interface Product {
   cart_item_id: number;
@@ -38,6 +42,8 @@ export default function CartPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const [walletKey, setWalletKey] = useState(0); // Key para forzar re-render del wallet
+  const createPreferenceRef = useRef(false); // Ref para evitar llamadas duplicadas
 
   const user = useUser();
   
@@ -107,10 +113,15 @@ export default function CartPage() {
 
 
   const createPreference = async (payerDetails: any) => {
-    // Evitar crear múltiples preferencias
-    if (isLoading || preference_id) return;
+    // Evitar crear múltiples preferencias usando ref
+    if (isLoading || preference_id || createPreferenceRef.current) {
+      console.log('Bloqueando creación de preferencia duplicada');
+      return;
+    }
     
+    createPreferenceRef.current = true;
     setIsLoading(true);
+    
     try {
       const items = cartItems.map((item) => ({
         id: item.product_id,
@@ -171,8 +182,11 @@ export default function CartPage() {
       const data = await response.json();
       
       if (data.preferenceId) {
+        console.log('✅ Preferencia creada:', data.preferenceId);
         // Guardar preference_id en Redux
         dispatch(addPreferenceId(data.preferenceId));
+        // Incrementar key para forzar re-render limpio del wallet
+        setWalletKey(prev => prev + 1);
         
         // Crear orden en base de datos
         await fetch("/api/orders", {
@@ -205,6 +219,7 @@ export default function CartPage() {
       console.error("Error creating preference:", error);
     } finally {
       setIsLoading(false);
+      createPreferenceRef.current = false;
     }
   };
 
