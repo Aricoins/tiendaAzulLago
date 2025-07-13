@@ -1,6 +1,8 @@
 import { sql } from "@vercel/postgres";
 import { NextResponse, NextRequest} from "next/server";
 
+export const runtime = 'nodejs';
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
     const email = searchParams.get('email')

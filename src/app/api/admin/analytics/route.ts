@@ -1,5 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 
+export const runtime = 'nodejs';
+
 // Función para obtener analytics reales de Vercel
 async function getVercelAnalytics(daysBack: number = 7) {
   try {

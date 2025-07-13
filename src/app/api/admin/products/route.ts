@@ -1,6 +1,9 @@
 import { sql } from "@vercel/postgres";
 import { NextResponse, NextRequest } from "next/server";
 
+// Forzar el uso de Node.js runtime para compatibilidad con PostgreSQL
+export const runtime = 'nodejs';
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
