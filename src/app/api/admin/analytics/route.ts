@@ -55,11 +55,11 @@ async function getVercelAnalytics(daysBack: number = 7) {
       'Content-Type': 'application/json'
     };
     
-    for (const [index, url] of analyticsEndpoints.entries()) {
+    for (const [index, endpoint] of analyticsEndpoints.entries()) {
       try {
-        console.log(`� Intentando endpoint ${index + 1}:`, url);
+        console.log(`� Intentando endpoint ${index + 1}:`, endpoint.name, endpoint.url);
         
-        const response = await fetch(url, { headers });
+        const response = await fetch(endpoint.url, { headers });
         
         console.log(`📊 Response status (endpoint ${index + 1}):`, response.status);
         
@@ -486,7 +486,7 @@ export async function GET(request: Request) {
     }
 
     // Determinar el source real basado en los analytics obtenidos
-    const dataSource = analytics.source || (analytics ? 'vercel-hybrid' : 'mock');
+    const dataSource = (analytics as any)?.source || (analytics ? 'vercel-hybrid' : 'mock');
 
     return NextResponse.json({
       analytics,
@@ -494,8 +494,8 @@ export async function GET(request: Request) {
       source: dataSource,
       period: daysBack,
       debug: {
-        hasRealData: !!analytics?.source && analytics.source !== 'mock',
-        endpointUsed: analytics?.source || 'fallback-mock'
+        hasRealData: !!(analytics as any)?.source && (analytics as any).source !== 'mock',
+        endpointUsed: (analytics as any)?.source || 'fallback-mock'
       }
     });
   } catch (error) {
