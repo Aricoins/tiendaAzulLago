@@ -111,7 +111,17 @@ export default function AdminDashboard() {
     }, [session, user]);
 
     useEffect(() => {
-        if (!isAdmin) return;
+        console.log('🔍 Dashboard useEffect triggered');
+        console.log('🔍 isAdmin:', isAdmin);
+        console.log('🔍 user:', user);
+        console.log('🔍 session:', session);
+        
+        if (!isAdmin) {
+            console.log('❌ User is not admin, skipping data fetch');
+            return;
+        }
+
+        console.log('✅ User is admin, starting data fetch');
         
         const calculateStats = (products: Product[]) => {
             const activeProducts = products.filter(p => !p.disable);
@@ -139,7 +149,7 @@ export default function AdminDashboard() {
                 setError('');
                 
                 const [productsResponse, usersResponse] = await Promise.all([
-                    fetch('/api/form'),
+                    fetch('/api/admin/products'),
                     fetch('/api/admin/users')
                 ]);
 
@@ -150,8 +160,12 @@ export default function AdminDashboard() {
                 const productsData = await productsResponse.json();
                 const usersData = await usersResponse.json();
 
+                console.log('🔍 Products data:', productsData);
+                console.log('🔍 Users data:', usersData);
+                console.log('🔍 Products array length:', productsData.products?.length || 0);
+
                 setProductList(productsData.products || []);
-                setUsers(usersData.users || productsData.users || []);
+                setUsers(usersData.users || []);
                 
                 // Calcular estadísticas
                 calculateStats(productsData.products || []);
@@ -159,6 +173,7 @@ export default function AdminDashboard() {
             } catch (error) {
                 console.error('Error fetching data:', error);
                 setError('Error al cargar los datos');
+                addToast('error', 'Error al cargar los datos del dashboard');
             } finally {
                 setLoading(false);
             }
@@ -169,7 +184,7 @@ export default function AdminDashboard() {
 
     const toggleProductStatus = async (id: string, currentStatus: boolean) => {
         try {
-            const response = await fetch("/api/form", {
+            const response = await fetch("/api/admin/products", {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id, disable: !currentStatus }),
