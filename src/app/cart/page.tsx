@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useMercadoPago } from "@/hooks/useMercadoPago";
-import MercadoPagoWallet from "@/components/MercadoPagoWallet";
+import MemoizedMercadoPagoWallet from "@/components/MemoizedMercadoPagoWallet";
 import { useEffect, useState, useRef } from "react";
 import { Modal, Form, Input, Button } from "antd";
 import dotenv from "dotenv";
@@ -333,12 +333,12 @@ export default function CartPage() {
                     </li>
                     <li>
                       {preference_id && initialized && (
-                        <div className="mt-4">
-                          <MercadoPagoWallet
+                        <div className="mt-4" key={`wallet-container-${preference_id}`}>
+                          <MemoizedMercadoPagoWallet
                             preferenceId={preference_id}
                             onReady={() => {
                               if (!walletReadyRef.current) {
-                                console.log('Wallet ready');
+                                console.log('Wallet ready from cart page');
                                 walletReadyRef.current = true;
                               }
                             }}
