@@ -14,6 +14,7 @@ export const shuffleArray = <T>(array: T[]): T[] => {
     'admin@azullago.com',
     'ariel@azullago.com',
     'administrador@azullago.com',
+    'arielrogeldev@gmail.com', // Administrador agregado
     // Agregar más emails de administradores aquí
   ];
 
