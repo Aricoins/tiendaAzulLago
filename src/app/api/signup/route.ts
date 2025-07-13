@@ -24,7 +24,7 @@ export async function POST(req: Request) {
 
         const existingUser = await sql`SELECT * FROM users WHERE id = ${id}`;
 
-        if (existingUser.rowCount > 0) {
+        if (existingUser.rowCount && existingUser.rowCount > 0) {
             return NextResponse.json({
             message: "User ID already exists",
             result: false,
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
           WHERE id = ${id}
         `;
     
-        if (rowCount > 0) {
+        if (rowCount && rowCount > 0) {
           return NextResponse.json({ message: "User Disable", result: true });
         } else {
           return NextResponse.json({ message: "Failed to disable user", result: false });

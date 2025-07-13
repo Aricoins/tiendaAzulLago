@@ -7,7 +7,7 @@ export async function DELETE(req: Request) {
     try {  
       const { rowCount } = await sql`DELETE FROM cart_items WHERE user_id = ${user_id}`;
   
-      if (rowCount > 0) {
+      if (rowCount && rowCount > 0) {
         return NextResponse.json({ message: "Item Deleted", result: true });
       } else {
         return NextResponse.json({ message: "Failed to delete", result: false });

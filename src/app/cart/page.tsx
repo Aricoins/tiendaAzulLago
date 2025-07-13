@@ -6,7 +6,7 @@ import { addToCart, removeFromCart, addPreferenceId } from "@/redux/slices/cartS
 import Link from "next/link";
 import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
-import { initMercadoPago } from "@mercadopago/sdk-react";
+import { useMercadoPago } from "@/hooks/useMercadoPago";
 import MercadoPagoWallet from "@/components/MercadoPagoWallet";
 import { useEffect, useState, useRef } from "react";
 import { Modal, Form, Input, Button } from "antd";
@@ -15,13 +15,6 @@ import { useUser } from "@clerk/clerk-react";
 import { MdOutlineShoppingCart } from "react-icons/md";
 
 dotenv.config();
-
-// Inicializar MercadoPago solo una vez, fuera del componente
-let mercadoPagoInitialized = false;
-if (!mercadoPagoInitialized && typeof window !== 'undefined') {
-  initMercadoPago(process.env.NEXT_PUBLIC_MP_KEY || "key", { locale: 'es-AR' });
-  mercadoPagoInitialized = true;
-}
 
 interface Product {
   cart_item_id: number;
@@ -42,10 +35,11 @@ export default function CartPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
-  const [walletKey, setWalletKey] = useState(0); // Key para forzar re-render del wallet
   const createPreferenceRef = useRef(false); // Ref para evitar llamadas duplicadas
+  const walletReadyRef = useRef(false); // Ref para evitar múltiples callbacks ready
 
   const user = useUser();
+  const { initialized } = useMercadoPago();
   
   const addToCartHandler = (
     product: Product,
@@ -90,8 +84,10 @@ export default function CartPage() {
 
   // Limpiar preference_id cuando se desmonte el componente
   useEffect(() => {
+    walletReadyRef.current = false;
     return () => {
       dispatch(addPreferenceId(''));
+      walletReadyRef.current = false;
     };
   }, [dispatch]);
   
@@ -183,10 +179,10 @@ export default function CartPage() {
       
       if (data.preferenceId) {
         console.log('✅ Preferencia creada:', data.preferenceId);
+        // Limpiar estado del wallet antes de asignar nueva preferencia
+        walletReadyRef.current = false;
         // Guardar preference_id en Redux
         dispatch(addPreferenceId(data.preferenceId));
-        // Incrementar key para forzar re-render limpio del wallet
-        setWalletKey(prev => prev + 1);
         
         // Crear orden en base de datos
         await fetch("/api/orders", {
@@ -336,13 +332,23 @@ export default function CartPage() {
                       </Button>
                     </li>
                     <li>
-                      {preference_id && (
+                      {preference_id && initialized && (
                         <div className="mt-4">
                           <MercadoPagoWallet
                             preferenceId={preference_id}
-                            onReady={() => console.log('Wallet ready')}
+                            onReady={() => {
+                              if (!walletReadyRef.current) {
+                                console.log('Wallet ready');
+                                walletReadyRef.current = true;
+                              }
+                            }}
                             onError={(error) => console.error('Wallet error:', error)}
                           />
+                        </div>
+                      )}
+                      {preference_id && !initialized && (
+                        <div className="text-center text-gray-500 mt-4">
+                          Inicializando sistema de pagos...
                         </div>
                       )}
                     </li>

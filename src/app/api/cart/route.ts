@@ -83,7 +83,7 @@ export async function POST(req: Request) {
       DO UPDATE SET qty = cart_items.qty + ${qty}, updated_at = CURRENT_TIMESTAMP;
     `;
 
-    if (rowCount > 0) {
+    if (rowCount && rowCount > 0) {
       return NextResponse.json({ message: "Added item to cart", result: true });
     } else {
       return NextResponse.json({ message: "Failed to add", result: false });
@@ -104,7 +104,7 @@ export async function DELETE(req: Request) {
   try {
     const { rowCount } = await sql`DELETE FROM cart_items WHERE cart_item_id = ${cart_item_id}`;
 
-    if (rowCount > 0) {
+    if (rowCount && rowCount > 0) {
       return NextResponse.json({ message: "Item deleted successfully", result: true });
     } else {
       return NextResponse.json({ message: "Item not found", result: false }, { status: 404 });
@@ -132,7 +132,7 @@ export async function PUT(req: Request) {
       WHERE cart_item_id = ${cart_item_id}
     `;
 
-    if (rowCount > 0) {
+    if (rowCount && rowCount > 0) {
       return NextResponse.json({ message: "Quantity updated successfully", result: true });
     } else {
       return NextResponse.json({ message: "Item not found", result: false }, { status: 404 });

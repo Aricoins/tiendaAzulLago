@@ -121,7 +121,7 @@ export async function PUT(req: NextRequest) {
         WHERE id = ${id}
       `;
       
-      if (rowCount > 0) {
+      if (rowCount && rowCount > 0) {
         return NextResponse.json({ 
           message: "Estado del producto actualizado exitosamente", 
           result: true 
@@ -203,7 +203,7 @@ export async function PUT(req: NextRequest) {
 
     const result = await sql.query(query, values);
     
-    if (result.rowCount > 0) {
+    if (result.rowCount && result.rowCount > 0) {
       return NextResponse.json({ 
         message: "Producto actualizado exitosamente", 
         product: result.rows[0],

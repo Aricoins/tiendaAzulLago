@@ -42,7 +42,7 @@ export async function POST(req: Request) {
           WHERE id = ${id}
         `;
     
-        if (rowCount > 0) {
+        if (rowCount && rowCount > 0) {
           return NextResponse.json({ message: "Quantity Updated", result: true });
         } else {
           return NextResponse.json({ message: "Failed to update quantity", result: false });
