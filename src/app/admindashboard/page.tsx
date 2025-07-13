@@ -101,7 +101,11 @@ function AdminDashboardContent() {
     });
     
     // Estados de UI
-    const [activeTab, setActiveTab] = useState<'products' | 'users' | 'stats' | 'debug'>('products');
+    const [activeTab, setActiveTab] = useState<'products' | 'users' | 'stats' | 'analytics' | 'debug'>('products');
+    
+    // Estados para analytics
+    const [analytics, setAnalytics] = useState<any>(null);
+    const [analyticsLoading, setAnalyticsLoading] = useState(false);
     
     // Ref para evitar múltiples llamadas
     const hasFetchedData = useRef(false);
@@ -157,53 +161,65 @@ function AdminDashboardContent() {
 
         console.log('✅ User is admin, starting data fetch');
         
-        const calculateStats = (products: Product[]) => {
-            const activeProducts = products.filter(p => !p.disable);
-            const categoryStats = products.reduce((acc, product) => {
-                acc[product.category] = (acc[product.category] || 0) + 1;
-                return acc;
-            }, {} as { [key: string]: number });
+            const calculateStats = (products: Product[], usersData: User[]) => {
+                const activeProducts = products.filter(p => !p.disable);
+                const categoryStats = products.reduce((acc, product) => {
+                    acc[product.category] = (acc[product.category] || 0) + 1;
+                    return acc;
+                }, {} as { [key: string]: number });
 
-            const totalRevenue = activeProducts.reduce((sum, product) => {
-                return sum + parseInt(product.price || '0');
-            }, 0);
+                const totalRevenue = activeProducts.reduce((sum, product) => {
+                    return sum + parseInt(product.price || '0');
+                }, 0);
 
-            setStats({
-                totalProducts: products.length,
-                totalUsers: 0, // Hardcoded por ahora
-                activeProducts: activeProducts.length,
-                totalRevenue,
-                categoryStats
-            });
-        };
+                setStats({
+                    totalProducts: products.length,
+                    totalUsers: usersData.length,
+                    activeProducts: activeProducts.length,
+                    totalRevenue,
+                    categoryStats
+                });
+            };
         
         const fetchData = async () => {
             try {
                 setLoading(true);
                 setError('');
                 
-                // Solo cargar productos por ahora
-                const productsResponse = await fetch('/api/admin/products');
+                // Cargar productos y usuarios
+                const [productsResponse, usersResponse] = await Promise.all([
+                    fetch('/api/admin/products'),
+                    fetch('/api/admin/users')
+                ]);
 
                 if (!productsResponse.ok) {
                     throw new Error('Failed to fetch products');
                 }
 
-                const productsData = await productsResponse.json();
+                if (!usersResponse.ok) {
+                    throw new Error('Failed to fetch users');
+                }
+
+                const [productsData, usersData] = await Promise.all([
+                    productsResponse.json(),
+                    usersResponse.json()
+                ]);
+
                 console.log('📦 Products data:', productsData);
-                console.log('📦 Products array length:', productsData.products?.length || 0);
+                console.log('� Users data:', usersData);
 
                 setProductList(productsData.products || []);
+                setUsers(usersData.users || []);
                 
-                // Calcular estadísticas solo con productos
-                calculateStats(productsData.products || []);
+                // Calcular estadísticas con productos y usuarios
+                calculateStats(productsData.products || [], usersData.users || []);
                 
                 // Marcar que los datos ya fueron cargados
                 hasFetchedData.current = true;
                 
             } catch (error) {
                 console.error('Error fetching data:', error);
-                setError('Error al cargar los datos de productos');
+                setError('Error al cargar los datos');
                 addToast('error', 'Error al cargar los datos del dashboard');
             } finally {
                 setLoading(false);
@@ -235,7 +251,7 @@ function AdminDashboardContent() {
 
     const toggleUserStatus = async (id: string, currentStatus: boolean) => {
         try {
-            const response = await fetch("/api/signup", {
+            const response = await fetch("/api/admin/users", {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id, disable: !currentStatus }),
@@ -244,10 +260,30 @@ function AdminDashboardContent() {
             if (!response.ok) throw new Error('Failed to update user');
             
             addToast('success', `Usuario ${!currentStatus ? 'deshabilitado' : 'habilitado'} correctamente`);
+            hasFetchedData.current = false; // Reset para permitir nueva carga
             setRefreshTrigger(prev => prev + 1);
         } catch (error) {
             console.error('Error updating user:', error);
             addToast('error', 'Error al actualizar el usuario');
+        }
+    };
+
+    const fetchAnalytics = async () => {
+        try {
+            setAnalyticsLoading(true);
+            const response = await fetch('/api/admin/analytics');
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch analytics');
+            }
+            
+            const data = await response.json();
+            setAnalytics(data.analytics);
+        } catch (error) {
+            console.error('Error fetching analytics:', error);
+            addToast('error', 'Error al cargar las analíticas');
+        } finally {
+            setAnalyticsLoading(false);
         }
     };
 
@@ -560,6 +596,20 @@ function AdminDashboardContent() {
                                 Estadísticas
                             </button>
                             <button
+                                onClick={() => {
+                                    setActiveTab('analytics');
+                                    if (!analytics) fetchAnalytics();
+                                }}
+                                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                                    activeTab === 'analytics'
+                                        ? 'border-blue-500 text-blue-600'
+                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                }`}
+                            >
+                                <TrendingUp className="h-4 w-4 inline mr-2" />
+                                Analytics
+                            </button>
+                            <button
                                 onClick={() => setActiveTab('debug')}
                                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                                     activeTab === 'debug'
@@ -729,12 +779,102 @@ function AdminDashboardContent() {
                     {/* Users Tab */}
                     {activeTab === 'users' && (
                         <div className="p-6">
-                            <div className="text-center py-12">
-                                <Users className="mx-auto h-12 w-12 text-gray-400" />
-                                <h3 className="mt-2 text-sm font-medium text-gray-900">Gestión de Usuarios</h3>
-                                <p className="mt-1 text-sm text-gray-500">
-                                    La funcionalidad de gestión de usuarios estará disponible próximamente.
-                                </p>
+                            <div className="mb-6">
+                                <h2 className="text-lg font-medium text-gray-900 mb-4">Gestión de Usuarios</h2>
+                                
+                                <div className="overflow-x-auto">
+                                    <table className="min-w-full divide-y divide-gray-200">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Usuario
+                                                </th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Email
+                                                </th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Estado
+                                                </th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Fecha de Registro
+                                                </th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Acciones
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-white divide-y divide-gray-200">
+                                            {users.map((user) => (
+                                                <tr key={user.id} className="hover:bg-gray-50">
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <div className="flex items-center">
+                                                            <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                                                                <span className="text-sm font-medium text-gray-600">
+                                                                    {user.email?.[0]?.toUpperCase() || '?'}
+                                                                </span>
+                                                            </div>
+                                                            <div className="ml-3">
+                                                                <div className="text-sm font-medium text-gray-900">
+                                                                    {user.name || 'Usuario'}
+                                                                </div>
+                                                                <div className="text-sm text-gray-500">
+                                                                    ID: {user.id.substring(0, 8)}...
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        {user.email}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                                            !user.disable 
+                                                                ? 'bg-green-100 text-green-800' 
+                                                                : 'bg-red-100 text-red-800'
+                                                        }`}>
+                                                            {!user.disable ? 'Activo' : 'Deshabilitado'}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {new Date(user.created_at).toLocaleDateString('es-ES')}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                        <button
+                                                            onClick={() => toggleUserStatus(user.id, user.disable)}
+                                                            className={`inline-flex items-center px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+                                                                user.disable
+                                                                    ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                                                                    : 'bg-red-100 text-red-800 hover:bg-red-200'
+                                                            }`}
+                                                        >
+                                                            {user.disable ? (
+                                                                <>
+                                                                    <Eye className="h-3 w-3 mr-1" />
+                                                                    Habilitar
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <EyeOff className="h-3 w-3 mr-1" />
+                                                                    Deshabilitar
+                                                                </>
+                                                            )}
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                {users.length === 0 && (
+                                    <div className="text-center py-12">
+                                        <Users className="mx-auto h-12 w-12 text-gray-400" />
+                                        <h3 className="mt-2 text-sm font-medium text-gray-900">No hay usuarios</h3>
+                                        <p className="mt-1 text-sm text-gray-500">
+                                            No se encontraron usuarios registrados.
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
@@ -777,6 +917,206 @@ function AdminDashboardContent() {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    )}
+
+                    {/* Analytics Tab */}
+                    {activeTab === 'analytics' && (
+                        <div className="p-6">
+                            {analyticsLoading ? (
+                                <div className="flex items-center justify-center py-12">
+                                    <RefreshCw className="animate-spin h-8 w-8 text-blue-500" />
+                                    <span className="ml-2 text-gray-600">Cargando analytics...</span>
+                                </div>
+                            ) : analytics ? (
+                                <div className="space-y-6">
+                                    {/* Header con indicador de fuente */}
+                                    <div className="flex items-center justify-between mb-6">
+                                        <h2 className="text-lg font-medium text-gray-900">📊 Analytics de Vercel</h2>
+                                        <div className="flex items-center space-x-2">
+                                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                                analytics.source === 'vercel' 
+                                                    ? 'bg-green-100 text-green-800' 
+                                                    : 'bg-yellow-100 text-yellow-800'
+                                            }`}>
+                                                {analytics.source === 'vercel' ? '🔗 Datos Reales' : '🔧 Datos Demo'}
+                                            </span>
+                                            <button
+                                                onClick={fetchAnalytics}
+                                                className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 transition-colors"
+                                            >
+                                                <RefreshCw className="h-3 w-3 mr-1" />
+                                                Actualizar
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Métricas principales */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 text-white">
+                                            <div className="flex items-center">
+                                                <Eye className="h-8 w-8 text-blue-200" />
+                                                <div className="ml-4">
+                                                    <p className="text-blue-100">Vistas de Página</p>
+                                                    <p className="text-2xl font-bold">{analytics.pageViews?.toLocaleString() || 0}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-6 text-white">
+                                            <div className="flex items-center">
+                                                <Users className="h-8 w-8 text-green-200" />
+                                                <div className="ml-4">
+                                                    <p className="text-green-100">Visitantes Únicos</p>
+                                                    <p className="text-2xl font-bold">{analytics.uniqueVisitors?.toLocaleString() || 0}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-6 text-white">
+                                            <div className="flex items-center">
+                                                <BarChart3 className="h-8 w-8 text-purple-200" />
+                                                <div className="ml-4">
+                                                    <p className="text-purple-100">Sesión Promedio</p>
+                                                    <p className="text-2xl font-bold">{analytics.averageSessionDuration || 'N/A'}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg p-6 text-white">
+                                            <div className="flex items-center">
+                                                <TrendingUp className="h-8 w-8 text-orange-200" />
+                                                <div className="ml-4">
+                                                    <p className="text-orange-100">Tasa de Rebote</p>
+                                                    <p className="text-2xl font-bold">{analytics.bounceRate || 'N/A'}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Gráficos y datos detallados */}
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                        {/* Páginas más visitadas */}
+                                        <div className="bg-white rounded-lg p-6 border border-gray-200">
+                                            <h3 className="text-lg font-medium text-gray-900 mb-4">📄 Páginas Más Visitadas</h3>
+                                            <div className="space-y-3">
+                                                {analytics.topPages?.map((page: any, index: number) => (
+                                                    <div key={page.path} className="flex items-center justify-between">
+                                                        <div className="flex items-center">
+                                                            <span className="flex items-center justify-center w-6 h-6 bg-blue-100 text-blue-800 rounded-full text-xs font-medium mr-3">
+                                                                {index + 1}
+                                                            </span>
+                                                            <div>
+                                                                <p className="text-sm font-medium text-gray-900">{page.title}</p>
+                                                                <p className="text-xs text-gray-500">{page.path}</p>
+                                                            </div>
+                                                        </div>
+                                                        <span className="text-sm font-bold text-gray-900">{page.views} vistas</span>
+                                                    </div>
+                                                )) || <p className="text-sm text-gray-500">No hay datos disponibles</p>}
+                                            </div>
+                                        </div>
+
+                                        {/* Dispositivos */}
+                                        <div className="bg-white rounded-lg p-6 border border-gray-200">
+                                            <h3 className="text-lg font-medium text-gray-900 mb-4">📱 Dispositivos</h3>
+                                            <div className="space-y-3">
+                                                {analytics.devices?.map((device: any) => (
+                                                    <div key={device.device} className="flex items-center justify-between">
+                                                        <span className="text-sm font-medium text-gray-900">{device.device}</span>
+                                                        <div className="flex items-center">
+                                                            <div className="w-20 bg-gray-200 rounded-full h-2 mr-2">
+                                                                <div 
+                                                                    className="bg-blue-500 h-2 rounded-full" 
+                                                                    style={{ width: `${device.percentage}%` }}
+                                                                ></div>
+                                                            </div>
+                                                            <span className="text-sm font-bold text-gray-900">{device.percentage}%</span>
+                                                        </div>
+                                                    </div>
+                                                )) || <p className="text-sm text-gray-500">No hay datos disponibles</p>}
+                                            </div>
+                                        </div>
+
+                                        {/* Países */}
+                                        <div className="bg-white rounded-lg p-6 border border-gray-200">
+                                            <h3 className="text-lg font-medium text-gray-900 mb-4">🌎 Países</h3>
+                                            <div className="space-y-3">
+                                                {analytics.countries?.map((country: any, index: number) => (
+                                                    <div key={country.country} className="flex items-center justify-between">
+                                                        <div className="flex items-center">
+                                                            <span className="flex items-center justify-center w-6 h-6 bg-green-100 text-green-800 rounded-full text-xs font-medium mr-3">
+                                                                {index + 1}
+                                                            </span>
+                                                            <span className="text-sm font-medium text-gray-900">{country.country}</span>
+                                                        </div>
+                                                        <span className="text-sm font-bold text-gray-900">{country.visitors} visitantes</span>
+                                                    </div>
+                                                )) || <p className="text-sm text-gray-500">No hay datos disponibles</p>}
+                                            </div>
+                                        </div>
+
+                                        {/* Vistas diarias */}
+                                        <div className="bg-white rounded-lg p-6 border border-gray-200">
+                                            <h3 className="text-lg font-medium text-gray-900 mb-4">📈 Vistas Últimos 7 Días</h3>
+                                            <div className="space-y-2">
+                                                {analytics.dailyViews?.map((day: any) => (
+                                                    <div key={day.date} className="flex items-center justify-between">
+                                                        <span className="text-sm text-gray-600">
+                                                            {new Date(day.date).toLocaleDateString('es-ES', { 
+                                                                weekday: 'short', 
+                                                                month: 'short', 
+                                                                day: 'numeric' 
+                                                            })}
+                                                        </span>
+                                                        <div className="flex items-center">
+                                                            <div className="w-16 bg-gray-200 rounded h-1 mr-2">
+                                                                <div 
+                                                                    className="bg-blue-500 h-1 rounded" 
+                                                                    style={{ 
+                                                                        width: `${Math.min((day.views / Math.max(...analytics.dailyViews.map((d: any) => d.views))) * 100, 100)}%` 
+                                                                    }}
+                                                                ></div>
+                                                            </div>
+                                                            <span className="text-sm font-medium text-gray-900">{day.views}</span>
+                                                        </div>
+                                                    </div>
+                                                )) || <p className="text-sm text-gray-500">No hay datos disponibles</p>}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Información adicional */}
+                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                        <div className="flex items-start">
+                                            <Info className="h-5 w-5 text-blue-600 mt-0.5 mr-3" />
+                                            <div>
+                                                <h4 className="text-sm font-medium text-blue-800 mb-1">💡 Información sobre Analytics</h4>
+                                                <div className="text-xs text-blue-700 space-y-1">
+                                                    <p>• Los datos se actualizan cada 24 horas</p>
+                                                    <p>• Las métricas muestran los últimos 7 días</p>
+                                                    <p>• Última actualización: {new Date().toLocaleString('es-ES')}</p>
+                                                    {analytics.error && (
+                                                        <p className="text-red-600">• Error: {analytics.error}</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="text-center py-12">
+                                    <BarChart3 className="mx-auto h-12 w-12 text-gray-400" />
+                                    <h3 className="mt-2 text-sm font-medium text-gray-900">No hay datos de analytics</h3>
+                                    <p className="mt-1 text-sm text-gray-500">
+                                        No se pudieron cargar las estadísticas.
+                                    </p>
+                                    <button
+                                        onClick={fetchAnalytics}
+                                        className="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                                    >
+                                        <RefreshCw className="h-4 w-4 mr-2" />
+                                        Intentar de nuevo
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     )}
 
