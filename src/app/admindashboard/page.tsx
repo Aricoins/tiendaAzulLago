@@ -2,64 +2,46 @@
 import { useSession, useUser } from "@clerk/nextjs";
 import { checkUserRole, isUserAdmin, getUserInfo } from "@/app/lib/utils";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { 
-  Package, 
-  Users, 
-  ShoppingCart, 
-  TrendingUp,
-  Plus,
-  Eye,
-  EyeOff,
-  Search,
-  Filter,
-  Edit,
-  Trash2,
-  BarChart3,
-  AlertCircle,
-  Check,
-  X,
-  Download,
-  Info,
-  RefreshCw
+    Package, 
+    Users, 
+    Eye, 
+    EyeOff, 
+    Plus, 
+    Search, 
+    Filter, 
+    AlertCircle, 
+    X, 
+    RefreshCw, 
+    Info, 
+    BarChart3, 
+    TrendingUp, 
+    ExternalLink 
 } from "lucide-react";
 
-// Simple toast hook without external dependencies
-const useToast = () => {
-  const [toasts, setToasts] = useState<Array<{id: string, type: 'success' | 'error' | 'info', message: string}>>([]);
-  
-  const addToast = (type: 'success' | 'error' | 'info', message: string) => {
-    const id = Math.random().toString(36).substring(2, 9);
-    setToasts(prev => [...prev, { id, type, message }]);
-    
-    setTimeout(() => {
-      setToasts(prev => prev.filter(toast => toast.id !== id));
-    }, 3000);
-  };
-  
-  const removeToast = (id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
-  };
-  
-  return { toasts, addToast, removeToast };
-};
-
+// Tipos
 interface Product {
-    id: string;
+    id: number;
     model: string;
     category: string;
-    price: string;
+    specs: any;
     image: string;
+    price: string;
+    video?: string;
     disable: boolean;
-    created_at?: string;
+    created_at: string;
+    updated_at: string;
 }
 
 interface User {
     id: string;
     email: string;
+    name: string;
+    role: string;
     disable: boolean;
-    created_at?: string;
+    created_at: string;
 }
 
 interface DashboardStats {
@@ -69,6 +51,27 @@ interface DashboardStats {
     totalRevenue: number;
     categoryStats: { [key: string]: number };
 }
+
+// Hook para notificaciones toast
+const useToast = () => {
+    const [toasts, setToasts] = useState<Array<{
+        id: string;
+        type: 'success' | 'error' | 'warning';
+        message: string;
+    }>>([]);
+
+    const addToast = (type: 'success' | 'error' | 'warning', message: string) => {
+        const id = Date.now().toString();
+        setToasts(prev => [...prev, { id, type, message }]);
+        setTimeout(() => removeToast(id), 5000);
+    };
+
+    const removeToast = (id: string) => {
+        setToasts(prev => prev.filter(toast => toast.id !== id));
+    };
+
+    return { toasts, addToast, removeToast };
+};
 
 export default function AdminDashboard() {
     const { session } = useSession();
@@ -148,31 +151,36 @@ export default function AdminDashboard() {
                 setLoading(true);
                 setError('');
                 
-                const [productsResponse, usersResponse] = await Promise.all([
-                    fetch('/api/admin/products'),
-                    fetch('/api/admin/users')
-                ]);
+                // Solo cargar productos por ahora
+                const productsResponse = await fetch('/api/admin/products');
 
-                if (!productsResponse.ok || !usersResponse.ok) {
-                    throw new Error('Failed to fetch data');
+                if (!productsResponse.ok) {
+                    throw new Error('Failed to fetch products');
                 }
 
                 const productsData = await productsResponse.json();
-                const usersData = await usersResponse.json();
-
-                console.log('🔍 Products data:', productsData);
-                console.log('🔍 Users data:', usersData);
-                console.log('🔍 Products array length:', productsData.products?.length || 0);
+                console.log('📦 Products data:', productsData);
+                console.log('📦 Products array length:', productsData.products?.length || 0);
 
                 setProductList(productsData.products || []);
-                setUsers(usersData.users || []);
                 
-                // Calcular estadísticas
+                // Calcular estadísticas solo con productos
                 calculateStats(productsData.products || []);
+                
+                // Cargar usuarios solo si es necesario (comentado por ahora)
+                // try {
+                //     const usersResponse = await fetch('/api/admin/users');
+                //     if (usersResponse.ok) {
+                //         const usersData = await usersResponse.json();
+                //         setUsers(usersData.users || []);
+                //     }
+                // } catch (userError) {
+                //     console.warn('Users endpoint not available:', userError);
+                // }
                 
             } catch (error) {
                 console.error('Error fetching data:', error);
-                setError('Error al cargar los datos');
+                setError('Error al cargar los datos de productos');
                 addToast('error', 'Error al cargar los datos del dashboard');
             } finally {
                 setLoading(false);
@@ -180,7 +188,7 @@ export default function AdminDashboard() {
         };
 
         fetchData();
-    }, [isAdmin, refreshTrigger, users.length]);
+    }, [isAdmin, refreshTrigger, addToast, users.length, session, user]);
 
     const toggleProductStatus = async (id: string, currentStatus: boolean) => {
         try {
@@ -316,6 +324,38 @@ export default function AdminDashboard() {
 
     return (
         <div className="min-h-screen bg-gray-50">
+            {/* Toasts */}
+            <div className="fixed top-4 right-4 space-y-2 z-50">
+                {toasts.map(toast => (
+                    <div
+                        key={toast.id}
+                        className={`p-4 rounded-md shadow-lg flex items-center justify-between min-w-96 ${
+                            toast.type === 'success' ? 'bg-green-50 border border-green-200' :
+                            toast.type === 'error' ? 'bg-red-50 border border-red-200' :
+                            'bg-yellow-50 border border-yellow-200'
+                        }`}
+                    >
+                        <span className={`text-sm font-medium ${
+                            toast.type === 'success' ? 'text-green-800' :
+                            toast.type === 'error' ? 'text-red-800' :
+                            'text-yellow-800'
+                        }`}>
+                            {toast.message}
+                        </span>
+                        <button
+                            onClick={() => removeToast(toast.id)}
+                            className={`ml-2 ${
+                                toast.type === 'success' ? 'text-green-400 hover:text-green-600' :
+                                toast.type === 'error' ? 'text-red-400 hover:text-red-600' :
+                                'text-yellow-400 hover:text-yellow-600'
+                            }`}
+                        >
+                            <X className="h-4 w-4" />
+                        </button>
+                    </div>
+                ))}
+            </div>
+
             {/* Header */}
             <div className="bg-white shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -333,11 +373,11 @@ export default function AdminDashboard() {
                                 Agregar Producto
                             </Link>
                             <Link 
-                                href="/quick-admin" 
+                                href="/" 
                                 className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                             >
-                                <Plus className="h-4 w-4 mr-2" />
-                                Agregar Rápido
+                                <Eye className="h-4 w-4 mr-2" />
+                                Ver Tienda
                             </Link>
                         </div>
                     </div>
@@ -454,6 +494,7 @@ export default function AdminDashboard() {
                             </button>
                         </nav>
                     </div> 
+                    
                     {/* Products Tab */}
                     {activeTab === 'products' && (
                         <div className="p-6">
@@ -554,38 +595,37 @@ export default function AdminDashboard() {
                                                             ? 'bg-red-100 text-red-800' 
                                                             : 'bg-green-100 text-green-800'
                                                     }`}>
+                                                        {product.disable ? 'Oculto' : 'Activo'}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                    <button
+                                                        onClick={() => toggleProductStatus(product.id.toString(), !product.disable)}
+                                                        className={`inline-flex items-center px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+                                                            product.disable
+                                                                ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                                                                : 'bg-red-100 text-red-800 hover:bg-red-200'
+                                                        }`}
+                                                    >
                                                         {product.disable ? (
                                                             <>
-                                                                <EyeOff className="h-3 w-3 mr-1" />
-                                                                Oculto
+                                                                <Eye className="h-3 w-3 mr-1" />
+                                                                Mostrar
                                                             </>
                                                         ) : (
                                                             <>
-                                                                <Eye className="h-3 w-3 mr-1" />
-                                                                Visible
+                                                                <EyeOff className="h-3 w-3 mr-1" />
+                                                                Ocultar
                                                             </>
                                                         )}
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                    <div className="flex items-center space-x-2">
-                                                        <Link
-                                                            href={`/product/${product.id}`}
-                                                            className="text-blue-600 hover:text-blue-900"
-                                                        >
-                                                            <Eye className="h-4 w-4" />
-                                                        </Link>
-                                                        <button
-                                                            onClick={() => toggleProductStatus(product.id, product.disable)}
-                                                            className={`${
-                                                                product.disable 
-                                                                    ? 'text-green-600 hover:text-green-900' 
-                                                                    : 'text-red-600 hover:text-red-900'
-                                                            }`}
-                                                        >
-                                                            {product.disable ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
-                                                        </button>
-                                                    </div>
+                                                    </button>
+                                                    <Link
+                                                        href={`/product/${product.id}`}
+                                                        className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors"
+                                                    >
+                                                        <ExternalLink className="h-3 w-3 mr-1" />
+                                                        Ver
+                                                    </Link>
                                                 </td>
                                             </tr>
                                         ))}
@@ -611,66 +651,12 @@ export default function AdminDashboard() {
                     {/* Users Tab */}
                     {activeTab === 'users' && (
                         <div className="p-6">
-                            <div className="overflow-x-auto">
-                                <table className="min-w-full divide-y divide-gray-200">
-                                    <thead className="bg-gray-50">
-                                        <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Usuario
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Estado
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Acciones
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="bg-white divide-y divide-gray-200">
-                                        {users.map((user) => (
-                                            <tr key={user.id} className="hover:bg-gray-50">
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="flex items-center">
-                                                        <div className="flex-shrink-0 h-10 w-10">
-                                                            <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                                                                <Users className="h-5 w-5 text-gray-600" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="ml-4">
-                                                            <div className="text-sm font-medium text-gray-900">
-                                                                {user.email}
-                                                            </div>
-                                                            <div className="text-sm text-gray-500">
-                                                                ID: {user.id}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                        user.disable 
-                                                            ? 'bg-red-100 text-red-800' 
-                                                            : 'bg-green-100 text-green-800'
-                                                    }`}>
-                                                        {user.disable ? 'Deshabilitado' : 'Activo'}
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                    <button
-                                                        onClick={() => toggleUserStatus(user.id, user.disable)}
-                                                        className={`${
-                                                            user.disable 
-                                                                ? 'text-green-600 hover:text-green-900' 
-                                                                : 'text-red-600 hover:text-red-900'
-                                                        }`}
-                                                    >
-                                                        {user.disable ? 'Habilitar' : 'Deshabilitar'}
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                            <div className="text-center py-12">
+                                <Users className="mx-auto h-12 w-12 text-gray-400" />
+                                <h3 className="mt-2 text-sm font-medium text-gray-900">Gestión de Usuarios</h3>
+                                <p className="mt-1 text-sm text-gray-500">
+                                    La funcionalidad de gestión de usuarios estará disponible próximamente.
+                                </p>
                             </div>
                         </div>
                     )}
@@ -680,20 +666,12 @@ export default function AdminDashboard() {
                         <div className="p-6">
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                 <div className="bg-gray-50 rounded-lg p-6">
-                                    <h3 className="text-lg font-medium text-gray-900 mb-4">Productos por Categoría</h3>
+                                    <h3 className="text-lg font-medium text-gray-900 mb-4">Estadísticas por Categoría</h3>
                                     <div className="space-y-3">
                                         {Object.entries(stats.categoryStats).map(([category, count]) => (
-                                            <div key={category} className="flex items-center justify-between">
-                                                <span className="text-sm text-gray-600">{category}</span>
-                                                <div className="flex items-center">
-                                                    <div className="w-32 bg-gray-200 rounded-full h-2 mr-3">
-                                                        <div 
-                                                            className="bg-blue-600 h-2 rounded-full" 
-                                                            style={{width: `${(count / stats.totalProducts) * 100}%`}}
-                                                        ></div>
-                                                    </div>
-                                                    <span className="text-sm font-medium text-gray-900">{count}</span>
-                                                </div>
+                                            <div key={category} className="flex justify-between items-center">
+                                                <span className="text-sm font-medium text-gray-600">{category}</span>
+                                                <span className="text-sm font-bold text-gray-900">{count} productos</span>
                                             </div>
                                         ))}
                                     </div>
@@ -702,25 +680,21 @@ export default function AdminDashboard() {
                                 <div className="bg-gray-50 rounded-lg p-6">
                                     <h3 className="text-lg font-medium text-gray-900 mb-4">Resumen General</h3>
                                     <div className="space-y-3">
-                                        <div className="flex justify-between">
-                                            <span className="text-sm text-gray-600">Total de productos:</span>
-                                            <span className="text-sm font-medium text-gray-900">{stats.totalProducts}</span>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm font-medium text-gray-600">Total de productos</span>
+                                            <span className="text-sm font-bold text-gray-900">{stats.totalProducts}</span>
                                         </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-sm text-gray-600">Productos activos:</span>
-                                            <span className="text-sm font-medium text-green-600">{stats.activeProducts}</span>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm font-medium text-gray-600">Productos activos</span>
+                                            <span className="text-sm font-bold text-green-600">{stats.activeProducts}</span>
                                         </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-sm text-gray-600">Productos ocultos:</span>
-                                            <span className="text-sm font-medium text-red-600">{stats.totalProducts - stats.activeProducts}</span>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm font-medium text-gray-600">Productos ocultos</span>
+                                            <span className="text-sm font-bold text-red-600">{stats.totalProducts - stats.activeProducts}</span>
                                         </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-sm text-gray-600">Total de usuarios:</span>
-                                            <span className="text-sm font-medium text-gray-900">{stats.totalUsers}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-sm text-gray-600">Categorías:</span>
-                                            <span className="text-sm font-medium text-gray-900">{Object.keys(stats.categoryStats).length}</span>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm font-medium text-gray-600">Categorías</span>
+                                            <span className="text-sm font-bold text-gray-900">{Object.keys(stats.categoryStats).length}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -733,91 +707,49 @@ export default function AdminDashboard() {
                         <div className="p-6">
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                 <div className="bg-gray-50 rounded-lg p-6">
-                                    <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                                        <Info className="h-5 w-5 mr-2" />
-                                        Información de Usuario Actual
-                                    </h3>
-                                    {debugInfo ? (
+                                    <h3 className="text-lg font-medium text-gray-900 mb-4">Información de Autenticación</h3>
+                                    {debugInfo && (
                                         <div className="space-y-3">
                                             <div className="flex justify-between items-center">
-                                                <span className="text-sm text-gray-600">Email:</span>
-                                                <span className="text-sm font-mono bg-gray-100 px-2 py-1 rounded">
-                                                    {debugInfo.email || 'No disponible'}
-                                                </span>
+                                                <span className="text-sm font-medium text-gray-600">Email:</span>
+                                                <span className="text-sm font-mono text-gray-900">{debugInfo.email || 'No disponible'}</span>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-sm text-gray-600">User ID:</span>
-                                                <span className="text-sm font-mono bg-gray-100 px-2 py-1 rounded">
-                                                    {debugInfo.userId || 'No disponible'}
-                                                </span>
+                                                <span className="text-sm font-medium text-gray-600">User ID:</span>
+                                                <span className="text-sm font-mono text-gray-900">{debugInfo.userId || 'No disponible'}</span>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-sm text-gray-600">Rol:</span>
-                                                <span className="text-sm font-mono bg-gray-100 px-2 py-1 rounded">
-                                                    {debugInfo.role || 'Sin rol'}
-                                                </span>
+                                                <span className="text-sm font-medium text-gray-600">Rol:</span>
+                                                <span className="text-sm font-mono text-gray-900">{debugInfo.role || 'Sin rol'}</span>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-sm text-gray-600">Es Admin:</span>
-                                                <span className={`text-sm font-mono px-2 py-1 rounded ${
-                                                    debugInfo.isAdmin 
-                                                        ? 'bg-green-100 text-green-800' 
-                                                        : 'bg-red-100 text-red-800'
-                                                }`}>
+                                                <span className="text-sm font-medium text-gray-600">Es Admin:</span>
+                                                <span className={`text-sm font-mono ${debugInfo.isAdmin ? 'text-green-600' : 'text-red-600'}`}>
                                                     {debugInfo.isAdmin ? 'Sí' : 'No'}
                                                 </span>
                                             </div>
-                                            <div className="pt-2 border-t">
-                                                <span className="text-sm text-gray-600 block mb-2">Public Metadata:</span>
-                                                <pre className="text-xs bg-gray-100 p-2 rounded overflow-x-auto">
-                                                    {JSON.stringify(debugInfo.publicMetadata, null, 2) || 'Vacío'}
-                                                </pre>
-                                            </div>
-                                            <div className="pt-2 border-t">
-                                                <span className="text-sm text-gray-600 block mb-2">Organization Memberships:</span>
-                                                <pre className="text-xs bg-gray-100 p-2 rounded overflow-x-auto">
-                                                    {JSON.stringify(debugInfo.organizationMemberships, null, 2) || 'Vacío'}
-                                                </pre>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="text-center py-8">
-                                            <AlertCircle className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                                            <p className="text-gray-500">No hay información de usuario disponible</p>
                                         </div>
                                     )}
                                 </div>
                                 
                                 <div className="bg-gray-50 rounded-lg p-6">
-                                    <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                                        <AlertCircle className="h-5 w-5 mr-2" />
-                                        Configuración de Administradores
-                                    </h3>
+                                    <h3 className="text-lg font-medium text-gray-900 mb-4">Estado del Sistema</h3>
                                     <div className="space-y-3">
-                                        <div className="border-b pb-2">
-                                            <h4 className="text-sm font-medium text-gray-700 mb-1">Métodos de Verificación:</h4>
-                                            <ul className="text-xs text-gray-600 space-y-1">
-                                                <li>• Rol en organizationMemberships</li>
-                                                <li>• Rol en publicMetadata</li>
-                                                <li>• Email en lista de administradores</li>
-                                                <li>• ID de usuario específico (fallback)</li>
-                                            </ul>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm font-medium text-gray-600">Productos cargados:</span>
+                                            <span className="text-sm font-bold text-gray-900">{productList.length}</span>
                                         </div>
-                                        <div className="border-b pb-2">
-                                            <h4 className="text-sm font-medium text-gray-700 mb-1">Emails Admin Configurados:</h4>
-                                            <ul className="text-xs text-gray-600 space-y-1">
-                                                <li>• admin@azullago.com</li>
-                                                <li>• ariel@azullago.com</li>
-                                                <li>• administrador@azullago.com</li>
-                                            </ul>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm font-medium text-gray-600">Filtros aplicados:</span>
+                                            <span className="text-sm font-bold text-gray-900">{filteredProducts.length}</span>
                                         </div>
-                                        <div className="bg-blue-50 p-3 rounded">
-                                            <h4 className="text-sm font-medium text-blue-800 mb-1">💡 Para obtener acceso admin:</h4>
-                                            <ul className="text-xs text-blue-700 space-y-1">
-                                                <li>• Configura tu rol como &apos;admin&apos; en Clerk</li>
-                                                <li>• Añade tu email a la lista de administradores</li>
-                                                <li>• Configura publicMetadata: {`{"role": "admin"}`}</li>
-                                            </ul>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm font-medium text-gray-600">Búsqueda:</span>
+                                            <span className="text-sm font-mono text-gray-900">{searchTerm || 'Sin búsqueda'}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm font-medium text-gray-600">Categoría:</span>
+                                            <span className="text-sm font-mono text-gray-900">{selectedCategory}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -825,41 +757,6 @@ export default function AdminDashboard() {
                         </div>
                     )}
                 </div>
-            </div>
-            
-            {/* Toast notifications */}
-            <div className="fixed top-4 right-4 z-50 space-y-2">
-                {toasts.map(toast => (
-                    <div
-                        key={toast.id}
-                        className={`transform transition-all duration-300 translate-x-0 opacity-100 max-w-sm w-full border rounded-lg shadow-lg p-4 ${
-                            toast.type === 'success' ? 'bg-green-50 border-green-200' :
-                            toast.type === 'error' ? 'bg-red-50 border-red-200' :
-                            'bg-blue-50 border-blue-200'
-                        }`}
-                    >
-                        <div className="flex items-start">
-                            <div className="flex-shrink-0">
-                                {toast.type === 'success' && <Check className="h-5 w-5 text-green-500" />}
-                                {toast.type === 'error' && <AlertCircle className="h-5 w-5 text-red-500" />}
-                                {toast.type === 'info' && <AlertCircle className="h-5 w-5 text-blue-500" />}
-                            </div>
-                            <div className="ml-3 w-0 flex-1">
-                                <p className="text-sm font-medium text-gray-900">
-                                    {toast.message}
-                                </p>
-                            </div>
-                            <div className="ml-4 flex-shrink-0 flex">
-                                <button
-                                    onClick={() => removeToast(toast.id)}
-                                    className="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500"
-                                >
-                                    <X className="h-5 w-5" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                ))}
             </div>
         </div>
     );
