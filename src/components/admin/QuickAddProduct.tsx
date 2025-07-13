@@ -97,8 +97,7 @@ export default function QuickAddProduct() {
             style={{ width: '100%' }}
             placeholder="15000"
             min={0}
-            formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            parser={value => value!.replace(/\$\s?|(,*)/g, '')}
+            prefix="$"
           />
         </Form.Item>
 

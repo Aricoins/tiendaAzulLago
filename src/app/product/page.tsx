@@ -69,7 +69,7 @@ export default async function Product({ searchParams }: { searchParams: SearchPa
             </div>
           }
           <FilterbyPriceRange />
-          <OrderButtons />z
+          <OrderButtons />
         </div>
 
         {/* Productos */}

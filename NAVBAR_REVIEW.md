@@ -13,11 +13,12 @@
 ### 2. Estructura de Autenticación Mejorada
 ```tsx
 <SignedOut>
-  <SignInButton mode="modal">
-    <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-      Iniciar Sesión
-    </button>
-  </SignInButton>
+  <button 
+    onClick={() => clerk.openSignIn()}
+    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+  >
+    Iniciar Sesión
+  </button>
 </SignedOut>
 <SignedIn>
   <UserButton 
@@ -25,9 +26,9 @@
     showName={true}
     appearance={{
       elements: {
-        avatarBox: "w-10 h-10",
+        avatarBox: "w-8 h-8",
         userButtonPopoverCard: "shadow-lg border",
-        userButtonPopoverActionButton: "text-sm",
+        userButtonPopoverActionButton: "text-sm hover:bg-gray-50",
       }
     }}
   />
@@ -81,10 +82,10 @@
   - `showName={true}`: Muestra el nombre del usuario
   - `appearance`: Personaliza estilos del componente
 
-### `<SignInButton>`
-- **Props principales**:
-  - `mode="modal"`: Abre en modal en lugar de navegación
-  - Botón personalizado dentro del componente
+### `useClerk()` Hook
+- **Método principal**: `clerk.openSignIn()` para abrir modal de login
+- **Más confiable**: Evita problemas con `SignInButton` component
+- **Control total**: Permite personalización completa del botón
 
 ## 🚀 Flujo de Autenticación Completo
 
@@ -157,7 +158,13 @@ appearance={{
 
 ### Botón de Iniciar Sesión
 ```typescript
-className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+// Usando clerk.openSignIn() directamente (Recomendado)
+<button 
+  onClick={() => clerk.openSignIn()}
+  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+>
+  Iniciar Sesión
+</button>
 ```
 
 ## 📄 Archivos Modificados
@@ -200,6 +207,29 @@ className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm
 
 ## 🔍 Debug y Troubleshooting
 
+### ⚠️ Problema Identificado: SignInButton No Visible
+**Síntoma**: El componente `<SignInButton>` de Clerk no se renderiza o no es visible.
+
+**Causa**: Incompatibilidad o configuración específica del proyecto que impide que el componente se renderice correctamente.
+
+**Solución Implementada**:
+```tsx
+// ❌ Problemático
+<SignInButton mode="modal">
+  <button>Iniciar Sesión</button>
+</SignInButton>
+
+// ✅ Solución que funciona
+<button onClick={() => clerk.openSignIn()}>
+  Iniciar Sesión
+</button>
+```
+
+### Dependencias Requeridas
+```bash
+npm install lucide-react  # Para iconos del dashboard
+```
+
 ### Si el avatar no aparece:
 - Verificar que el usuario esté correctamente autenticado
 - Revisar las claves de Clerk en variables de entorno
@@ -213,6 +243,15 @@ className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm
 ### Para debugging:
 ```typescript
 console.log('🔍 User Info:', getUserInfo(session, user));
+```
+
+### Error de Compilación en Producción:
+```bash
+# Si falta lucide-react
+npm install lucide-react
+
+# Limpiar cache si hay problemas
+npm run build
 ```
 
 ---

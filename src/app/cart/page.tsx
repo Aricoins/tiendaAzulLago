@@ -236,7 +236,7 @@ export default function CartPage() {
                 </thead>
                 <tbody>
                   {cartItems.map((item) => (
-                    <tr key={item.id} className="border-b text-white">
+                    <tr key={item.cart_item_id} className="border-b text-white">
                       <td>
                         <Link
                           href={`/product/${item.product_id}`}

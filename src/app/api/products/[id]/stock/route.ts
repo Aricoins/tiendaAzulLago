@@ -45,7 +45,7 @@ export async function GET(
   } catch (error) {
     console.error('Error checking stock:', error);
     return NextResponse.json(
-      { message: 'Error checking stock', error: error.message },
+      { message: 'Error checking stock', error },
       { status: 500 }
     );
   }

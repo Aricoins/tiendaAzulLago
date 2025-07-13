@@ -267,7 +267,7 @@ export default function AdminDashboard() {
                         <ul className="text-xs text-blue-700 space-y-1">
                             <li>• Contacta al administrador del sistema</li>
                             <li>• Tu email debe estar en la lista de administradores</li>
-                            <li>• O tu rol debe configurarse como 'admin' en Clerk</li>
+                            <li>• O tu rol debe configurarse como &apos;admin&apos; en Clerk</li>
                         </ul>
                     </div>
                     

@@ -35,7 +35,7 @@ export default function Navbar() {
     const searchParams = useSearchParams()
     const params = searchParams.get('category')
     const { user } = useUser()
-    const { clerk } = useClerk()
+    const clerk = useClerk()
     const id = user?.id
     const dispatch = useDispatch()
     const email = user?.primaryEmailAddress?.emailAddress;

@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('Error creating product:', error);
     return NextResponse.json(
-      { message: 'Error al crear producto', error: error.message },
+      { message: 'Error al crear producto', error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
