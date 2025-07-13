@@ -140,7 +140,7 @@ export default function Navbar() {
             <div className="flex items-center">
               <Link href="/" className="flex items-center">
                 <Image src={logo} alt="azul lago logo" 
-                  className="w-12 h-12 mr-4"
+                  className="w-12 h-12"
                   width={100}
                   height={100}
                  />

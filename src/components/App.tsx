@@ -42,15 +42,28 @@ export default function App({ children }: { children: React.ReactNode }) {
                 <div className="relative w-full mt-2 h-screen overflow-hidden">
                     <video src='/img/video.mp4' autoPlay loop muted className="absolute inset-0 w-full h-full object-cover" style={{ maskImage: "linear-gradient(to bottom, #d6c2c2 80%, transparent 100%)"}} />
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-0">
-                        <h1
-                            className="text-6xl lg:text-9xl text-white font-Inter text-center tracking-wide transition-transform duration-500 ease-in-out transform hover:scale-110 bg-opacity-60 p-2 rounded-md"
-                            style={{ textShadow: '3px 3px 6px rgba(0, 0, 0, 0.9)' }}
-                            onMouseEnter={() => handleHover('Azul Lago')}
-                            onMouseLeave={handleHoverEnd}
-                            data-aos="fade-left"
-                        >
-                            Azul Lago
-                        </h1>
+                        <div className="text-center w-full flex flex-col items-center justify-center">
+                            <div className="logo-container">
+                                <svg viewBox="0 0 600 200" className="curved-text-svg">
+                                    <defs>
+                                        <path id="arc" d="M 50 150 Q 300 50 550 150" stroke="transparent" fill="none"/>
+                                    </defs>
+                                    <text
+                                        className="logo-azul-lago-hero-svg"
+                                        onMouseEnter={() => handleHover('Azul Lago')}
+                                        onMouseLeave={handleHoverEnd}
+                                        data-aos="fade-left"
+                                    >
+                                        <textPath href="#arc" startOffset="50%" textAnchor="middle">
+                                            AZUL LAGO
+                                        </textPath>
+                                    </text>
+                                </svg>
+                            </div>
+                            <p className="logo-coop-text" data-aos="fade-right">
+                                COOP
+                            </p>
+                        </div>
                         <p
                             className="text-xl lg:text-3xl my-4 text-center rounded-3xl shadow-lg p-5 bg-black bg-opacity-60 transition-all duration-700 ease-out hover:text-green-500 cursor-pointer"
                             onMouseEnter={() => handleHover('Tienda Online')}
