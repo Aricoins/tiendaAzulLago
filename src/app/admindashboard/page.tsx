@@ -19,7 +19,9 @@ import {
     Info, 
     BarChart3, 
     TrendingUp, 
-    ExternalLink 
+    ExternalLink,
+    Edit,
+    Save
 } from "lucide-react";
 
 // Tipos
@@ -106,6 +108,19 @@ function AdminDashboardContent() {
     // Estados para analytics
     const [analytics, setAnalytics] = useState<any>(null);
     const [analyticsLoading, setAnalyticsLoading] = useState(false);
+    const [analyticsPeriod, setAnalyticsPeriod] = useState<number>(7); // 7 días por defecto
+    
+    // Estados para edición de productos
+    const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editForm, setEditForm] = useState({
+        model: '',
+        category: '',
+        price: '',
+        image: '',
+        video: '',
+        specs: { description: '', features: [] }
+    });
     
     // Ref para evitar múltiples llamadas
     const hasFetchedData = useRef(false);
@@ -249,6 +264,66 @@ function AdminDashboardContent() {
         }
     };
 
+    // Función para abrir el modal de edición
+    const openEditModal = (product: Product) => {
+        setEditingProduct(product);
+        setEditForm({
+            model: product.model,
+            category: product.category,
+            price: product.price,
+            image: product.image,
+            video: product.video || '',
+            specs: typeof product.specs === 'string' ? JSON.parse(product.specs) : product.specs
+        });
+        setIsEditModalOpen(true);
+    };
+
+    // Función para cerrar el modal de edición
+    const closeEditModal = () => {
+        setIsEditModalOpen(false);
+        setEditingProduct(null);
+        setEditForm({
+            model: '',
+            category: '',
+            price: '',
+            image: '',
+            video: '',
+            specs: { description: '', features: [] }
+        });
+    };
+
+    // Función para actualizar el producto
+    const updateProduct = async () => {
+        if (!editingProduct) return;
+
+        try {
+            const response = await fetch("/api/admin/products", {
+                method: "PUT",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: editingProduct.id,
+                    model: editForm.model,
+                    category: editForm.category,
+                    price: editForm.price,
+                    image: editForm.image,
+                    video: editForm.video,
+                    specs: editForm.specs
+                }),
+            });
+
+            if (!response.ok) throw new Error('Failed to update product');
+            
+            const data = await response.json();
+            addToast('success', 'Producto actualizado correctamente');
+            closeEditModal();
+            hasFetchedData.current = false;
+            setRefreshTrigger(prev => prev + 1);
+        } catch (error) {
+            console.error('Error updating product:', error);
+            addToast('error', 'Error al actualizar el producto');
+        }
+    };
+
     const toggleUserStatus = async (id: string, currentStatus: boolean) => {
         try {
             const response = await fetch("/api/admin/users", {
@@ -268,10 +343,10 @@ function AdminDashboardContent() {
         }
     };
 
-    const fetchAnalytics = async () => {
+    const fetchAnalytics = async (period: number = analyticsPeriod) => {
         try {
             setAnalyticsLoading(true);
-            const response = await fetch('/api/admin/analytics');
+            const response = await fetch(`/api/admin/analytics?period=${period}`);
             
             if (!response.ok) {
                 throw new Error('Failed to fetch analytics');
@@ -279,6 +354,7 @@ function AdminDashboardContent() {
             
             const data = await response.json();
             setAnalytics(data.analytics);
+            setAnalyticsPeriod(period);
         } catch (error) {
             console.error('Error fetching analytics:', error);
             addToast('error', 'Error al cargar las analíticas');
@@ -728,6 +804,13 @@ function AdminDashboardContent() {
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                                     <button
+                                                        onClick={() => openEditModal(product)}
+                                                        className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors"
+                                                    >
+                                                        <Edit className="h-3 w-3 mr-1" />
+                                                        Editar
+                                                    </button>
+                                                    <button
                                                         onClick={() => toggleProductStatus(product.id.toString(), !product.disable)}
                                                         className={`inline-flex items-center px-3 py-1 rounded-md text-xs font-medium transition-colors ${
                                                             product.disable
@@ -942,13 +1025,42 @@ function AdminDashboardContent() {
                                                 {analytics.source === 'vercel' ? '🔗 Datos Reales' : '🔧 Datos Demo'}
                                             </span>
                                             <button
-                                                onClick={fetchAnalytics}
+                                                onClick={() => fetchAnalytics(analyticsPeriod)}
                                                 className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 transition-colors"
                                             >
                                                 <RefreshCw className="h-3 w-3 mr-1" />
                                                 Actualizar
                                             </button>
                                         </div>
+                                    </div>
+
+                                    {/* Filtros de Tiempo */}
+                                    <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                                        <h3 className="text-sm font-medium text-gray-700 mb-3">📅 Período de Análisis</h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {[
+                                                { value: 1, label: 'Hoy', icon: '📅' },
+                                                { value: 7, label: '7 días', icon: '📊' },
+                                                { value: 30, label: '30 días', icon: '📈' },
+                                                { value: 90, label: '3 meses', icon: '📉' }
+                                            ].map((period) => (
+                                                <button
+                                                    key={period.value}
+                                                    onClick={() => fetchAnalytics(period.value)}
+                                                    className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                                                        analyticsPeriod === period.value
+                                                            ? 'bg-blue-600 text-white shadow-sm'
+                                                            : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                                                    }`}
+                                                >
+                                                    <span className="mr-1">{period.icon}</span>
+                                                    {period.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <p className="text-xs text-gray-500 mt-2">
+                                            Mostrando datos de los últimos <strong>{analyticsPeriod}</strong> {analyticsPeriod === 1 ? 'día' : 'días'}
+                                        </p>
                                     </div>
 
                                     {/* Métricas principales */}
@@ -1176,6 +1288,154 @@ function AdminDashboardContent() {
                     )}
                 </div>
             </div>
+
+            {/* Modal de Edición de Producto */}
+            {isEditModalOpen && (
+                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                    <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+                        <div className="mt-3">
+                            {/* Header del Modal */}
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-lg font-medium text-gray-900">
+                                    ✏️ Editar Producto
+                                </h3>
+                                <button
+                                    onClick={closeEditModal}
+                                    className="text-gray-400 hover:text-gray-600"
+                                >
+                                    <X className="h-6 w-6" />
+                                </button>
+                            </div>
+
+                            {/* Formulario de Edición */}
+                            <div className="space-y-6">
+                                {/* Nombre del Producto */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Nombre del Producto
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={editForm.model}
+                                        onChange={(e) => setEditForm(prev => ({ ...prev, model: e.target.value }))}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Ingrese el nombre del producto"
+                                    />
+                                </div>
+
+                                {/* Categoría y Precio */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Categoría
+                                        </label>
+                                        <select
+                                            value={editForm.category}
+                                            onChange={(e) => setEditForm(prev => ({ ...prev, category: e.target.value }))}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        >
+                                            <option value="">Seleccionar categoría</option>
+                                            <option value="hidrolatoseterico">Hidrolatos Etérico</option>
+                                            <option value="aceites">Aceites</option>
+                                            <option value="cremas">Cremas</option>
+                                            <option value="otros">Otros</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Precio
+                                        </label>
+                                        <input
+                                            type="number"
+                                            value={editForm.price}
+                                            onChange={(e) => setEditForm(prev => ({ ...prev, price: e.target.value }))}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            placeholder="0.00"
+                                            step="0.01"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* URL de Imagen */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        URL de la Imagen
+                                    </label>
+                                    <input
+                                        type="url"
+                                        value={editForm.image}
+                                        onChange={(e) => setEditForm(prev => ({ ...prev, image: e.target.value }))}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="https://ejemplo.com/imagen.jpg"
+                                    />
+                                    {editForm.image && (
+                                        <div className="mt-3">
+                                            <Image
+                                                src={editForm.image}
+                                                alt="Vista previa"
+                                                width={80}
+                                                height={80}
+                                                className="h-20 w-20 object-cover rounded-md border"
+                                                onError={(e) => {
+                                                    e.currentTarget.style.display = 'none';
+                                                }}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* URL de Video (Opcional) */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        URL del Video (Opcional)
+                                    </label>
+                                    <input
+                                        type="url"
+                                        value={editForm.video}
+                                        onChange={(e) => setEditForm(prev => ({ ...prev, video: e.target.value }))}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="https://ejemplo.com/video.mp4"
+                                    />
+                                </div>
+
+                                {/* Descripción */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Descripción
+                                    </label>
+                                    <textarea
+                                        value={editForm.specs.description || ''}
+                                        onChange={(e) => setEditForm(prev => ({ 
+                                            ...prev, 
+                                            specs: { ...prev.specs, description: e.target.value }
+                                        }))}
+                                        rows={4}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Descripción del producto..."
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Botones de Acción */}
+                            <div className="flex justify-end space-x-3 mt-8">
+                                <button
+                                    onClick={closeEditModal}
+                                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    onClick={updateProduct}
+                                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                                >
+                                    <Save className="h-4 w-4 mr-2" />
+                                    Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

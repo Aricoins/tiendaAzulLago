@@ -100,7 +100,8 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const { id, disable } = await req.json();
+    const body = await req.json();
+    const { id, disable, model, category, specs, image, price, video } = body;
     
     if (!id) {
       return NextResponse.json(
@@ -108,16 +109,101 @@ export async function PUT(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Si solo se está actualizando el estado (disable), usar la lógica original
+    if (typeof disable === 'boolean' && Object.keys(body).length === 2) {
+      const { rowCount } = await sql`
+        UPDATE products
+        SET disable = ${disable}, updated_at = NOW()
+        WHERE id = ${id}
+      `;
+      
+      if (rowCount > 0) {
+        return NextResponse.json({ 
+          message: "Estado del producto actualizado exitosamente", 
+          result: true 
+        });
+      } else {
+        return NextResponse.json({ 
+          message: "Producto no encontrado", 
+          result: false 
+        }, { status: 404 });
+      }
+    }
+
+    // Actualización completa del producto
+    const updateFields = [];
+    const values = [];
+    let paramIndex = 1;
+
+    if (model !== undefined) {
+      updateFields.push(`model = $${paramIndex}`);
+      values.push(model);
+      paramIndex++;
+    }
+
+    if (category !== undefined) {
+      updateFields.push(`category = $${paramIndex}`);
+      values.push(category);
+      paramIndex++;
+    }
+
+    if (specs !== undefined) {
+      updateFields.push(`specs = $${paramIndex}`);
+      values.push(JSON.stringify(specs));
+      paramIndex++;
+    }
+
+    if (image !== undefined) {
+      updateFields.push(`image = $${paramIndex}`);
+      values.push(image);
+      paramIndex++;
+    }
+
+    if (price !== undefined) {
+      updateFields.push(`price = $${paramIndex}`);
+      values.push(parseFloat(price));
+      paramIndex++;
+    }
+
+    if (video !== undefined) {
+      updateFields.push(`video = $${paramIndex}`);
+      values.push(video);
+      paramIndex++;
+    }
+
+    if (disable !== undefined) {
+      updateFields.push(`disable = $${paramIndex}`);
+      values.push(disable);
+      paramIndex++;
+    }
+
+    // Siempre actualizar updated_at
+    updateFields.push(`updated_at = NOW()`);
+
+    if (updateFields.length === 1) { // Solo updated_at
+      return NextResponse.json(
+        { message: 'No hay campos para actualizar' },
+        { status: 400 }
+      );
+    }
+
+    // Agregar el ID al final
+    values.push(id);
     
-    const { rowCount } = await sql`
-      UPDATE products
-      SET disable = ${disable}
-      WHERE id = ${id}
+    const query = `
+      UPDATE products 
+      SET ${updateFields.join(', ')}
+      WHERE id = $${paramIndex}
+      RETURNING *
     `;
+
+    const result = await sql.query(query, values);
     
-    if (rowCount > 0) {
+    if (result.rowCount > 0) {
       return NextResponse.json({ 
         message: "Producto actualizado exitosamente", 
+        product: result.rows[0],
         result: true 
       });
     } else {
