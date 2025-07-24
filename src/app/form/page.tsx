@@ -11,7 +11,9 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation';
 import { ImageConfigContext } from 'next/dist/shared/lib/image-config-context.shared-runtime';
-import { useUser } from '@clerk/nextjs';
+import { useUser, useSession } from '@clerk/nextjs';
+import { isUserAdmin } from '@/app/lib/utils';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 
 
 interface Specs {
@@ -53,10 +55,14 @@ const validation = (form: Form, setErrors: React.Dispatch<React.SetStateAction<E
 const CreateProduct: FC = () => {
 
 const router = useRouter()
-const user= useUser()
+const { user, isLoaded } = useUser()
+const { session } = useSession()
 
-const id = user.user?.id
+const id = user?.id
 console.log(id, "userid")
+
+// Verificar si el usuario es administrador
+const isAdmin = isUserAdmin(session, user);
 
 
   const [form, setForm] = useState<Form>({
@@ -222,13 +228,65 @@ const handleAddSpec = () => {
     AOS.init();
   }, []);
 
-const auth = process.env.ADMIN_ID
+console.log('🔍 Form page - isAdmin:', isAdmin);
+console.log('🔍 Form page - user:', user);
+console.log('🔍 Form page - isLoaded:', isLoaded);
 
+// Mostrar loader mientras Clerk carga
+if (!isLoaded) {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Cargando autenticación...</p>
+      </div>
+    </div>
+  );
+}
 
+// Verificar autenticación y permisos de administrador
+if (!isAdmin) {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8">
+        <div className="text-center mb-6">
+          <AlertCircle className="mx-auto h-12 w-12 text-red-500 mb-4" />
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Acceso Denegado</h2>
+          <p className="text-gray-600 mb-6">
+            No tienes permisos para crear productos. Solo los administradores pueden acceder a esta página.
+          </p>
+        </div>
+        
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <h4 className="text-sm font-medium text-blue-800 mb-2">🔑 Para obtener acceso:</h4>
+          <ul className="text-xs text-blue-700 space-y-1">
+            <li>• Tu email debe estar en la lista de administradores</li>
+            <li>• Contacta al administrador del sistema</li>
+            <li>• Verifica que estés logueado con el usuario correcto</li>
+          </ul>
+        </div>
+        
+        <div className="flex space-x-3 justify-center">
+          <Link 
+            href="/" 
+            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Volver al inicio
+          </Link>
+          <Link 
+            href="/admindashboard" 
+            className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+          >
+            Ir al Dashboard
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
 
  return (
-  <> {user.user?.id === auth ? 
-    (<div className="flex flex-col sm:flex-row justify-center bg-gray-500 w-full mb-32">
+    <div className="flex flex-col sm:flex-row justify-center bg-gray-500 w-full mb-32">
       
       <div className="m-6  mx-4 w-auto sm:mx-10 sm:w-2/3 p-4 bg-black rounded-md shadow-md items-center gap-5 mb-50 text-gray-300 ">
         <h1 data-aos="flip-right" 
@@ -433,10 +491,8 @@ const auth = process.env.ADMIN_ID
       </div>
 
         
-</div>) : ( <p className='text-center text-white'> Acceso denegado: debe ser Administrador para poder crear productos </p>)}
-
-  </>
-);
+    </div>
+  );
 
 };
 

@@ -1,4 +1,20 @@
 User-agent: *
 Allow: /
+Disallow: /admindashboard/
+Disallow: /api/
+Disallow: /form/
+Disallow: /cart/
+Disallow: /success/
+Disallow: /failure/
+Disallow: /pending/
+Disallow: /signin/
+Disallow: /signup/
 
-Sitemap: https://www.azullago.com/sitemap.xml
+# Allow product pages and images
+Allow: /product/
+Allow: /public/img/
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1
+
+Sitemap: https://tienda.azullago.com/sitemap.xml

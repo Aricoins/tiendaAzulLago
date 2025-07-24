@@ -7,26 +7,11 @@ import { addToCart, removeFromCart } from "@/redux/slices/cartSlice"
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from "react"
 import { useUser } from "@clerk/nextjs";
+import { CartItem } from "@/app/lib/definitions";
 
-interface CartItem {
-    cart_item_id: number;
-    userid: string;
-    id: string;
-    image: string;
-    price: number;
-    qty: number;
-  }
-  
-  interface Product {
-    cart_item_id: number;
-    userid: string;
-    id: string;
-    name: string;
-    image: string;
-    price: number;
-    qty: number;
-    // Add other properties
-  }
+interface Product extends CartItem {
+  name: string;
+}
   
   interface CartSideBarProps {
     stock: number;
@@ -101,12 +86,12 @@ export default function CartSideBar(){
                     </div>
                     <div>
                         {cartItems.map((item) => (
-                            <div key={item.id}
+                            <div key={item.cart_item_id}
                                 className="p-2 flex flex-col items-center border-b border-b-gray-600">
-                                    <Link href={`/product/${item.id}`}
+                                    <Link href={`/product/${item.product_id}`}
                                     className="flex items-center">
                                         <Image 
-                                        src={item.image} alt={item.id} 
+                                        src={item.image} alt={item.product_id} 
                                         width={100}
                                         height={100}
                                         className="p-1 rounded-md"></Image>
@@ -129,7 +114,7 @@ export default function CartSideBar(){
                                       </button>
                                     </div>
                                     <button className="default-button mt-2 bg-red-500 text-white rounded-md w-full"
-                                    onClick={()=> removeFromCartHandler(item.id ,item.cart_item_id)}>
+                                    onClick={()=> removeFromCartHandler(item.product_id ,item.cart_item_id)}>
                                         Quitar
                                     </button>
                             </div>

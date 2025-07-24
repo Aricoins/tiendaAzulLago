@@ -10,6 +10,7 @@ import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
 import { AddToCart } from "@/components/AddToCart";
 import MediaGallery from "@/components/siteEmails/MediaGallery";
+import { Products } from "@/app/lib/definitions";
 
 interface Detail {
   id: string;
@@ -22,7 +23,6 @@ interface Detail {
   carrusel: Record<string, string>;
   video: string;
   website: string;
-  product: Record<string, unknown>;
 }
 
 export default function Detail({ params }: { params: { id: string } }) {
@@ -129,20 +129,6 @@ export default function Detail({ params }: { params: { id: string } }) {
           <div className="rounded-lg bg-blue-600 px-4 py-2 text-xl font-semibold text-center">
             AR$ {productDetail.price}
           </div>
-<AddToCart
-  buttonStyle="px-6 py-2 mt-4 text-base border border-white rounded-full"
-  stock={40}
-  productId={productDetail.id}
-  showQty={false}
-  product={{
-    cart_item_id: 0,
-    model: productDetail.model,
-    price: parseFloat(productDetail.price),
-    image: productDetail.image,
-  }}
-  increasePerClick={true}
-  redirect={false}
-/>
       
             
 
@@ -170,11 +156,17 @@ export default function Detail({ params }: { params: { id: string } }) {
   productId={productDetail.id}
   showQty={false}
   product={{
-    cart_item_id: 0,
+    id: productDetail.id,
     model: productDetail.model,
-    price: parseFloat(productDetail.price),
+    category: productDetail.category,
+    specs: productDetail.specs,
     image: productDetail.image,
-  }}
+    colors: productDetail.colors ? [productDetail.colors] : [],
+    price: parseFloat(productDetail.price),
+    carrusel: productDetail.carrusel,
+    video: productDetail.video,
+    website: productDetail.website,
+  } as Products}
   increasePerClick={true}
   redirect={false}
 />

@@ -45,7 +45,7 @@ body {
 }
 
 .cart-badge {
-  @apply absolute ml-4 mt-2 text-center w-5 h-auto bg-red-500 text-white text-xs font-semibold rounded-full px-1 py-0.5;
+  @apply absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center;
 }
 .swiper-button-prev,
 .swiper-button-next {
@@ -60,5 +60,315 @@ body {
 .thumbs-swiper .swiper-slide-thumb-active > div {
   border-color: #3b82f6 !important;
   opacity: 1 !important;
+}
+
+/* MercadoPago Wallet customization */
+.mercadopago-wallet {
+  @apply w-full max-w-md mx-auto;
+}
+
+.mercadopago-wallet .mp-wallet-container {
+  @apply rounded-lg shadow-lg;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  @apply animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500;
+}
+
+/* Prevent double-click on payment buttons */
+.payment-button {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.payment-button:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Caveat:wght@400;700&family=Permanent+Marker&display=swap');
+
+/* Iteración 7: SVG para texto curvado real - completamente responsive */
+.curved-text-svg {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  overflow: visible;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Responsive adjustments */
+@media (min-width: 640px) {
+  .curved-text-svg {
+    max-width: 600px;
+  }
+}
+
+@media (min-width: 768px) {
+  .curved-text-svg {
+    max-width: 700px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .curved-text-svg {
+    max-width: 800px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .curved-text-svg {
+    max-width: 900px;
+  }
+}
+
+/* SVG text responsive - más grande en mobile */
+.logo-azul-lago-hero-svg {
+  font-family: 'Kalam', 'Caveat', cursive;
+  font-weight: 700;
+  font-size: 3.5rem; /* Más grande en mobile - era 2.5rem */
+  fill: #0d0869;
+  letter-spacing: 0.03em;
+  
+  /* Borde blanco más visible con bisel */
+  stroke: #5ea085;
+  stroke-width: 1px;
+  paint-order: stroke fill;
+  
+  /* Efectos de sombra y bisel mejorados */
+  filter: 
+    drop-shadow(2px 2px 0px rgba(255, 255, 255, 0.3))
+    drop-shadow(4px 4px 8px rgba(30, 58, 138, 0.5)) 
+    drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3))
+    drop-shadow(-1px -1px 2px rgba(255, 255, 255, 0.2));
+  
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.logo-azul-lago-hero-svg:hover {
+    stroke: #c9e0f0;;
+  transform: scale(1.2);
+}
+
+@media (min-width: 640px) {
+  .logo-azul-lago-hero-svg {
+    font-size: 3.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .logo-azul-lago-hero-svg {
+    font-size: 4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .logo-azul-lago-hero-svg {
+    font-size: 5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .logo-azul-lago-hero-svg {
+    font-size: 6rem;
+  }
+}
+
+/* Contenedor para el logo - centrado perfecto */
+.logo-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .logo-azul-lago-hero-svg {
+    font-size: 4rem;
+  }
+  .curved-text-svg {
+    max-width: 800px;
+    height: 250px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .logo-azul-lago-hero-svg {
+    font-size: 5rem;
+  }
+  .curved-text-svg {
+    max-width: 1000px;
+    height: 300px;
+  }
+}
+
+/* Fallback para browsers sin SVG support */
+.logo-azul-lago-hero {
+  font-family: 'Pinkblue','Kalam', 'Caveat', cursive;
+  font-weight: 600;
+  font-size: 3rem;
+  color: #0d0869;
+  text-align: center;
+  letter-spacing: 0.03em;
+  text-shadow: 2px 2px 4px rgba(30, 58, 138, 0.3);
+  position: relative;
+  line-height: 1;
+  margin: 2rem 0;
+  display: none; /* Oculto ya que usamos SVG */
+}
+
+/* Variante para navbar */
+.logo-azul-lago-nav {
+  font-family: 'Kalam', 'Caveat', cursive;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #1e3a8a;
+  letter-spacing: 0.02em;
+  text-shadow: 1px 1px 2px rgba(30, 58, 138, 0.2);
+  transition: all 0.3s ease;
+  transform: rotate(-1deg);
+}
+
+.logo-azul-lago-nav:hover {
+  transform: rotate(0deg) scale(1.05);
+  color: #1d4ed8;
+}
+
+/* COOP con rojo más oscuro, más pegado y más grueso - responsive sizing */
+.logo-coop-text {
+  font-family: 'Kalam', cursive;
+  font-weight: 700; /* Más grueso - cambió de 400 a 700 */
+  font-size: 1.4rem; /* Tamaño base para mobile - ya está bien */
+  color: #a70409; /* Rojo más oscuro */
+  letter-spacing: 0.1em;
+  margin-top: -4.5rem; /* Más cerca del texto principal - de -3.5rem a -4.5rem */
+  transform: rotate(-1deg);
+  text-shadow: 1px 1px 2px rgba(127, 29, 29, 0.3); /* Sombra para darle más presencia */
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem; /* Espacio más cercano entre COOP y los pinos */
+}
+
+/* Contenedor virtual para los pinos usando ::after */
+.logo-coop-text::after {
+  content: "🌲🌲";
+  font-size: 0.9em;
+  color: #0f7c0f;
+  text-shadow: 1px 1px 2px rgba(15, 124, 15, 0.3);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
+  animation: sway 3s ease-in-out infinite alternate;
+  animation-delay: 0.5s;
+  letter-spacing: -1.02em; /* Más superposición entre los emojis */
+  transform: rotate(1deg) translateY(-2px); /* Mover ligeramente hacia arriba para alinear con baseline */
+  display: inline-block;
+  line-height: 1;
+  vertical-align: baseline; /* Alineación con la línea base del texto */
+}
+
+/* Animación sutil de balanceo para los pinos */
+@keyframes sway {
+  0% { 
+    transform: rotate(-1deg) translateY(-2px); 
+  }
+  100% { 
+    transform: rotate(2deg) translateY(-2px); 
+  }
+}
+
+/* Animaciones específicas para pantallas grandes */
+@media (min-width: 900px) {
+  @keyframes sway {
+    0% { 
+      transform: rotate(-1deg) translateY(-4px); 
+    }
+    100% { 
+      transform: rotate(2deg) translateY(-4px); 
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  @keyframes sway {
+    0% { 
+      transform: rotate(-1deg) translateY(-5px); 
+    }
+    100% { 
+      transform: rotate(2deg) translateY(-5px); 
+    }
+  }
+}
+
+@media (min-width: 1280px) {
+  @keyframes sway {
+    0% { 
+      transform: rotate(-1deg) translateY(-6px); 
+    }
+    100% { 
+      transform: rotate(2deg) translateY(-6px); 
+    }
+  }
+}
+
+/* COOP más grande en pantallas grandes */
+@media (min-width: 640px) {
+  .logo-coop-text {
+    font-size: 1.6rem;
+    margin-top: -5rem; /* Ajuste para pantallas más grandes */
+    gap: 0;
+  }
+  
+  .logo-coop-text::after {
+    font-size: 1em;
+  }
+}
+
+@media (min-width: 768px) {
+  .logo-coop-text {
+    font-size: 1.8rem;
+    margin-top: -5.5rem;
+    gap: 0;
+  }
+  
+  .logo-coop-text::after {
+    font-size: 1.1em;
+  }
+}
+
+@media (min-width: 900px) {
+  .logo-coop-text::after {
+    transform: rotate(1deg) translateY(-4px); /* Más alto para alinear mejor con texto grande */
+  }
+}
+
+@media (min-width: 1024px) {
+  .logo-coop-text {
+    font-size: 2.2rem;
+    margin-top: -6.5rem;
+    gap: 0;
+  }
+  
+  .logo-coop-text::after {
+    font-size: 1.2em;
+    transform: rotate(1deg) translateY(-5px); /* Aún más alto para pantallas grandes */
+  }
+}
+
+@media (min-width: 1280px) {
+  .logo-coop-text {
+    font-size: 2.5rem;
+    margin-top: -7.5rem;
+    gap: 0;
+  }
+  
+  .logo-coop-text::after {
+    font-size: 1.3em;
+    transform: rotate(1deg) translateY(-6px); /* Máximo ajuste para pantallas muy grandes */
+  }
 }
 

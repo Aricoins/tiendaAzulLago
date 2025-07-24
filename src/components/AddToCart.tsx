@@ -5,13 +5,14 @@ import { RootState, store } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { addToCart, removeFromCart } from "@/redux/slices/cartSlice";
+import { Products } from "@/app/lib/definitions";
 
 
 
 interface AddToCartProps {
   stock: number;
   productId: string;
-  product: Record<string, unknown>; 
+  product: Products; 
   showQty?: boolean;
   redirect?: boolean;
   increasePerClick?: boolean;
@@ -37,7 +38,7 @@ export const AddToCart: React.FC<AddToCartProps> = ({
     const addToCartHandler = () => {
       let newQty = qty;
       if (increasePerClick) {
-        const existItem = cartItems.find((x: any) => x.id === productId);
+        const existItem = cartItems.find((x: any) => x.product_id === productId);
         if (existItem) {
           if (existItem.qty + 1 <= (stock1)) {
             newQty = existItem.qty + qty;
@@ -58,9 +59,9 @@ export const AddToCart: React.FC<AddToCartProps> = ({
 
       dispatch(
         addToCart({
-          cart_item_id: product.cart_item_id as number,
-          userid: product.user_id as string,
-          id: productId, 
+          cart_item_id: 0, // Default value since we're adding a new item
+          user_id: email || '', // Use email from user context
+          product_id: productId, 
           name: product.model as string,
           image: product.image as string,
           price: product.price as number,

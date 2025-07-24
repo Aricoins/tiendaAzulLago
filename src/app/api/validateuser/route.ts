@@ -11,7 +11,7 @@ export async function PUT(req: Request) {
         WHERE email = ${email}
       `;
   
-      if (rowCount > 0) {
+      if (rowCount && rowCount > 0) {
         return NextResponse.json({ message: "User Updated", result: true });
       } else {
         return NextResponse.json({ message: "Failed to update user", result: false });

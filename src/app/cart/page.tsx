@@ -2,26 +2,24 @@
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { addToCart, removeFromCart } from "@/redux/slices/cartSlice";
+import { addToCart, removeFromCart, addPreferenceId } from "@/redux/slices/cartSlice";
 import Link from "next/link";
 import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
-import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
-import { useEffect, useState } from "react";
+import { useMercadoPago } from "@/hooks/useMercadoPago";
+import MemoizedMercadoPagoWallet from "@/components/MemoizedMercadoPagoWallet";
+import { useEffect, useState, useRef } from "react";
 import { Modal, Form, Input, Button } from "antd";
 import dotenv from "dotenv";
 import { useUser } from "@clerk/clerk-react";
 import { MdOutlineShoppingCart } from "react-icons/md";
 
-
 dotenv.config();
-
-initMercadoPago(process.env.NEXT_PUBLIC_MP_KEY || "key",  { locale: 'es-AR' });
 
 interface Product {
   cart_item_id: number;
-  userid: string;
-  id: string;
+  user_id: string;
+  product_id: string;
   name: string;
   image: string;
   price: number;
@@ -31,16 +29,17 @@ interface Product {
 export default function CartPage() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { loading, cartItems, itemsPrice } = useSelector(
+  const { loading, cartItems, itemsPrice, preference_id } = useSelector(
     (state: RootState) => state.cart
   );
-  const [preferenceId, setPreferenceId] = useState<string | null>("");
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const createPreferenceRef = useRef(false); // Ref para evitar llamadas duplicadas
+  const walletReadyRef = useRef(false); // Ref para evitar múltiples callbacks ready
 
   const user = useUser();
-  console.log(user, "user")
+  const { initialized } = useMercadoPago();
   
   const addToCartHandler = (
     product: Product,
@@ -83,11 +82,14 @@ export default function CartPage() {
     dispatch(removeFromCart(id));
   };
 
+  // Limpiar preference_id cuando se desmonte el componente
   useEffect(() => {
+    walletReadyRef.current = false;
     return () => {
-      setPreferenceId(null); // Limpia al desmontar el componente
+      dispatch(addPreferenceId(''));
+      walletReadyRef.current = false;
     };
-  }, []);
+  }, [dispatch]);
   
 
   const handleOk = () => {
@@ -107,11 +109,18 @@ export default function CartPage() {
 
 
   const createPreference = async (payerDetails: any) => {
-
+    // Evitar crear múltiples preferencias usando ref
+    if (isLoading || preference_id || createPreferenceRef.current) {
+      console.log('Bloqueando creación de preferencia duplicada');
+      return;
+    }
+    
+    createPreferenceRef.current = true;
     setIsLoading(true);
+    
     try {
       const items = cartItems.map((item) => ({
-        id: item.id,
+        id: item.product_id,
         title: item.name,
         currency_id: "ARS",
         description: item.name,
@@ -120,7 +129,7 @@ export default function CartPage() {
       }));
 
       const payer = {
-                name: user.user?.firstName,
+        name: user.user?.firstName,
         surname: user.user?.lastName,
         email: user.user?.primaryEmailAddress?.emailAddress,
         identification: {
@@ -167,39 +176,46 @@ export default function CartPage() {
       });
 
       const data = await response.json();
-      setPreferenceId(data.preferenceId);
-      await fetch("/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          preference_id: data.preferenceId,
-          payer: {
-            email: user.user?.primaryEmailAddress?.emailAddress,
-            name: user.user?.firstName,
-            surname: user.user?.lastName,
-            dni: payerDetails.identification,
-            phone: `${payerDetails.phone_area_code}${payerDetails.phone_number}`,
-            address: payerDetails.address,
-          },
-          total_amount: itemsPrice,
-          items: cartItems.map((item) => ({
-            product_id: item.id,
-            title: item.name,
-            quantity: item.qty,
-            unit_price: item.price,
-          })),
-        }),
-      });
       
-
-
+      if (data.preferenceId) {
+        console.log('✅ Preferencia creada:', data.preferenceId);
+        // Limpiar estado del wallet antes de asignar nueva preferencia
+        walletReadyRef.current = false;
+        // Guardar preference_id en Redux
+        dispatch(addPreferenceId(data.preferenceId));
+        
+        // Crear orden en base de datos
+        await fetch("/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            preference_id: data.preferenceId,
+            payer: {
+              email: user.user?.primaryEmailAddress?.emailAddress,
+              name: user.user?.firstName,
+              surname: user.user?.lastName,
+              dni: payerDetails.identification,
+              phone: `${payerDetails.phone_area_code}${payerDetails.phone_number}`,
+              address: payerDetails.address,
+            },
+            total_amount: itemsPrice,
+            items: cartItems.map((item) => ({
+              product_id: item.product_id,
+              title: item.name,
+              quantity: item.qty,
+              unit_price: item.price,
+            })),
+          }),
+        });
+      }
 
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error creating preference:", error);
     } finally {
       setIsLoading(false);
+      createPreferenceRef.current = false;
     }
   };
 
@@ -231,10 +247,10 @@ export default function CartPage() {
                 </thead>
                 <tbody>
                   {cartItems.map((item) => (
-                    <tr key={item.id} className="border-b text-white">
+                    <tr key={item.cart_item_id} className="border-b text-white">
                       <td>
                         <Link
-                          href={`/product/${item.id}`}
+                          href={`/product/${item.product_id}`}
                           className="flex items-center text-white"
                         >
                           <Image
@@ -282,7 +298,7 @@ export default function CartPage() {
                         <button
                           className="w-full bg-violet-900 rounded-lg text-white"
                           onClick={() =>
-                            removeFromCartHandler(item.id, item.cart_item_id)
+                            removeFromCartHandler(item.product_id, item.cart_item_id)
                           }
                         >
                           Quitar
@@ -316,12 +332,25 @@ export default function CartPage() {
                       </Button>
                     </li>
                     <li>
-                    {preferenceId && (
-  <Wallet
-   // key={preferenceId} // Forzar recreación del componente
-    initialization={{ preferenceId }}
-  />
-)}
+                      {preference_id && initialized && (
+                        <div className="mt-4" key={`wallet-container-${preference_id}`}>
+                          <MemoizedMercadoPagoWallet
+                            preferenceId={preference_id}
+                            onReady={() => {
+                              if (!walletReadyRef.current) {
+                                console.log('Wallet ready from cart page');
+                                walletReadyRef.current = true;
+                              }
+                            }}
+                            onError={(error) => console.error('Wallet error:', error)}
+                          />
+                        </div>
+                      )}
+                      {preference_id && !initialized && (
+                        <div className="text-center text-gray-500 mt-4">
+                          Inicializando sistema de pagos...
+                        </div>
+                      )}
                     </li>
                   </ul>
                 </div>

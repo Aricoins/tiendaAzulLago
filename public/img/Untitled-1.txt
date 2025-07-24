@@ -1,0 +1,2 @@
+// En package.json - Configuración de memoria excesiva
+"dev": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next dev"
