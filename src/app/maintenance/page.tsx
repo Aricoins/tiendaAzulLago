@@ -15,7 +15,7 @@ export default function MaintenancePage() {
         </div>
         
         <h1 className="text-4xl font-bold text-gray-800 mb-6">
-          Tienda Temporalmente Cerrada
+          Volveremos pronto
         </h1>
         
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
@@ -25,8 +25,8 @@ export default function MaintenancePage() {
           </h2>
           <p className="text-gray-600 text-lg leading-relaxed mb-6">
             Nuestra tienda se encuentra temporalmente cerrada mientras completamos 
-            las certificaciones necesarias para ofrecerte los mejores productos 
-            con todas las garantías de calidad y seguridad.
+            las mejoras necesarias para ofrecerte los productos 
+            con todas las garantías de calidad.
           </p>
           <p className="text-gray-600 text-lg leading-relaxed">
             Estamos trabajando para reabrir lo antes posible. Te agradecemos tu paciencia 
@@ -39,10 +39,6 @@ export default function MaintenancePage() {
           <p className="mb-4">
             Podés contactarnos para cualquier información adicional
           </p>
-          <div className="space-y-2">
-            <p>📧 info@azullago.com</p>
-            <p>📱 WhatsApp: +54 9 XXX XXX-XXXX</p>
-          </div>
         </div>
         
         <div className="mt-8 text-gray-500">
